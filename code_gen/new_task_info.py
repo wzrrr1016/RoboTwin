@@ -45,3 +45,12 @@ PICK_PLACE_BLOCK_DUAL_CONTAINER_3 = {
     "task: Move blocks such that the blue bowl contains the red and green blocks, and the yellow bowl contains the blue and yellow blocks. The purple block must remain on the table. Each bowl must have exactly two blocks./"
     "action: Place the red block and green block in the blue bowl. Place the blue block and yellow block in the yellow bowl."
 }
+
+SYMMETRICAL_PAIRING = {
+    "task_name": "symmetrical_pairing",
+    "task_description":
+    "scene: On the table, there are two bowls and four items: a bottle, a can, a hamburger, and an apple. The bowls are placed at opposite ends of the table./"
+    "task: The items must be placed into the bowls to create two identical sets. Each bowl must contain exactly two items, and the contents of the two bowls must be the same type of items. For example, one valid configuration is placing the bottle and can in one bowl, and the hamburger and apple in the other. Another valid configuration is placing the bottle and hamburger in one bowl, and the can and apple in the other. Any configuration that results in two bowls with identical contents is acceptable./"
+    "action: Place the bottle and can in one bowl. Place the hamburger and apple in the other bowl."
+}
+
