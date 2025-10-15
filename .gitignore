@@ -28,3 +28,12 @@ envs/curobo/*
 
 /*.json*
 /*.txt
+
+# image and video
+*.png
+*.jpg
+*.jpeg
+*.mp4
+
+# model
+*.ckpt
