@@ -13,6 +13,7 @@ def rand_pose(
     rotate_rand=False,
     rotate_lim=[0, 0, 0],
     qpos=[1, 0, 0, 0],
+    prohibit_area=None,
 ) -> sapien.Pose:
     if len(xlim) < 2 or xlim[1] < xlim[0]:
         xlim = np.array([xlim[0], xlim[0]])
@@ -21,8 +22,23 @@ def rand_pose(
     if len(zlim) < 2 or zlim[1] < zlim[0]:
         zlim = np.array([zlim[0], zlim[0]])
 
+
     x = np.random.uniform(xlim[0], xlim[1])
     y = np.random.uniform(ylim[0], ylim[1])
+
+    if prohibit_area is not None:
+        while True:
+            flag = True
+            for area in prohibit_area:
+                x_min, x_max, y_min, y_max = area[0], area[1], area[2], area[3]
+                if x_min <= x <= x_max and y_min <= y <= y_max:
+                    flag = False
+                    break
+            if flag:
+                break
+
+            x = np.random.uniform(xlim[0], xlim[1])
+            y = np.random.uniform(ylim[0], ylim[1])
 
     while ylim_prop and abs(x) < 0.15 and y > 0:
         y = np.random.uniform(ylim[0], 0)

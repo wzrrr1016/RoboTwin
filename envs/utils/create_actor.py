@@ -534,7 +534,8 @@ def create_actor(
     try:
         with open(json_file_path, "r") as file:
             model_data = json.load(file)
-        scale = model_data["scale"]
+        scale = (model_data["scale"][0]*scale[0], model_data["scale"][1]*scale[1], model_data["scale"][2]*scale[2]) if "scale" in model_data else scale
+        model_data["scale"] = scale
     except:
         model_data = None
 

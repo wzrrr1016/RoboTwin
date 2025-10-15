@@ -16,9 +16,12 @@ import inspect
 
 current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
+main_directory = os.path.dirname(parent_directory)
 
-SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "script")
-CONFIGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "task_config")
+# SCRIPT_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "script")
+# CONFIGS_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "task_config")
+SCRIPT_PATH = os.path.join(main_directory, "script")
+CONFIGS_PATH = os.path.join(main_directory, "task_config")
 OBJECTS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets/objects")
 
 
@@ -220,6 +223,7 @@ def setup_task_config(task_name):
 
     args["need_plan"] = True
     args["save_path"] = "./data/test"
+    # args["save_data"] = True
 
     return task, args
 
@@ -264,6 +268,7 @@ def run(TASK_ENV, args, check_num=10):
                 print(f"simulate data episode {suc_num} success! (seed = {epid})")
                 suc_num += 1
                 run_records.append("success!")
+                # TASK_ENV.merge_pkl_to_hdf5_video()
             else:
                 if not TASK_ENV.plan_success:
                     if hasattr(TASK_ENV, 'left_plan_success') and not TASK_ENV.lefft_plan_success:
@@ -281,7 +286,6 @@ def run(TASK_ENV, args, check_num=10):
 
                 print(f"simulate data episode {suc_num} fail! (seed = {epid})")
                 fail_num += 1
-
             TASK_ENV.close()
             if args.get("render_freq"):
                 TASK_ENV.viewer.close()

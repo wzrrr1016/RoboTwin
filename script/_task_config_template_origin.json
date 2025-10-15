@@ -4,7 +4,7 @@
   "episode_num": 10,
   "use_seed": false,
   "save_freq": 15,
-  "embodiment": ["franka-panda","franka-panda",0],
+  "embodiment": "aloha-agilex",
   "augmentation": {
     "random_background": false,
     "messy_table": false,

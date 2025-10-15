@@ -7,7 +7,7 @@ from sapien.render import clear_cache
 from collections import OrderedDict
 import pdb
 from envs import *
-# from envs.zerograsp.zerograsp import ZeroGrasp_Getter
+from envs.zerograsp.zerograsp import ZeroGrasp_Getter
 import yaml
 import importlib
 import json
@@ -116,13 +116,24 @@ def run(TASK_ENV, args):
     zerograsp_checkpoint_path = args.get("zerograsp_checkpoint_path")
 
 
-    # grasp_getter = ZeroGrasp_Getter(zerograsp_config_path,zerograsp_checkpoint_path)
-    grasp_getter = None
+    grasp_getter = ZeroGrasp_Getter(zerograsp_config_path,zerograsp_checkpoint_path)
+    # grasp_getter = None
 
     print(f"Task Name: \033[34m{args['task_name']}\033[0m")
 
     # =========== Collect Seed ===========
     os.makedirs(args["save_path"], exist_ok=True)
+
+    os.makedirs(os.path.join(args["save_path"], "sub_plan"),exist_ok=True)
+
+
+    def exist_hdf5(idx):
+        file_path = os.path.join(args["save_path"], 'data', f'episode{idx}.hdf5')
+        return os.path.exists(file_path)
+    
+    def exist_pkl(idx):
+        file_path = os.path.join(args["save_path"], '_traj_data', f'episode{idx}.pkl')
+        return os.path.exists(file_path)
 
     if not args["use_seed"]:
         print("\033[93m" + "[Start Seed and Pre Motion Data Collection]" + "\033[0m")
@@ -137,17 +148,107 @@ def run(TASK_ENV, args):
                     epid = max(seed_list) + 1
             print(f"Exist seed file, Start from: {epid} / {suc_num}")
 
+        origin_args = args.copy()
+        ct = 0
+        while ct < suc_num:
+            print(exist_hdf5(ct), exist_pkl(ct))
+            if (not exist_hdf5(ct)) and exist_pkl(ct):
+                print(f"Collecting Data of episode {ct} (seed = {seed_list[ct]})")
+                args["need_plan"] = False
+                args["render_freq"] = 0
+                args["save_data"] = True
+                TASK_ENV.setup_demo(now_ep_num=ct, seed=seed_list[ct],grasp_getter=grasp_getter, **args)
+
+                traj_data = TASK_ENV.load_tran_data(ct)
+                args["left_joint_path"] = traj_data["left_joint_path"]
+                args["right_joint_path"] = traj_data["right_joint_path"]
+                TASK_ENV.set_path_lst(args)
+
+                info_file_path = os.path.join(args["save_path"], "scene_info.json")
+
+                if not os.path.exists(info_file_path):
+                    with open(info_file_path, "w", encoding="utf-8") as file:
+                        json.dump({}, file, ensure_ascii=False)
+
+                with open(info_file_path, "r", encoding="utf-8") as file:
+                    info_db = json.load(file)
+
+                info = TASK_ENV.play_once()
+                info_db[f"episode_{ct}"] = info
+
+                with open(info_file_path, "w", encoding="utf-8") as file:
+                    json.dump(info_db, file, ensure_ascii=False, indent=4)
+
+                sub_plans = TASK_ENV.get_subplans()
+                subplan_save_path = os.path.join(args["save_path"], "sub_plan", f"episode{ct}.json")
+                # print(sub_plans)
+                with open(subplan_save_path, "w", encoding="utf-8") as file:
+                    json.dump(sub_plans, file, ensure_ascii=False, indent=4)
+
+                TASK_ENV.close_env()
+                TASK_ENV.merge_pkl_to_hdf5_video()
+                TASK_ENV.remove_data_cache()
+
+                clear_cache()
+            ct += 1
+
+        # clear_cache_freq = args["clear_cache_freq"]
         while suc_num < args["episode_num"]:
             try:
+                args = origin_args.copy()
                 TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
                 TASK_ENV.play_once()
 
-                if TASK_ENV.plan_success and TASK_ENV.check_success():
-                # if True:
+                # if TASK_ENV.plan_success and TASK_ENV.check_success():
+                if True:
                     print(f"simulate data episode {suc_num} success! (seed = {epid})")
                     seed_list.append(epid)
                     TASK_ENV.save_traj_data(suc_num)
+
+                    TASK_ENV.close_env()
+
+                    if args["render_freq"]:
+                        TASK_ENV.viewer.close()
+
+                    args["need_plan"] = False
+                    args["render_freq"] = 0
+                    args["save_data"] = True
+                    print(f"Start Collecting Data of episode {suc_num} (seed = {epid})")
+                    TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
+
+                    traj_data = TASK_ENV.load_tran_data(suc_num)
+                    args["left_joint_path"] = traj_data["left_joint_path"]
+                    args["right_joint_path"] = traj_data["right_joint_path"]
+                    TASK_ENV.set_path_lst(args)
+
+                    info_file_path = os.path.join(args["save_path"], "scene_info.json")
+
+                    if not os.path.exists(info_file_path):
+                        with open(info_file_path, "w", encoding="utf-8") as file:
+                            json.dump({}, file, ensure_ascii=False)
+
+                    with open(info_file_path, "r", encoding="utf-8") as file:
+                        info_db = json.load(file)
+
+                    info = TASK_ENV.play_once()
+                    info_db[f"episode_{suc_num}"] = info
+
+                    with open(info_file_path, "w", encoding="utf-8") as file:
+                        json.dump(info_db, file, ensure_ascii=False, indent=4)
+
+                    sub_plans = TASK_ENV.get_subplans()
+                    subplan_save_path = os.path.join(args["save_path"], "sub_plan", f"episode{suc_num}.json")
+                    # print(sub_plans)
+                    with open(subplan_save_path, "w", encoding="utf-8") as file:
+                        json.dump(sub_plans, file, ensure_ascii=False, indent=4)
+
+                    TASK_ENV.close_env()
+                    TASK_ENV.merge_pkl_to_hdf5_video()
+                    TASK_ENV.remove_data_cache()
+
                     suc_num += 1
+                    clear_cache()
+                
                 else:
                     print(f"simulate data episode {suc_num} fail! (seed = {epid})")
                     fail_num += 1
@@ -156,6 +257,7 @@ def run(TASK_ENV, args):
 
                 if args["render_freq"]:
                     TASK_ENV.viewer.close()
+                clear_cache()
             except UnStableError as e:
                 print(" -------------")
                 print(f"simulate data episode {suc_num} fail! (seed = {epid})")
@@ -166,6 +268,7 @@ def run(TASK_ENV, args):
 
                 if args["render_freq"]:
                     TASK_ENV.viewer.close()
+                clear_cache()
                 time.sleep(0.3)
             except Exception as e:
                 # stack_trace = traceback.format_exc()
@@ -179,7 +282,7 @@ def run(TASK_ENV, args):
                 if args["render_freq"]:
                     TASK_ENV.viewer.close()
                 time.sleep(1)
-
+                clear_cache()
             epid += 1
 
             with open(os.path.join(args["save_path"], "seed.txt"), "w") as file:
@@ -193,66 +296,9 @@ def run(TASK_ENV, args):
             seed_list = file.read().split()
             seed_list = [int(i) for i in seed_list]
 
-    # =========== Collect Data ===========
 
-    if args["collect_data"]:
-        print("\033[93m" + "[Start Data Collection]" + "\033[0m")
-
-        args["need_plan"] = False
-        args["render_freq"] = 0
-        args["save_data"] = True
-
-        clear_cache_freq = args["clear_cache_freq"]
-
-        st_idx = 0
-
-        def exist_hdf5(idx):
-            file_path = os.path.join(args["save_path"], 'data', f'episode{idx}.hdf5')
-            return os.path.exists(file_path)
-
-        while exist_hdf5(st_idx):
-            st_idx += 1
-
-        os.makedirs(os.path.join(args["save_path"], "sub_plan"),exist_ok=True)
-
-        for episode_idx in range(st_idx, args["episode_num"]):
-            print(f"\033[34mTask name: {args['task_name']}\033[0m")
-
-            TASK_ENV.setup_demo(now_ep_num=episode_idx, seed=seed_list[episode_idx],grasp_getter=grasp_getter, **args)
-
-            traj_data = TASK_ENV.load_tran_data(episode_idx)
-            args["left_joint_path"] = traj_data["left_joint_path"]
-            args["right_joint_path"] = traj_data["right_joint_path"]
-            TASK_ENV.set_path_lst(args)
-
-            info_file_path = os.path.join(args["save_path"], "scene_info.json")
-
-            if not os.path.exists(info_file_path):
-                with open(info_file_path, "w", encoding="utf-8") as file:
-                    json.dump({}, file, ensure_ascii=False)
-
-            with open(info_file_path, "r", encoding="utf-8") as file:
-                info_db = json.load(file)
-
-            info = TASK_ENV.play_once()
-            info_db[f"episode_{episode_idx}"] = info
-
-            with open(info_file_path, "w", encoding="utf-8") as file:
-                json.dump(info_db, file, ensure_ascii=False, indent=4)
-
-            sub_plans = TASK_ENV.get_subplans()
-            subplan_save_path = os.path.join(args["save_path"], "sub_plan", f"episode{episode_idx}.json")
-            # print(sub_plans)
-            with open(subplan_save_path, "w", encoding="utf-8") as file:
-                json.dump(sub_plans, file, ensure_ascii=False, indent=4)
-
-            TASK_ENV.close_env(clear_cache=((episode_idx + 1) % clear_cache_freq == 0))
-            TASK_ENV.merge_pkl_to_hdf5_video()
-            TASK_ENV.remove_data_cache()
-            # assert TASK_ENV.check_success(), "Collect Error"
-
-        command = f"cd description && bash gen_episode_instructions.sh {args['task_name']} {args['task_config']} {args['language_num']}"
-        os.system(command)
+    # command = f"cd description && bash gen_episode_instructions.sh {args['task_name']} {args['task_config']} {args['language_num']}"
+    # os.system(command)
 
 
 if __name__ == "__main__":

@@ -113,10 +113,11 @@ class Robot:
             self.right_entity_origion_pose.p += [arms_dis / 2, 0, 0]
             left_loader: sapien.URDFLoader = scene.create_urdf_loader()
             left_loader.fix_root_link = True
-            right_loader: sapien.URDFLoader = scene.create_urdf_loader()
-            right_loader.fix_root_link = True
+            # right_loader: sapien.URDFLoader = scene.create_urdf_loader()
+            # right_loader.fix_root_link = True
             self.left_entity = left_loader.load(self.left_urdf_path)
-            self.right_entity = right_loader.load(self.right_urdf_path)
+            self.right_entity = self.left_entity
+            # self.right_entity = right_loader.load(self.right_urdf_path)
 
         self.left_entity.set_root_pose(self.left_entity_origion_pose)
         self.right_entity.set_root_pose(self.right_entity_origion_pose)

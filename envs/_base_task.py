@@ -13,9 +13,11 @@ from collections import OrderedDict
 import torch, random
 
 from .utils import *
+from .utils.grasp_pose import *
 import math
 from .robot import Robot
 from .camera import Camera
+from .zerograsp.zerograsp import ZeroGrasp_Getter
 
 from copy import deepcopy
 import subprocess
@@ -39,7 +41,7 @@ class Base_Task(gym.Env):
         pass
 
     # =========================================================== Init Task Env ===========================================================
-    def _init_task_env_(self, table_xy_bias=[0, 0], table_height_bias=0, **kwags):
+    def _init_task_env_(self, table_xy_bias=[0, 0], table_height_bias=0, grasp_getter=None, **kwags):
         """
         Initialization TODO
         - `self.FRAME_IDX`: The index of the file saved for the current scene.
@@ -70,6 +72,11 @@ class Base_Task(gym.Env):
         self.eval_mode = kwags.get("eval_mode", False)
 
         self.need_topp = True  # TODO
+
+        # if grasp_getter is None:
+        #     self.grasp_getter = ZeroGrasp_Getter()
+        # else:
+        #     self.grasp_getter = grasp_getter
 
         # Random
         random_setting = kwags.get("domain_randomization")
@@ -157,6 +164,36 @@ class Base_Task(gym.Env):
         self.info["info"] = {}
 
         self.stage_success_tag = False
+
+        self.seg_img_origin = None
+
+        self._update_render()
+        self.cameras.update_picture()
+        # rgb_img = self.cameras.get_rgb()['front_camera']['rgb']
+        # depth_img = self.cameras.get_depth()['front_camera']['depth']
+        self.seg_img_origin = self.cameras.get_segmentation(level='actor')['front_camera']['actor_segmentation']
+
+        self.sub_plans = []
+
+        self.last_point = None
+
+    def add_subplan(self, action, frame_idx, target_name):
+        all_pose = {}
+        for actor in self.scene.get_all_actors():
+            all_pose[actor.get_name()] = actor.get_pose().p.tolist()
+        if not self.save_data:
+            return 
+        self.sub_plans.append({
+            "frame_idx": frame_idx,
+            "action": action,
+            "target_name": target_name,
+            "pose": all_pose
+        })
+
+    def get_subplans(self):
+        return self.sub_plans
+            
+
 
     def check_stable(self):
         actors_list, actors_pose_list = [], []
@@ -314,7 +351,7 @@ class Base_Task(gym.Env):
             texture_id=self.table_texture,
         )
 
-    def get_cluttered_table(self, cluttered_numbers=10, xlim=[-0.59, 0.59], ylim=[-0.34, 0.34], zlim=[0.741]):
+    def get_cluttered_table(self, cluttered_numbers=10, xlim=[-0.45, 0.45], ylim=[-0.3, 0.3], zlim=[0.741]):
         self.record_cluttered_objects = []  # record cluttered objects
 
         xlim[0] += self.table_xy_bias[0]
@@ -987,9 +1024,9 @@ class Base_Task(gym.Env):
         """
         contacts = self.scene.get_contacts()
         for contact in contacts:
-            if (contact.bodies[0].entity.name == actor1
-                    and contact.bodies[1].entity.name == actor2) or (contact.bodies[0].entity.name == actor2
-                                                                     and contact.bodies[1].entity.name == actor1):
+            if (contact.bodies[0].entity.name == actor1.get_name()
+                    and contact.bodies[1].entity.name == actor2.get_name()) or (contact.bodies[0].entity.name == actor2.get_name()
+                                                                     and contact.bodies[1].entity.name == actor1.get_name()):
                 return True
         return False
 
@@ -999,6 +1036,32 @@ class Base_Task(gym.Env):
             pdb.set_trace()
             print(dir(contact))
             print(contact.bodies[0].entity.name, contact.bodies[1].entity.name)
+
+    def check_grasp(self, actor):
+        contacts = self.scene.get_contacts()
+        # print("gripper name:",self.robot.gripper_name)
+        for contact in contacts:
+            if (contact.bodies[0].entity.name == actor.get_name() and contact.bodies[1].entity.name in self.robot.gripper_name) or (contact.bodies[1].entity.name == actor.get_name() and contact.bodies[0].entity.name in self.robot.gripper_name):
+                return True
+            
+        return False
+
+    def check_on(self,actor,container):
+
+        # contacts = self.scene.get_contacts()
+        # for contact in contacts:
+        #     if (contact.bodies[0].entity.name == actor.get_name() and contact.bodies[1].entity.name == container.get_name()) or (contact.bodies[1].entity.name == actor.get_name() and contact.bodies[0].entity.name == container.get_name()):
+        #         return True
+        
+        ep = [0.06, 0.06, 0.2]
+        actor_pose = actor.get_pose().p
+        container_pose = container.get_pose().p
+        print("actor ",actor.get_name()," pose: ",actor_pose)
+        print("container ",container.get_name()," pose: ",container_pose)
+        if np.all(abs(actor_pose-container_pose)<ep):
+            return True
+        
+        return False
 
     def choose_best_pose(self, res_pose, center_pose, arm_tag: ArmTag = None):
         """
@@ -1164,6 +1227,100 @@ class Base_Task(gym.Env):
             return res_pre_side_pose, res_side_pose
         return res_pre_pose, res_pose
 
+
+    '''
+    def get_grasp_pose_from_zerograsp(
+        self,
+        actor: Actor,
+        camera_name='front_camera',
+    ):
+        self._update_render()
+        self.cameras.update_picture()
+        rgb_img = self.cameras.get_rgb()[camera_name]['rgb']
+        depth_img = self.cameras.get_depth()[camera_name]['depth']
+        seg_img = self.cameras.get_segmentation(level='actor')[camera_name]['actor_segmentation']
+        camera_config = self.cameras.get_config()[camera_name]
+        instrinsic_cv = camera_config['intrinsic_cv']
+        cam2world_gl = camera_config['cam2world_gl']
+        # print("instrinsic_cv:", instrinsic_cv)
+        # print("cam2world_gl:", cam2world_gl)
+
+        actor_point = actor.get_pose().p
+        try:
+            contact_points = []
+            contact_point = actor.get_contact_point(idx=0,ret='pose').p
+            for i, contact_point in actor.iter_contact_points("pose"):
+                contact_points.append(contact_point.p)
+            contact_point = np.mean(contact_points, axis=0)
+                
+        except:
+            contact_point = actor_point
+        #     print("no contact point, use actor point")
+        # print("actor point: ",contact_point)
+        cam_point = world_to_pixel(contact_point, cam2world_gl, instrinsic_cv)[0]
+        self.last_point = cam_point
+        # print("cam point:", cam_point[:2])
+        if cam_point[0] > seg_img.shape[1] or cam_point[1] > seg_img.shape[0] or cam_point[0] < 0 or cam_point[1] < 0:
+            print("actor out of sight!")
+            return None
+        pixel = [int(np.round(cam_point[0])), int(np.round(cam_point[1]))]
+        seg_img = rgb_to_P(seg_img)
+        actor_color = np.array(seg_img)[pixel[1],pixel[0]]
+        # print("actor color:", actor_color)
+
+        # for test
+        # get a new segmentation map with only the actor
+        # origin_seg_img = rgb_to_P(seg_img)
+        # origin_seg_img.save("origin_seg_img.png")
+        
+
+        # seg_img_array = np.array(seg_img)
+        # mask = seg_img_array == actor_color
+        # # print("mask sum:",np.sum(mask))
+        # # mask = np.all(seg_img == actor_color, axis=-1, keepdims=True)
+
+        # mask_uint8 = (mask * 255).astype(np.uint8)
+        # mask_img = Image.fromarray(mask_uint8)
+        # mask_img.save('seg_actor_img.png')
+
+        # import matplotlib.pyplot as plt
+        # img = plt.imread("origin_seg_img.png")
+        # plt.imshow(img)
+        # plt.plot(pixel[0], pixel[1], 'ro', markersize=10)
+        # plt.axis('off')
+        # plt.savefig("marked_image.png", bbox_inches='tight', pad_inches=0)
+
+        # plt.close()
+
+        # for test end
+        grasp_poses_cam = self.grasp_getter.get_pose(rgb_img,depth_img,seg_img,instrinsic_cv, actor_color)
+        grasp_poses_world = camera_to_world(grasp_poses_cam, cam2world_gl)
+        best_pose = choose_best_grasp(grasp_poses_world)
+        # print("zerograsp grasp pose: ",best_pose)
+        return best_pose
+ 
+    '''
+    
+    def create_grasp_pose(
+        self,
+        actor: Actor,
+        arm_tag: ArmTag,
+        grasp_pose = None,
+        pre_grasp_dis=0.1,
+        grasp_dis=0,
+        camera_name='front_camera'
+    ):
+        
+        actor_pose = actor.get_pose().p
+        if grasp_pose is None:
+            # actor_pose[1] -=0.01
+            grasp_pose = actor_pose.tolist() + [0.5312539375275843, -0.46665886518430555, 0.4666393704291426, 0.5312687223729883]
+        # elif grasp_pose[1][-1] > actor_pose[1]:
+        #     grasp_pose[1][-1] = actor_pose[1]
+        pre_grasp_pose = get_pre_grasp_pose(grasp_pose, pre_grasp_dis)
+        grasp_pose = get_pre_grasp_pose(grasp_pose, grasp_dis)
+        return pre_grasp_pose, grasp_pose
+
     def grasp_actor(
         self,
         actor: Actor,
@@ -1171,17 +1328,49 @@ class Base_Task(gym.Env):
         pre_grasp_dis=0.1,
         grasp_dis=0,
         gripper_pos=0.0,
+        use_contact_point=True,
         contact_point_id: list | float = None,
+        grasp_pose: list | np.ndarray = None,
+        camera_name='front_camera'
     ):
         if not self.plan_success:
             return None, []
-        pre_grasp_pose, grasp_pose = self.choose_grasp_pose(
-            actor,
-            arm_tag=arm_tag,
-            pre_dis=pre_grasp_dis,
-            target_dis=grasp_dis,
-            contact_point_id=contact_point_id,
-        )
+        if use_contact_point:
+            pre_grasp_pose, grasp_pose = self.choose_grasp_pose(
+                actor,
+                arm_tag=arm_tag,
+                pre_dis=pre_grasp_dis,
+                target_dis=grasp_dis,
+                contact_point_id=contact_point_id,
+            )
+
+            # print("actor pose: ", actor.get_pose())
+            # print("ee pose: ", self.robot.get_left_ee_pose())
+            # print("pre_grasp_pose: ",pre_grasp_pose)
+            # print("   grasp_pose: ",grasp_pose)
+        else:
+            pre_grasp_pose, grasp_pose = self.create_grasp_pose(
+                actor,
+                arm_tag,
+                grasp_pose = grasp_pose,
+                pre_grasp_dis=pre_grasp_dis,
+                grasp_dis=grasp_dis,
+                camera_name=camera_name
+            )
+        if grasp_pose is None or pre_grasp_pose is None:
+            pose = list(actor.get_pose().p)+[0,1,0,0]
+            pre_grasp_pose, grasp_pose = self.create_grasp_pose(
+                actor,
+                arm_tag,
+                grasp_pose = pose,
+                pre_grasp_dis=pre_grasp_dis,
+                grasp_dis=grasp_dis,
+                camera_name=camera_name
+            )            
+            # print("actor pose: ", actor.get_pose())
+            # print("ee pose: ", self.robot.get_left_ee_pose())
+            # print("pre_grasp_pose:", pre_grasp_pose)
+            # print("    grasp_pose:",grasp_pose)
         if pre_grasp_pose == grasp_pose:
             return arm_tag, [
                 Action(arm_tag, "move", target_pose=pre_grasp_pose),
@@ -1287,11 +1476,15 @@ class Base_Task(gym.Env):
         res_pose = (target_point - grasp_bias - pre_dis * target_dis_vec).tolist() + target_grasp_qpose.tolist()
         return res_pose
 
+
+
     def place_actor(
         self,
         actor: Actor,
-        arm_tag: ArmTag,
-        target_pose: list | np.ndarray,
+        container: Actor = None,
+        arm_tag: ArmTag = ArmTag('left'),
+        target_pose: list | np.ndarray = None,
+        use_functional_point: bool = True,
         functional_point_id: int = None,
         pre_dis: float = 0.1,
         dis: float = 0.02,
@@ -1300,23 +1493,28 @@ class Base_Task(gym.Env):
     ):
         if not self.plan_success:
             return None, []
-
-        place_pre_pose = self.get_place_pose(
-            actor,
-            arm_tag,
-            target_pose,
-            functional_point_id=functional_point_id,
-            pre_dis=pre_dis,
-            **args,
-        )
-        place_pose = self.get_place_pose(
-            actor,
-            arm_tag,
-            target_pose,
-            functional_point_id=functional_point_id,
-            pre_dis=dis,
-            **args,
-        )
+        if use_functional_point:
+            place_pre_pose = self.get_place_pose(
+                actor,
+                arm_tag,
+                target_pose,
+                functional_point_id=functional_point_id,
+                pre_dis=pre_dis,
+                **args,
+            )
+            place_pose = self.get_place_pose(
+                actor,
+                arm_tag,
+                target_pose,
+                functional_point_id=functional_point_id,
+                pre_dis=dis,
+                **args,
+            )
+        else:
+            place_pose = get_pre_grasp_pose(target_pose, dis)
+            place_pre_pose = get_pre_grasp_pose(target_pose, pre_dis)
+            # print("    place_pose:",place_pose)
+            # print("pre_place_pose:",place_pre_pose)
 
         actions = [
             Action(arm_tag, "move", target_pose=place_pre_pose),

@@ -21,7 +21,7 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=0.01):
+    def __init__(self, actor: Entity, actor_data: dict, mass=0.6):
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)
@@ -105,7 +105,7 @@ class ArticulationActor(Actor):
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: PhysxArticulation, actor_data: dict, mass=0.01):
+    def __init__(self, actor: PhysxArticulation, actor_data: dict, mass=0.6):
         assert isinstance(actor, PhysxArticulation), "ArticulationActor must be a Articulation"
 
         self.actor = actor

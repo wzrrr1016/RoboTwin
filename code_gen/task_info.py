@@ -1,5 +1,7 @@
 # All variable names for task information must be in uppercase.
 
+from new_task_info import *
+
 # Template of Task Information:
 """
 TASK_NAME = {
