@@ -13,7 +13,7 @@ class Pick_Place_Task(Base_Task):
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
     
-    def create_object(self, object_type, object_name, object_pose = None):
+    def add_actor(self, object_type, object_name, object_pose = None):
         modelname,model_type = get_modelname(object_type)
         model_id = get_model_id(object_type)
         rotate_lim, rotate_rand, qpos, is_static, convex, scale = get_args_from_modeltype(model_type,model_type,model_id)
@@ -22,7 +22,7 @@ class Pick_Place_Task(Base_Task):
             object_pose = rand_pose(
                 xlim=[-0.25, 0.25],
                 ylim=[-0.25, 0.1],
-                zlim=[0.75],
+                # zlim=[0.75],
                 rotate_rand=rotate_rand,
                 rotate_lim=rotate_lim,
                 qpos=qpos,
@@ -38,7 +38,7 @@ class Pick_Place_Task(Base_Task):
             model_id=model_id,
         )
 
-        self.add_prohibit_area(actor,padding=0.05)
+        self.add_prohibit_area(actor,padding=0.02)
         actor.set_name(object_name)
         return actor
 
@@ -187,7 +187,7 @@ class Pick_Place_Task(Base_Task):
                 arm_tag=arm_tag, 
                 pre_grasp_dis=0.15, 
                 grasp_dis=0.02,
-                use_contact_point=True,
+                # use_contact_point=False,
                 # grasp_pose = grasp_pose
                 ),  # arm_tag
         )
@@ -241,7 +241,8 @@ class Pick_Place_Task(Base_Task):
 
     def pick_and_place(self, target, container, arm_tag=ArmTag('left'), try_times=0):
 
-        success = self.check_actors_contact(target, container)
+        # success = self.check_actors_contact(target, container)
+        success = self.check_on(target, container)
         if success:
             return True
         
@@ -251,7 +252,7 @@ class Pick_Place_Task(Base_Task):
             return False
 
         ct = 0
-        action = "pick"
+        # action = "pick"
         success = False
         while not success:
             success = self.pick(target, arm_tag=arm_tag)
