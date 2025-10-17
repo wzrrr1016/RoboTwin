@@ -96,6 +96,30 @@ class Actor:
             if isinstance(component, sapien.physx.PhysxRigidDynamicComponent):
                 component.mass = mass
 
+    def get_area(self,padding=0.01):
+        actor_pose = self.get_pose()
+        actor_data = self.config
+        scale: float = actor_data.get("scale", 1)
+        origin_bounding_size = (np.array(actor_data.get("extents", [0.1, 0.1, 0.1])) * scale / 2)
+        origin_bounding_pts = (np.array([
+            [-1, -1, -1],
+            [-1, -1, 1],
+            [-1, 1, -1],
+            [-1, 1, 1],
+            [1, -1, -1],
+            [1, -1, 1],
+            [1, 1, -1],
+            [1, 1, 1],
+        ]) * origin_bounding_size)
+
+        actor_matrix = actor_pose.to_transformation_matrix()
+        trans_bounding_pts = actor_matrix[:3, :3] @ origin_bounding_pts.T + actor_matrix[:3, 3].reshape(3, 1)
+        x_min = np.min(trans_bounding_pts[0]) - padding
+        x_max = np.max(trans_bounding_pts[0]) + padding
+        y_min = np.min(trans_bounding_pts[1]) - padding
+        y_max = np.max(trans_bounding_pts[1]) + padding
+
+        return x_min, y_min, x_max, y_max
 
 class ArticulationActor(Actor):
     POINTS = {
