@@ -30,7 +30,7 @@ def rand_pose(
         while True:
             flag = True
             for area in prohibit_area:
-                x_min, x_max, y_min, y_max = area[0], area[1], area[2], area[3]
+                x_min, y_min, x_max, y_max = area[0], area[1], area[2], area[3]
                 if x_min <= x <= x_max and y_min <= y <= y_max:
                     flag = False
                     break
