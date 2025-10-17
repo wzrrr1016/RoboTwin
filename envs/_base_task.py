@@ -73,10 +73,10 @@ class Base_Task(gym.Env):
 
         self.need_topp = True  # TODO
 
-        # if grasp_getter is None:
-        #     self.grasp_getter = ZeroGrasp_Getter()
-        # else:
-        #     self.grasp_getter = grasp_getter
+        if grasp_getter is None:
+            self.grasp_getter = ZeroGrasp_Getter()
+        else:
+            self.grasp_getter = grasp_getter
 
         # Random
         random_setting = kwags.get("domain_randomization")
@@ -1053,14 +1053,21 @@ class Base_Task(gym.Env):
         #     if (contact.bodies[0].entity.name == actor.get_name() and contact.bodies[1].entity.name == container.get_name()) or (contact.bodies[1].entity.name == actor.get_name() and contact.bodies[0].entity.name == container.get_name()):
         #         return True
         
-        ep = [0.06, 0.06, 0.2]
+        # ep = [0.06, 0.06, 0.2]
+        # actor_pose = actor.get_pose().p
+        # container_pose = container.get_pose().p
+        # print("actor ",actor.get_name()," pose: ",actor_pose)
+        # print("container ",container.get_name()," pose: ",container_pose)
+        # if np.all(abs(actor_pose-container_pose)<ep):
+        #     return True
+
+        x_min, y_min, x_max, y_max = container.get_area()
         actor_pose = actor.get_pose().p
         container_pose = container.get_pose().p
-        print("actor ",actor.get_name()," pose: ",actor_pose)
-        print("container ",container.get_name()," pose: ",container_pose)
-        if np.all(abs(actor_pose-container_pose)<ep):
+
+        if x_min <= actor_pose[0] <= x_max and y_min <= actor_pose[1] <= y_max and actor_pose[2] > container_pose[2]:
             return True
-        
+
         return False
 
     def choose_best_pose(self, res_pose, center_pose, arm_tag: ArmTag = None):
