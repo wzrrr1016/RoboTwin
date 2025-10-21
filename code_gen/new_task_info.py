@@ -54,3 +54,26 @@ SYMMETRICAL_PAIRING = {
     "action: Place the bottle and can in one bowl. Place the hamburger and apple in the other bowl."
 }
 
+MEAL_COMPOSITION_CAPACITY = {
+    "task_name": "meal_composition_capacity",
+    "task_description":
+    "scene: On the table, there are a bottle, a can, a hamburg, an apple, a bread, and a toycar. A tray and a bowl are available. The bowl can only hold two items. /"
+    "task: Prepare a complete meal on the tray. A complete meal is defined as one drink, one main course, and one side item. The remaining items that are not part of the meal must be placed in the bowl. The bowl must be filled to its exact capacity. /"
+    "action: Place the bottle, hamburg, and apple on the tray. Place the can and bread in the bowl. The toycar is left on the table."
+}
+
+ODD_EVEN_SORT = {
+    "task_name": "odd_even_sort",
+    "task_description":
+    "scene: On the table, there are 3 bottles, 2 cans, and 1 toycar. A tray and a shoe-box are available. /"
+    "task: Place all items with an odd quantity into the shoe-box. Place all items with an even quantity onto the tray. /"
+    "action: Place the 3 bottles and 1 toycar in the shoe-box. Place the 2 cans on the tray."
+}
+
+EXCLUSION_TASK = {
+    "task_name": "exclusion_task",
+    "task_description":
+    "scene: On the table, there are a bottle, a can, a toycar, and an apple. A wooden-box is available. /"
+    "task: Place all non-food items into the wooden-box. /"
+    "action: Place the bottle, the can, and the toycar in the wooden-box."
+}

@@ -87,7 +87,7 @@ pick_and_place: Pick up an object and place it in the container.
 For example:
 ```python
     def play_once(self):
-        success = self.pick_place(self.apple, self.plate)
+        success = self.pick_and_place(self.apple, self.plate)
         print("pick place apple:", success)
         if not success:
             return self.info
@@ -141,6 +141,11 @@ class gpt_{task_name}(Pick_Place_Task):
             return True
         return False
 ```
+All the available object types are:
 
+object able to pick:
+bottle, french-fries, hamburg, cup_without_handle, can, bread, toycar, apple
 
+container:
+bowl, plate, fluted-block, shoe-box, tray, wooden-box
 '''
