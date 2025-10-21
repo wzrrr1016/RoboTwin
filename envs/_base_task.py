@@ -73,10 +73,10 @@ class Base_Task(gym.Env):
 
         self.need_topp = True  # TODO
 
-        if grasp_getter is None:
-            self.grasp_getter = ZeroGrasp_Getter()
-        else:
-            self.grasp_getter = grasp_getter
+        # if grasp_getter is None:
+        #     self.grasp_getter = ZeroGrasp_Getter()
+        # else:
+        #     self.grasp_getter = grasp_getter
 
         # Random
         random_setting = kwags.get("domain_randomization")
@@ -1046,7 +1046,7 @@ class Base_Task(gym.Env):
             
         return False
 
-    def check_on(self,actor,container):
+    def check_on(self,actor: Actor,container: Actor):
 
         # contacts = self.scene.get_contacts()
         # for contact in contacts:
@@ -1061,7 +1061,7 @@ class Base_Task(gym.Env):
         # if np.all(abs(actor_pose-container_pose)<ep):
         #     return True
 
-        x_min, y_min, x_max, y_max = container.get_area()
+        x_min, y_min, x_max, y_max = container.get_area(padding=-0.01)
         actor_pose = actor.get_pose().p
         container_pose = container.get_pose().p
 

@@ -21,10 +21,17 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=0.6):
+    def __init__(self, actor: Entity, actor_data: dict, mass=0.5):
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)
+        self.object_type = None
+
+    def set_object_type(self, object_type: str):
+        self.object_type = object_type
+
+    def get_object_type(self) -> str:
+        return self.object_type
 
     def get_point(
         self,
@@ -129,7 +136,7 @@ class ArticulationActor(Actor):
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: PhysxArticulation, actor_data: dict, mass=0.6):
+    def __init__(self, actor: PhysxArticulation, actor_data: dict, mass=0.5):
         assert isinstance(actor, PhysxArticulation), "ArticulationActor must be a Articulation"
 
         self.actor = actor

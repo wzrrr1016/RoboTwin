@@ -195,31 +195,18 @@ def run(TASK_ENV, args):
         # clear_cache_freq = args["clear_cache_freq"]
         while suc_num < args["episode_num"]:
             try:
-                args = origin_args.copy()
-                TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
-                TASK_ENV.play_once()
 
-                # if TASK_ENV.plan_success and TASK_ENV.check_success():
-                if True:
+                args = origin_args.copy()
+                args["save_data"] = True
+                args["render_freq"] = 0
+                print(f"Start Collecting Data of episode {suc_num} (seed = {epid})")
+                TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
+                info = TASK_ENV.play_once()
+
+                if TASK_ENV.plan_success and TASK_ENV.check_success():
+                # if True:
                     print(f"simulate data episode {suc_num} success! (seed = {epid})")
                     seed_list.append(epid)
-                    TASK_ENV.save_traj_data(suc_num)
-
-                    TASK_ENV.close_env()
-
-                    if args["render_freq"]:
-                        TASK_ENV.viewer.close()
-
-                    args["need_plan"] = False
-                    args["render_freq"] = 0
-                    args["save_data"] = True
-                    print(f"Start Collecting Data of episode {suc_num} (seed = {epid})")
-                    TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
-
-                    traj_data = TASK_ENV.load_tran_data(suc_num)
-                    args["left_joint_path"] = traj_data["left_joint_path"]
-                    args["right_joint_path"] = traj_data["right_joint_path"]
-                    TASK_ENV.set_path_lst(args)
 
                     info_file_path = os.path.join(args["save_path"], "scene_info.json")
 
@@ -230,7 +217,6 @@ def run(TASK_ENV, args):
                     with open(info_file_path, "r", encoding="utf-8") as file:
                         info_db = json.load(file)
 
-                    info = TASK_ENV.play_once()
                     info_db[f"episode_{suc_num}"] = info
 
                     with open(info_file_path, "w", encoding="utf-8") as file:

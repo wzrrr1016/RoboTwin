@@ -14,15 +14,15 @@ class Pick_Place_Task(Base_Task):
         super()._init_task_env_(**kwags)
     
     def add_actor(self, object_type, object_name, object_pose = None):
-        modelname,model_type = get_modelname(object_type)
+        modelname, model_type, scale = get_modelname(object_type)
         model_id = get_model_id(object_type)
-        rotate_lim, rotate_rand, qpos, is_static, convex, scale = get_args_from_modeltype(model_type,model_type,model_id)
+        rotate_lim, rotate_rand, qpos, is_static, convex = get_args_from_modeltype(model_type, model_id)
         # print("create object:",object_name, " type:",object_type," model:",modelname," id:",model_id)
         if object_pose is None:
             object_pose = rand_pose(
                 xlim=[-0.25, 0.25],
                 ylim=[-0.25, 0.1],
-                # zlim=[0.75],
+                zlim=[0.743],
                 rotate_rand=rotate_rand,
                 rotate_lim=rotate_lim,
                 qpos=qpos,
@@ -40,6 +40,7 @@ class Pick_Place_Task(Base_Task):
 
         self.add_prohibit_area(actor,padding=0.02)
         actor.set_name(object_name)
+        actor.set_object_type(object_type)
         return actor
 
     
@@ -167,7 +168,8 @@ class Pick_Place_Task(Base_Task):
             container_pose = np.array([pose[0]-0.01,pose[1]+0.02,pose[2]])
 
         point = world_to_pixel(container_pose,cam2world_gl,instrinsic_cv)[0]
-        # print("container_pose:",container_pose)    
+        # print("container_pose:",container_pose)
+        
         return container_pose.tolist()+[0.5312539375275843, -0.46665886518430555, 0.4666393704291426, 0.5312687223729883],point
  
 
@@ -176,8 +178,16 @@ class Pick_Place_Task(Base_Task):
         # print("pick ",target.get_name())
         self.move(self.open_gripper(arm_tag=arm_tag))
         self.plan_success = True
+        if get_grasp_type(target.get_object_type()) == "predict":
+            grasp_pose, grasp_point = self.get_grasp_pose_from_zerograsp(target)
+            use_contact_point = False
+        else:
+            use_contact_point = True
+            grasp_pose = None
         # grasp_pose, grasp_point = self.get_grasp_pose_from_zerograsp(target)
-
+        # grasp_point = target.get_pose().p
+        # quat = GRASP_DIRECTION_DIC['down_right']
+        # grasp_pose = [grasp_point[0],grasp_point[1],grasp_point[2],quat[0],quat[1],quat[2],quat[3]]
         frame_idx = self.FRAME_IDX
         action_str = "pick"
         self.add_subplan(action_str, frame_idx, [target.get_name()])
@@ -185,10 +195,10 @@ class Pick_Place_Task(Base_Task):
             self.grasp_actor(
                 target, 
                 arm_tag=arm_tag, 
-                pre_grasp_dis=0.15, 
-                grasp_dis=0.02,
-                # use_contact_point=False,
-                # grasp_pose = grasp_pose
+                pre_grasp_dis=0.1, 
+                grasp_dis=0.0,
+                use_contact_point=use_contact_point,
+                grasp_pose = grasp_pose
                 ),  # arm_tag
         )
         # print('grasp done \n plan_success:',self.plan_success)
@@ -197,7 +207,7 @@ class Pick_Place_Task(Base_Task):
             return False
 
         # print("pick move up")
-        self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.15,move_axis="world"))
+        self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.2,move_axis="world"))
         # self.get_scene_contact()
         is_grasp = self.check_grasp(target)
 
@@ -245,6 +255,8 @@ class Pick_Place_Task(Base_Task):
         success = self.check_on(target, container)
         if success:
             return True
+        
+        self.move(self.move_by_displacement(arm_tag=ArmTag("left"), z=0.1, move_axis="world"))
         
         target_pose = target.get_pose().p
         if target_pose[2] < 0.7:

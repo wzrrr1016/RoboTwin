@@ -1,452 +1,574 @@
 asset_models = {
     "bottle": {
         "model": "001_bottle",
-        "num": 23
-    },
+        "idx": [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],
+        "type": "bottle",
+        "scale":(0.8,0.8,0.8)
+        },
     "bowl": {
         "model": "002_bowl",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "container"
+        },
     "plate": {
         "model": "003_plate",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container"
+        },
     "fluted-block": {
         "model": "004_fluted-block",
-        "num": 2
-    },
+        "idx": [0,1],
+        "type": "container",
+        "scale":(1.2,1.2,1.2)
+        },
     "french-fries": {
         "model": "005_french-fries",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"
+        },
     "hamburg": {
         "model": "006_hamburg",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"
+        },
     "shoe-box": {
         "model": "007_shoe-box",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container"
+        },
     "tray": {
         "model": "008_tray",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "container"
+        },
     "dustbin": {
         "model": "011_dustbin",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container"
+        },
+    "pot-with-plant": {
+        "model": "012_plant-pot",
+        "idx": [0,2,3],
+        "type": "object_flat",
+        "scale": (0.5,0.7,0.5)
+        },
     "plant-pot": {
         "model": "012_plant-pot",
-        "num": 5
-    },
+        "idx": [1,4],
+        "type": "container"
+        },
     "dumbbell-rack": {
         "model": "013_dumbbell-rack",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "container",
+        "scale":(0.2,0.2,0.2)
+        },
     "bookcase": {
         "model": "014_bookcase",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "container",
+        "scale":(0.15,0.15,0.15)
+        },
     "calculator": {
         "model": "017_calculator",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat",
+        "scale": (0.06,0.06,0.06)
+        },
     "microphone": {
         "model": "018_microphone",
-        "num": 4
-    },
+        "idx": [0,1,4,5],
+        "type": "object_down",
+        "scale": (1.2,1.2,1.2)
+        },
     "coaster": {
         "model": "019_coaster",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container",
+        "scale": (1.1,1.1,1.1)
+        },
     "hammer": {
         "model": "020_hammer",
-        "num": 1
-    },
-    "cup": {
+        "idx": [0],
+        "type": "tool"
+        },
+    "cup_with_handle": {
         "model": "021_cup",
-        "num": 13
-    },
+        "idx": [6,7,8,9,10,11,12],
+        "type": "bottle",
+        "scale": (0.9,0.9,0.9)
+        },
+    "cup_without_handle": {
+        "model": "021_cup",
+        "idx": [0,1,2,3,4,5],
+        "type": "bottle",
+        "scale": (0.9,0.9,0.9)
+        },
     "cup-with-liquid": {
         "model": "022_cup-with-liquid",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "bottle",
+        "scale": (0.7,0.7,0.7)
+        },
     "tissue-box": {
         "model": "023_tissue-box",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "scanner": {
         "model": "024_scanner",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "tool"
+        },
     "chips-tub": {
         "model": "025_chips-tub",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "bottle"
+        },
     "pet-collar": {
         "model": "026_pet-collar",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object"
+        },
     "table-tennis": {
         "model": "027_table-tennis",
-        "num": 2
-    },
+        "idx": [0,1],
+        "type": "object"
+        },
     "roll-paper": {
         "model": "028_roll-paper",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object"
+        },
     "olive-oil": {
         "model": "029_olive-oil",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "bottle"
+        },
     "drill": {
         "model": "030_drill",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "tool"
+        },
     "jam-jar": {
         "model": "031_jam-jar",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "bottle"
+        },
     "screwdriver": {
         "model": "032_screwdriver",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object_flat"
+        },
     "fork": {
         "model": "033_fork",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object_flat"
+        },
     "knife": {
         "model": "034_knife",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object_flat"
+        },
     "apple": {
         "model": "035_apple",
-        "num": 2
-    },
+        "idx": [0,1],
+        "type": "object_flat"
+        },
     "milk-box": {
         "model": "038_milk-box",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "bottle"
+        },
     "mug": {
         "model": "039_mug",
-        "num": 13
-    },
+        "idx": [0,1,2,3,4,5,6,7,8,9,10,11,12],
+        "type": "bottle"
+        },
     "rack": {
         "model": "040_rack",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container"
+        },
     "shoe": {
         "model": "041_shoe",
-        "num": 10
-    },
-    "wooden": {
+        "idx": [0,1,2,3,4,5,6,7,8,9],
+        "type": "object_flat"},
+    "wooden_box": {
         "model": "042_wooden_box",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "container",
+        "scale":(0.1,0.1,0.1)
+        },
     "book": {
         "model": "043_book",
-        "num": 2
-    },
+        "idx": [0,1],
+        "type": "object_flat"
+        },
     "sand-clock": {
         "model": "045_sand-clock",
-        "num": 3
-    },
+        "idx": [0,1,3],
+        "type": "object_flat"
+        },
     "alarm-clock": {
         "model": "046_alarm-clock",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"
+        },
     "mouse": {
         "model": "047_mouse",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "object_flat"
+        },
     "stapler": {
         "model": "048_stapler",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "shampoo": {
         "model": "049_shampoo",
-        "num": 7
-    },
+        "idx": [1,2,3,4,5,6,7],
+        "type": "bottle"
+        },
     "bell": {
         "model": "050_bell",
-        "num": 2
-    },
+        "idx": [0,1],
+        "type": "object_flat"
+        },
     "candlestick": {
         "model": "051_candlestick",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "object_flat"
+        },
     "dumbbell": {
         "model": "052_dumbbell",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "teanet": {
         "model": "053_teanet",
-        "num": 5
-    },
+        "idx": [1,4,5,6,7],
+        "type": "object_flat"
+        },
     "baguette": {
         "model": "054_baguette",
-        "num": 2
-    },
+        "idx": [2,3],
+        "type": "object_flat"
+        },
     "small-speaker": {
         "model": "055_small-speaker",
-        "num": 3
-    },
+        "idx": [1,2,3],
+        "type": "object_flat"
+        },
     "toycar": {
         "model": "057_toycar",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"
+        },
     "markpen": {
         "model": "058_markpen",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object"
+        },
     "pencup": {
         "model": "059_pencup",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "bottle"
+        },
     "battery": {
         "model": "061_battery",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object"
+        },
     "plasticbox": {
         "model": "062_plasticbox",
-        "num": 11
-    },
+        "idx": [0,1,2,3,4,5,6,7,8,9,10],
+        "type": "container"
+        },
     "tabletrashbin": {
         "model": "063_tabletrashbin",
-        "num": 11
-    },
+        "idx": [0,1,2,3,4,5,6,7,8,9,10],
+        "type": "container"
+        },
     "msg": {
         "model": "064_msg",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "bottle"
+        },
     "soy-sauce": {
         "model": "065_soy-sauce",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "bottle"
+        },
     "vinegar": {
         "model": "066_vinegar",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "bottle"
+        },
     "steamer": {
         "model": "067_steamer",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "container"
+        },
     "boxdrink": {
         "model": "068_boxdrink",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "bottle"
+        },
     "vagetable": {
         "model": "069_vagetable",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object"
+        },
     "paymentsign": {
         "model": "070_paymentsign",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"
+        },
     "can": {
         "model": "071_can",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "bottle"
+        },
     "electronicscale": {
         "model": "072_electronicscale",
-        "num": 5
-    },
+        "idx": [0,1,2,5,6],
+        "type": "object_flat"
+        },
     "rubikscube": {
         "model": "073_rubikscube",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "object"},
     "displaystand": {
         "model": "074_displaystand",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "container"
+        },
     "bread": {
         "model": "075_bread",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "breadbasket": {
         "model": "076_breadbasket",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "container"
+        },
     "phone": {
         "model": "077_phone",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "object_flat"},
     "phonestand": {
         "model": "078_phonestand",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "remotecontrol": {
         "model": "079_remotecontrol",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "pillbottle": {
         "model": "080_pillbottle",
-        "num": 5
-    },
+        "idx": [1,2,3,4,5],
+        "type": "bottle"
+        },
     "playingcards": {
         "model": "081_playingcards",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "object_flat"},
     "smallshovel": {
         "model": "082_smallshovel",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"
+        },
     "brush": {
         "model": "083_brush",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "tool"},
     "woodenmallet": {
         "model": "084_woodenmallet",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "tool"},
     "gong": {
         "model": "085_gong",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"},
     "woodenblock": {
         "model": "086_woodenblock",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "object"},
     "waterer": {
         "model": "087_waterer",
-        "num": 8
-    },
+        "idx": [0,1,2,3,4,5,6,7],
+        "type": "bottle"},
     "wineglass": {
         "model": "088_wineglass",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "bottle"},
     "globe": {
         "model": "089_globe",
-        "num": 2
-    },
+        "idx": [2,3],
+        "type": "object_flat"},
     "trophy": {
         "model": "090_trophy",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "object_flat"},
     "kettle": {
         "model": "091_kettle",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "bottle"},
     "notebook": {
         "model": "092_notebook",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "object_flat"
+        },
     "brush-pen": {
         "model": "093_brush-pen",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object"},
     "rest": {
         "model": "094_rest",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"},
     "glue": {
         "model": "095_glue",
-        "num": 6
-    },
+        "idx": [0,1,2,4,5,6],
+        "type": "bottle"},
     "cleaner": {
         "model": "096_cleaner",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"},
     "screen": {
         "model": "097_screen",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"},
     "speaker": {
         "model": "098_speaker",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"},
     "fan": {
         "model": "099_fan",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "seal": {
         "model": "100_seal",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,6],
+        "type": "object_flat"
+        },
     "milk-tea": {
         "model": "101_milk-tea",
-        "num": 6
-    },
+        "idx": [0,1,2,4,5,6],
+        "type": "bottle"
+        },
     "roller": {
         "model": "102_roller",
-        "num": 3
-    },
+        "idx": [0,1,2],
+        "type": "tool"
+        },
     "fruit": {
         "model": "103_fruit",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object"
+        },
     "board": {
         "model": "104_board",
-        "num": 5
-    },
+        "idx": [0,1,2,3,4],
+        "type": "container"
+        },
     "sauce-can": {
         "model": "105_sauce-can",
-        "num": 5
-    },
+        "idx": [0,2,4,5,6],
+        "type": "bottle"
+        },
     "skillet": {
         "model": "106_skillet",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "container"
+        },
     "soap": {
         "model": "107_soap",
-        "num": 4
-    },
-    "block": {
+        "idx": [0,1,2,3],
+        "type": "object"
+        },
+    "toy-block": {
         "model": "108_block",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object"
+        },
     "hydrating-oil": {
         "model": "109_hydrating-oil",
-        "num": 4
-    },
+        "idx": [0,1,2,5],
+        "type": "bottle"
+        },
     "basket": {
         "model": "110_basket",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "container"
+        },
     "callbell": {
         "model": "111_callbell",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"
+        },
     "tea-box": {
         "model": "112_tea-box",
-        "num": 6
-    },
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat"
+        },
     "coffee-box": {
         "model": "113_coffee-box",
-        "num": 7
-    },
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat"
+        },
     "perfume": {
         "model": "115_perfume",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "bottle"
+        },
     "keyboard": {
         "model": "116_keyboard",
-        "num": 4
-    },
+        "idx": [0,1,2,3],
+        "type": "object_flat"
+        },
     "whiteboard-eraser": {
         "model": "117_whiteboard-eraser",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object_flat"
+        },
     "tooth-paste": {
         "model": "118_tooth-paste",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object"},
     "mini-chalkboard": {
         "model": "119_mini-chalkboard",
-        "num": 1
-    },
+        "idx": [0],
+        "type": "object_flat"
+        },
     "plant": {
         "model": "120_plant",
-        "num": 1
-    }
+        "idx": [0],
+        "type": "object_flat"
+        }
 }
 
-objects_able_to_pick_list = ["fresh-fries","hamburg","calculator","apple","microphone","soap"]
+# objects_able_to_pick_list = ["fresh-fries","hamburg","calculator","apple","microphone","soap",'fruit']
 
-containers_list = ['bowl','plate','plasticbox','dustbin','tabletrashbin','breadbasket','basket']
+# containers_list = ['bowl','plate','plasticbox','dustbin','tabletrashbin','breadbasket','basket']
 
-bottle_list = ['bottle', 'can', 'milk-box', 'olive-oil', 'jam-jar', 'sauce-can', 'milk-tea', 'coffee-box', 'tea-box', 'hydrating-oil']
+# bottle_list = ['bottle', 'can', 'milk-box', 'olive-oil', 'jam-jar', 'sauce-can', 'milk-tea', 'coffee-box', 'tea-box', 'hydrating-oil']
 
-special_object_args ={
-    "bottle":{"scale":(0.8,0.8,0.8)},
-}
+# special_object_args ={
+#     "bottle":{"scale":(0.8,0.8,0.8)},
+#     "fluted-block":{"scale":(1.2,1.2,1.2)},
+# }
+
+# point_grasp_list = ['bottle','french-fries','hamburg']
+predict_grasp_list = ['calculator','fruit']
+
+
+'''
+object able to pick:
+bottle, 
+'''
