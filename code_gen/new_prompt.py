@@ -148,4 +148,6 @@ bottle, french-fries, hamburg, cup_without_handle, can, bread, toycar, apple
 
 container:
 bowl, plate, fluted-block, shoe-box, tray, wooden-box
+
+You can use the 'self.table' to get the table actor in the environment.
 '''

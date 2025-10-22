@@ -216,10 +216,20 @@ class Pick_Place_Task(Base_Task):
     
 
     
-    def place(self, target, container, arm_tag=ArmTag('left')):
+    def place(self, target: Actor, container: Actor, condition = "on", arm_tag=ArmTag('left')):
         # print("place ",target.get_name()," into ",container.get_name())
         self.plan_success = True
-        place_pose, place_point = self.get_place_pose_from_container(container)
+        if container == self.table:
+            pos = target.get_pose().p
+            place_pose = [pos[0], pos[1], 0.745]+[0.5312539375275843, -0.46665886518430555, 0.4666393704291426, 0.5312687223729883]
+            # place_point = None
+        else:
+            if condition == "on":
+                place_pose, place_point = self.get_place_pose_from_container(container)
+
+            # elif condition == "left":
+            #     container_area = container.get_area()
+            # TODO: add more place condition
         frame_idx = self.FRAME_IDX
         action_str = "place"
         self.add_subplan(action_str, frame_idx, [target.get_name(),container.get_name()])
@@ -248,6 +258,7 @@ class Pick_Place_Task(Base_Task):
         success = self.check_actors_contact(target, container)
         # print("place success:",success)
         return success
+    
 
     def pick_and_place(self, target, container, arm_tag=ArmTag('left'), try_times=0):
 

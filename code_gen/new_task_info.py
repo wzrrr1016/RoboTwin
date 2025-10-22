@@ -77,3 +77,12 @@ EXCLUSION_TASK = {
     "task: Place all non-food items into the wooden-box. /"
     "action: Place the bottle, the can, and the toycar in the wooden-box."
 }
+
+
+EXCLUSION_TASK_E = {
+    "task_name": "exclusion_task_e",
+    "task_description":
+    "scene: On the table, there are two cup_without_handle, a bread, a toycar, and an apple. A wooden-box is available. /"
+    "task: Place all non-food items into the wooden-box. /"
+    "action: First accidentally grasp an apple, and put it back to the table. Place the two cup_without_handle, the can, and the toycar in the wooden-box."
+}
