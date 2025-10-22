@@ -147,7 +147,7 @@ object able to pick:
 bottle, french-fries, hamburg, cup_without_handle, can, bread, toycar, apple
 
 container:
-bowl, plate, fluted-block, shoe-box, tray, wooden-box
+bowl, plate, fluted-block, shoe-box, tray, wooden_box
 
 You can use the 'self.table' to get the table actor in the environment.
 '''
