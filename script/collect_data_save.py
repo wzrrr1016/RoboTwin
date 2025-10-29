@@ -10,6 +10,7 @@ from envs import *
 from envs.zerograsp.zerograsp import ZeroGrasp_Getter
 import yaml
 import importlib
+import pkgutil
 import json
 import traceback
 import os
@@ -24,13 +25,26 @@ parent_directory = os.path.dirname(current_file_path)
 
 
 def class_decorator(task_name):
-    envs_module = importlib.import_module(f"envs.{task_name}")
+    # Try direct import first: envs.<task_name>
     try:
+        envs_module = importlib.import_module(f"envs.{task_name}")
         env_class = getattr(envs_module, task_name)
-        env_instance = env_class()
-    except:
-        raise SystemExit("No such task")
-    return env_instance
+        return env_class()
+    except Exception:
+        pass
+
+    # Fallback: recursively search all submodules under envs for a class named task_name
+    import envs as envs_pkg
+    prefix = envs_pkg.__name__ + "."
+    for finder, name, ispkg in pkgutil.walk_packages(envs_pkg.__path__, prefix):
+        try:
+            mod = importlib.import_module(name)
+            if hasattr(mod, task_name):
+                env_class = getattr(mod, task_name)
+                return env_class()
+        except Exception:
+            continue
+    raise SystemExit("No such task")
 
 
 def get_embodiment_config(robot_file):
