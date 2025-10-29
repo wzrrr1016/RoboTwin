@@ -27,7 +27,8 @@ def rand_pose(
     y = np.random.uniform(ylim[0], ylim[1])
 
     if prohibit_area is not None:
-        while True:
+        max_iter = 100
+        while max_iter > 0:
             flag = True
             for area in prohibit_area:
                 x_min, y_min, x_max, y_max = area[0], area[1], area[2], area[3]
@@ -39,6 +40,10 @@ def rand_pose(
 
             x = np.random.uniform(xlim[0], xlim[1])
             y = np.random.uniform(ylim[0], ylim[1])
+            max_iter -= 1
+
+        if max_iter == 0:
+            Exception("Cannot find a position outside the prohibited area")
 
     while ylim_prop and abs(x) < 0.15 and y > 0:
         y = np.random.uniform(ylim[0], 0)

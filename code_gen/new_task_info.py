@@ -86,3 +86,121 @@ EXCLUSION_TASK_E = {
     "task: Place all non-food items into the wooden_box. /"
     "action: First accidentally grasp an apple, and put it back to the table. Place the two cup_without_handle, the can, and the toycar in the wooden_box."
 }
+
+# Variants with explicit reasoning steps
+EXCLUSION_TASK_E1 = {
+    "task_name": "exclusion_task_e1",
+    "task_description":
+    "scene: On the table, there are two bottles, a can, a toycar, and an apple. A wooden_box is available. /"
+    "task: Place all non-food items into the wooden_box. /"
+    "action: Intentionally pick up the apple and place it back on the table. Then place both bottles, the can, and the toycar into the wooden_box."
+}
+
+EXCLUSION_TASK_E2 = {
+    "task_name": "exclusion_task_e2",
+    "task_description":
+    "scene: On the table, there are two cup_without_handle, a toycar, an apple, and a bread. A wooden_box is available. /"
+    "task: Place all non-food items into the wooden_box. /"
+    "action: First move the bread and return it to the table as a reasoning step. Then place both cups and the toycar into the wooden_box."
+}
+
+EXCLUSION_TASK_E3 = {
+    "task_name": "exclusion_task_e3",
+    "task_description":
+    "scene: On the table, there are a bottle, a can, a toycar, an apple, and a bread. A wooden_box is available. /"
+    "task: Place all non-food items into the wooden_box. /"
+    "action: Intentionally pick up the apple and put it back on the table. Then place the bottle, the can, and the toycar into the wooden_box."
+}
+
+# New reasoning tasks with mistake-and-recovery
+SORT_FOOD_NONFOOD_RECOVER = {
+    "task_name": "sort_food_nonfood_recover",
+    "task_description":
+    "scene: On the table are a tray, a shoe-box, and a dustbin. Objects include an apple, a hamburg, a bottle, and a can. /"
+    "task: Sort food items onto the tray and non-food items into the shoe-box. Include mistakes and recoveries. /"
+    "action: Put the apple in the dustbin by mistake, then move it to the tray. Place the hamburg on the tray. Place the bottle in the shoe-box. Put the can on the tray by mistake, then move it to the shoe-box."
+}
+
+MEAL_ASSEMBLY_RECOVER = {
+    "task_name": "meal_assembly_recover",
+    "task_description":
+    "scene: A tray and a shoe-box are available. Objects include french-fries, a hamburg, a fruit, and a calculator. /"
+    "task: Assemble a meal (fries, hamburg, fruit) on the tray. Non-food items go to the shoe-box. Include mistakes and recoveries. /"
+    "action: Put the calculator on the tray by mistake, then move it to the shoe-box. Put the fruit in the shoe-box by mistake, then move it to the tray. Finally place french-fries and hamburg on the tray."
+}
+
+TOOL_AND_DRINK_SEPARATION_RECOVER = {
+    "task_name": "tool_and_drink_separation_recover",
+    "task_description":
+    "scene: A bowl and a plate are available. Objects include a hammer, a microphone, a bottle, and a cup_with_handle. /"
+    "task: Place drinks (bottle, cup) into the bowl and tools (hammer, microphone) on the plate. Include mistakes and recoveries. /"
+    "action: Put the bottle on the plate by mistake, then move it to the bowl. Place the cup in the bowl. Put the hammer in the bowl by mistake, then move it to the plate. Place the microphone on the plate."
+}
+
+CUP_SORTING_SPILL_RECOVER = {
+    "task_name": "cup_sorting_spill_recover",
+    "task_description":
+    "scene: A fluted-block and a wooden_box are available. Objects include cup_with_handle, cup_without_handle, and cup-with-liquid. /"
+    "task: Place dry cups into the wooden_box and the cup-with-liquid onto the fluted-block. Include mistakes and recoveries. /"
+    "action: Move the cup-with-liquid to the wooden_box by mistake, then move it to the fluted-block. Place the cup_with_handle and cup_without_handle into the wooden_box."
+}
+
+RECYCLE_SORT_RECOVER = {
+    "task_name": "recycle_sort_recover",
+    "task_description":
+    "scene: A dustbin and a wooden_box are available. Objects include a can, a bottle, and a pot-with-plant. /"
+    "task: Place recyclables (can, bottle) into the dustbin and non-recyclables (pot-with-plant) into the wooden_box. Include mistakes and recoveries. /"
+    "action: Put the pot-with-plant into the dustbin by mistake, then move it to the wooden_box. Place the can and bottle into the dustbin."
+}
+
+MIXED_CONTAINER_LOGIC_RECOVER = {
+    "task_name": "mixed_container_logic_recover",
+    "task_description":
+    "scene: A bowl, a plate, and a tray are available. Objects include an apple, a hamburg, and a hammer. /"
+    "task: Place the apple into the bowl, the hamburg onto the tray, and the hammer onto the plate. Include mistakes and recoveries. /"
+    "action: Put the hammer onto the tray by mistake, then move it to the plate. Place the apple into the bowl and the hamburg onto the tray."
+}
+
+# Counting reasoning - no correction
+COUNT_BLUE_RED_TO_PLATE = {
+    "task_name": "count_blue_red_to_plate",
+    "task_description":
+    "scene: There is a plate on the table and several colored blocks. /"
+    "task: Place exactly two red blocks and two blue blocks onto the plate. /"
+    "action: Identify red and blue blocks and place any two red and two blue on the plate."
+}
+
+# Counting reasoning - with correction
+SPLIT_EVEN_ODD_BETWEEN_TRAY_BOWL = {
+    "task_name": "split_even_odd_between_tray_bowl",
+    "task_description":
+    "scene: A tray and a bowl are available with several numbered blocks. /"
+    "task: Place even-numbered blocks into the bowl and odd-numbered blocks onto the tray. Include a mistake and recovery. /"
+    "action: Put an odd block into the bowl by mistake, then move it to the tray. Finally, place all even blocks into the bowl and all odd blocks onto the tray."
+}
+
+ENSURE_MAJORITY_IN_WOODEN_BOX = {
+    "task_name": "ensure_majority_in_wooden_box",
+    "task_description":
+    "scene: A wooden_box and a plate are available with five blocks. /"
+    "task: Ensure the majority of blocks are in the wooden_box, with a mistake and recovery. /"
+    "action: Place two blocks on the plate by mistake, then move one back to the wooden_box. Place the remaining blocks into the wooden_box to ensure at least three blocks are inside."
+}
+
+# Common-sense - no correction
+TOOL_DRINK_PLACEMENT = {
+    "task_name": "tool_drink_placement",
+    "task_description":
+    "scene: A bowl and a plate are available with a hammer, a microphone, a bottle, and a cup. /"
+    "task: Place tools on the plate and drinks in the bowl (no corrections). /"
+    "action: Place the hammer and microphone on the plate; place the bottle and cup in the bowl."
+}
+
+# Spatial reasoning - no correction (simplified left/right)
+PLACE_FOOD_LEFT_TOOLS_RIGHT = {
+    "task_name": "place_food_left_tools_right",
+    "task_description":
+    "scene: A tray is available with two food items (apple, hamburg) and two tools (hammer, microphone). /"
+    "task: Place food on the left side of the tray and tools on the right (no corrections). /"
+    "action: Place all four items on the tray with the intent of left/right separation for food/tools."
+}

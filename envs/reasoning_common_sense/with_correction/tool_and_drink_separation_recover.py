@@ -13,6 +13,7 @@ class tool_and_drink_separation_recover(Imagine_Task):
         # Objects: tools and drinks
         self.hammer = self.add_actor("hammer", "hammer")
         self.microphone = self.add_actor("microphone", "microphone")
+        self.apple = self.add_actor("apple", "apple")
         self.bottle = self.add_actor("bottle", "bottle")
         self.cup = self.add_actor("cup_without_handle", "cup_without_handle")
 
@@ -37,20 +38,20 @@ class tool_and_drink_separation_recover(Imagine_Task):
             return self.info
 
         # Mistake: place hammer into wooden_box, then recover to plate
-        success = self.pick_and_place(self.hammer, self.wooden_box)
-        print("mistake hammer->wooden_box:", success)
-        if not success:
-            return self.info
+        # success = self.pick_and_place(self.hammer, self.wooden_box)
+        # print("mistake hammer->wooden_box:", success)
+        # if not success:
+        #     return self.info
         success = self.pick_and_place(self.hammer, self.plate)
         print("recover hammer->plate:", success)
         if not success:
             return self.info
 
         # Correct: place microphone on plate
-        success = self.pick_and_place(self.microphone, self.plate)
-        print("place microphone->plate:", success)
-        if not success:
-            return self.info
+        # success = self.pick_and_place(self.microphone, self.plate)
+        # print("place microphone->plate:", success)
+        # if not success:
+        #     return self.info
 
     def check_success(self):
         # Drinks in wooden_box; tools on plate

@@ -19,20 +19,13 @@ class Imagine_Task(Base_Task):
         modelname, model_type, scale = get_modelname(object_type)
         if model_id is None:
             model_id = get_model_id(object_type)
-        rotate_lim, rotate_rand, qpos, is_static, convex, zlim = get_args_from_modeltype(model_type, model_id)
+        rand_object_pose, is_static, convex = get_args_from_modeltype(model_type, self.prohibited_area)
         if static is not None:
             is_static = static
         # print("create object:",object_name, " type:",object_type," model:",modelname," id:",model_id)
         if object_pose is None:
-            object_pose = rand_pose(
-                xlim=[-0.30, 0.30],
-                ylim=[-0.20, 0.10],
-                zlim=zlim,
-                rotate_rand=rotate_rand,
-                rotate_lim=rotate_lim,
-                qpos=qpos,
-                prohibit_area=self.prohibited_area,
-            )
+            object_pose = rand_object_pose
+            
         actor = create_actor(
             scene=self,
             pose=object_pose,
@@ -167,11 +160,11 @@ class Imagine_Task(Base_Task):
                 container_point = get_blank_point(new_mask)
                 depth_img = self.cameras.get_depth()['front_camera']['depth']
                 container_pose = pixel_to_world(container_point,cam2world_gl,instrinsic_cv,depth_img)[0]
+                container_pose = (container_pose+np.array(pose))/2
             except Exception as e:
-                container_pose = np.array([pose[0]-0.005,pose[1]+0.005,pose[2]])
+                container_pose = np.array([pose[0]-0.01,pose[1]+0.01,pose[2]])
         if np.all(abs(pose[:3] - container_pose[:3]) > np.array([0.1,0.1,0.15])):
-
-            container_pose = np.array([pose[0]-0.005,pose[1]+0.005,pose[2]])
+            container_pose = np.array([pose[0]-0.01,pose[1]+0.01,pose[2]])
 
         point = world_to_pixel(container_pose,cam2world_gl,instrinsic_cv)[0]
         # print("container_pose:",container_pose)
@@ -283,15 +276,15 @@ class Imagine_Task(Base_Task):
         if not self.plan_success:
             return False
 
-        target_pose_p = target.get_pose().p
-        target_pose_q = target.get_pose().q
-        target_object_type = target.get_object_type()
-        target_name = target.get_name()
-        model_id = target.get_model_id()
-        self.scene.remove_actor(target.actor)
-        new_pose = sapien.Pose(target_pose_p,target_pose_q)
-        new_target = self.add_actor(target_object_type,target_name, new_pose, True, model_id)
-        target.copy_to(new_target)
+        # target_pose_p = target.get_pose().p
+        # target_pose_q = target.get_pose().q
+        # target_object_type = target.get_object_type()
+        # target_name = target.get_name()
+        # model_id = target.get_model_id()
+        # self.scene.remove_actor(target.actor)
+        # new_pose = sapien.Pose(target_pose_p,target_pose_q)
+        # new_target = self.add_actor(target_object_type,target_name, new_pose, True, model_id)
+        # target.copy_to(new_target)
 
         success = self.check_on(target, container)
         # print("place success:",success)

@@ -1,7 +1,7 @@
 import random
 from .color import COLORS
 from .asset_list import *
-
+from .rand_create_actor import *
 
 def get_modelname(actor_name):
     if actor_name in asset_models.keys():
@@ -30,8 +30,11 @@ def get_grasp_type(actor_name):
     else:
         return "point"
     
-def get_args_from_modeltype(model_type, model_id):
+def get_args_from_modeltype(model_type, prohibited_area=None):
+    object_pose = None
     zlim = [0.743]
+    xlim = [-0.28, 0.28]
+    ylim = [-0.20, 0.10]
     if model_type == "object":
         rotate_lim = [1, 1, 1]
         rotate_rand = True
@@ -66,7 +69,13 @@ def get_args_from_modeltype(model_type, model_id):
     elif model_type == "bottle":
         rotate_lim = [0, 1, 0]
         rotate_rand = True
-        qpos = [0.66, 0.66, -0.25, -0.25]
+        rand_int = random.randint(0, 1)
+        if rand_int == 0:
+            qpos = [0.66, 0.66, -0.25, -0.25]
+            xlim = [-0.28, 0]
+        else:
+            qpos = [0.66, 0.66, 0.25, 0.25]
+            xlim = [0, 0.28]
         is_static = False
         convex = True
     else: # other
@@ -75,7 +84,18 @@ def get_args_from_modeltype(model_type, model_id):
         qpos = [1, 0, 0, 0]
         is_static = False
         convex = True
-    return rotate_lim, rotate_rand, qpos, is_static, convex, zlim
+
+    object_pose = rand_pose(
+                xlim=xlim,
+                ylim=ylim,
+                zlim=zlim,
+                rotate_rand=rotate_rand,
+                rotate_lim=rotate_lim,
+                qpos=qpos,
+                prohibit_area=prohibited_area,
+            )
+
+    return object_pose, is_static, convex
 
 def get_color(color):
     if color in COLORS:

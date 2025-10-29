@@ -21,10 +21,11 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=5):
+    def __init__(self, actor: Entity, actor_data: dict, mass=5, damping=(0.1, 0.5)):
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)
+        self.set_damping(damping)
         self.object_type = None
         self.model_id = None
 
@@ -115,6 +116,12 @@ class Actor:
         for component in self.actor.get_components():
             if isinstance(component, sapien.physx.PhysxRigidDynamicComponent):
                 component.mass = mass
+
+    def set_damping(self, damping):
+        for component in self.actor.get_components():
+            if isinstance(component, sapien.physx.PhysxRigidDynamicComponent):
+                component.linear_damping = damping[0]
+                component.angular_damping = damping[1]
 
     def get_area(self,padding=0.01):
         actor_pose = self.get_pose()

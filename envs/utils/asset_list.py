@@ -79,7 +79,7 @@ asset_models = {
     "microphone": {
         "model": "018_microphone",
         "idx": [0,1,4,5],
-        "type": "object_down",
+        "type": "tool",
         "scale": (1.2,1.2,1.2)
         },
     "coaster": {
