@@ -8,6 +8,8 @@ def get_modelname(actor_name):
         modelname = asset_models[actor_name]["model"]
         model_type = asset_models[actor_name].get("type","other")
         scale = asset_models[actor_name].get("scale",(1.0,1.0,1.0))
+        if model_type != "container":
+            scale = (scale[0]*0.95,scale[1]*0.95,scale[2]*0.95)
         return modelname, model_type, scale
     else:
         print(f"Error: {actor_name} not in asset list")
@@ -29,6 +31,7 @@ def get_grasp_type(actor_name):
         return "point"
     
 def get_args_from_modeltype(model_type, model_id):
+    zlim = [0.743]
     if model_type == "object":
         rotate_lim = [1, 1, 1]
         rotate_rand = True
@@ -51,14 +54,15 @@ def get_args_from_modeltype(model_type, model_id):
         rotate_lim = [0, 1, 0]
         rotate_rand = False
         qpos = [0, 0, 0.995, 0.105]
-        is_static = False
+        is_static = True
         convex = True
+        zlim = [0.76]
     elif model_type == "container":
         rotate_lim = [0, 1, 0]
         rotate_rand = True
         qpos = [0.5, 0.5, 0.5, 0.5]
         is_static = True
-        convex = True
+        convex = False
     elif model_type == "bottle":
         rotate_lim = [0, 1, 0]
         rotate_rand = True
@@ -71,7 +75,7 @@ def get_args_from_modeltype(model_type, model_id):
         qpos = [1, 0, 0, 0]
         is_static = False
         convex = True
-    return rotate_lim, rotate_rand, qpos, is_static, convex
+    return rotate_lim, rotate_rand, qpos, is_static, convex, zlim
 
 def get_color(color):
     if color in COLORS:

@@ -1,10 +1,11 @@
 
 from envs._base_task import Base_Task
 from envs._pick_place_task import Pick_Place_Task
+from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class exclusion_task_e(Pick_Place_Task):
+class exclusion_task_e(Imagine_Task):
     def load_actors(self):
         # Load the two cups
         self.cup1 = self.add_actor("cup_without_handle", "cup_without_handle_0")
@@ -15,8 +16,8 @@ class exclusion_task_e(Pick_Place_Task):
         self.toycar = self.add_actor("toycar", "toycar")
         # Load the apple (food)
         self.apple = self.add_actor("apple", "apple")
-        # Load the can (non-food)
-        self.can = self.add_actor("can", "can")
+        # # Load the can (non-food)
+        # self.can = self.add_actor("can", "can")
         # Load the wooden_box (container)
         self.wooden_box = self.add_actor("wooden_box", "wooden_box")
     def play_once(self):
@@ -40,10 +41,10 @@ class exclusion_task_e(Pick_Place_Task):
             return self.info
 
         # Place can
-        success = self.pick_and_place(self.can, self.wooden_box)
-        print("pick place can:", success)
-        if not success:
-            return self.info
+        # success = self.pick_and_place(self.can, self.wooden_box)
+        # print("pick place can:", success)
+        # if not success:
+        #     return self.info
 
         # Place toycar
         success = self.pick_and_place(self.toycar, self.wooden_box)
@@ -54,7 +55,7 @@ class exclusion_task_e(Pick_Place_Task):
         # Check if all non-food items are on the wooden_box
         if (self.check_on(self.cup1, self.wooden_box) and
             self.check_on(self.cup2, self.wooden_box) and
-            self.check_on(self.can, self.wooden_box) and
+            # self.check_on(self.can, self.wooden_box) and
             self.check_on(self.toycar, self.wooden_box)):
             return True
         return False

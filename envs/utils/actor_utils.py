@@ -21,17 +21,30 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=0.5):
+    def __init__(self, actor: Entity, actor_data: dict, mass=5):
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)
         self.object_type = None
+        self.model_id = None
+
+    def copy_to(self, new_actor):
+        self.POINTS = new_actor.POINTS
+        self.actor = new_actor.actor
+        self.config = new_actor.config
+        self.object_type = new_actor.object_type
 
     def set_object_type(self, object_type: str):
         self.object_type = object_type
 
     def get_object_type(self) -> str:
         return self.object_type
+
+    def set_model_id(self, model_id: int):
+        self.model_id = model_id
+
+    def get_model_id(self) -> int:
+        return self.model_id
 
     def get_point(
         self,
@@ -127,7 +140,27 @@ class Actor:
         y_max = np.max(trans_bounding_pts[1]) + padding
 
         return x_min, y_min, x_max, y_max
+    
+    def world_to_local(self, world_point: np.ndarray) -> np.ndarray:
+        """Transform a world point to the local coordinate of the actor."""
+        actor_pose = self.get_pose()
+        actor_matrix = actor_pose.to_transformation_matrix()
+        rotation_matrix = actor_matrix[:3, :3]
+        translation_vector = actor_matrix[:3, 3]
 
+        relative_point = np.array(world_point) - translation_vector
+
+        local_point = rotation_matrix.T @ relative_point
+
+        return local_point
+    
+    def get_local_area(self, padding=0.01):
+        """Get the local bounding box of the actor."""
+        actor_data = self.config
+        scale: float = actor_data.get("scale", 1)
+        origin_bounding_size = (np.array(actor_data.get("extents", [0.1, 0.1, 0.1])) * scale / 2)
+        x_min, y_min, z_min, x_max, y_max, z_max = -origin_bounding_size[0] - padding, -origin_bounding_size[1] - padding,-origin_bounding_size[2]-padding, origin_bounding_size[0] + padding, origin_bounding_size[1] + padding, origin_bounding_size[2]+padding
+        return x_min, y_min, z_min, x_max, y_max, z_max
 class ArticulationActor(Actor):
     POINTS = {
         "contact": "contact_points",

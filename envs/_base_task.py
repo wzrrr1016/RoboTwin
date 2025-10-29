@@ -1048,27 +1048,37 @@ class Base_Task(gym.Env):
 
     def check_on(self,actor: Actor,container: Actor):
 
-        # contacts = self.scene.get_contacts()
-        # for contact in contacts:
-        #     if (contact.bodies[0].entity.name == actor.get_name() and contact.bodies[1].entity.name == container.get_name()) or (contact.bodies[1].entity.name == actor.get_name() and contact.bodies[0].entity.name == container.get_name()):
-        #         return True
-        
-        # ep = [0.06, 0.06, 0.2]
-        # actor_pose = actor.get_pose().p
-        # container_pose = container.get_pose().p
-        # print("actor ",actor.get_name()," pose: ",actor_pose)
-        # print("container ",container.get_name()," pose: ",container_pose)
-        # if np.all(abs(actor_pose-container_pose)<ep):
-        #     return True
+        actor_pose = actor.get_pose().p
+        if container == self.table:
+            if actor_pose[2] > 0.74:
+                return True
+            return False
+
+        x_min, y_min, z_min, x_max, y_max, z_max = container.get_local_area(padding=0.01)
+        actor_point = container.world_to_local(actor_pose)
+
+        if x_min <= actor_point[0] <= x_max and z_min <= actor_point[2] <= z_max:
+            return True
+
+        return False
+
+    def check_on_world_area(self,actor: Actor,container: Actor):
+
+        actor_pose = actor.get_pose().p
+        if container == self.table:
+            if actor_pose[2] > 0.74:
+                return True
+            return False
 
         x_min, y_min, x_max, y_max = container.get_area(padding=-0.01)
-        actor_pose = actor.get_pose().p
         container_pose = container.get_pose().p
 
         if x_min <= actor_pose[0] <= x_max and y_min <= actor_pose[1] <= y_max and actor_pose[2] > container_pose[2]:
             return True
 
         return False
+    
+
 
     def choose_best_pose(self, res_pose, center_pose, arm_tag: ArmTag = None):
         """

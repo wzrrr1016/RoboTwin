@@ -3,26 +3,31 @@ from ._base_task import Base_Task
 from .utils import *
 from .utils.get_model import *
 from .utils.grasp_pose import *
+from .utils.actor_utils import Actor
 import sapien
 import math
 import numpy as np
 
 
-class Pick_Place_Task(Base_Task):  
+class Imagine_Task(Base_Task):  
 
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
     
-    def add_actor(self, object_type, object_name, object_pose = None):
+    def add_actor(self, object_type, object_name, 
+                  object_pose = None, static = None, model_id = None) -> Actor:
         modelname, model_type, scale = get_modelname(object_type)
-        model_id = get_model_id(object_type)
-        rotate_lim, rotate_rand, qpos, is_static, convex = get_args_from_modeltype(model_type, model_id)
+        if model_id is None:
+            model_id = get_model_id(object_type)
+        rotate_lim, rotate_rand, qpos, is_static, convex, zlim = get_args_from_modeltype(model_type, model_id)
+        if static is not None:
+            is_static = static
         # print("create object:",object_name, " type:",object_type," model:",modelname," id:",model_id)
         if object_pose is None:
             object_pose = rand_pose(
-                xlim=[-0.25, 0.25],
-                ylim=[-0.25, 0.1],
-                zlim=[0.743],
+                xlim=[-0.30, 0.30],
+                ylim=[-0.20, 0.10],
+                zlim=zlim,
                 rotate_rand=rotate_rand,
                 rotate_lim=rotate_lim,
                 qpos=qpos,
@@ -41,6 +46,7 @@ class Pick_Place_Task(Base_Task):
         self.add_prohibit_area(actor,padding=0.02)
         actor.set_name(object_name)
         actor.set_object_type(object_type)
+        actor.set_model_id(model_id)
         return actor
 
     
@@ -162,10 +168,10 @@ class Pick_Place_Task(Base_Task):
                 depth_img = self.cameras.get_depth()['front_camera']['depth']
                 container_pose = pixel_to_world(container_point,cam2world_gl,instrinsic_cv,depth_img)[0]
             except Exception as e:
-                container_pose = np.array([pose[0]-0.01,pose[1]+0.02,pose[2]])
+                container_pose = np.array([pose[0]-0.005,pose[1]+0.005,pose[2]])
         if np.all(abs(pose[:3] - container_pose[:3]) > np.array([0.1,0.1,0.15])):
 
-            container_pose = np.array([pose[0]-0.01,pose[1]+0.02,pose[2]])
+            container_pose = np.array([pose[0]-0.005,pose[1]+0.005,pose[2]])
 
         point = world_to_pixel(container_pose,cam2world_gl,instrinsic_cv)[0]
         # print("container_pose:",container_pose)
@@ -178,36 +184,48 @@ class Pick_Place_Task(Base_Task):
         # print("pick ",target.get_name())
         self.move(self.open_gripper(arm_tag=arm_tag))
         self.plan_success = True
+
+        frame_idx = self.FRAME_IDX - 1
+        action_str = "pick"
+        self.add_subplan(action_str, frame_idx, [target.get_name()])
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}.png",'front_camera')
+        # print("before pick")
+        target_pose_p = target.get_pose().p
+        if target_pose_p[2]< 0.76:
+            target_pose_q = target.get_pose().q
+            target_object_type = target.get_object_type()
+            target_name = target.get_name()
+            model_id = target.get_model_id()
+            self.scene.remove_actor(target.actor)
+            target_pose_p[2] += 0.1
+            new_pose = sapien.Pose(target_pose_p,target_pose_q)
+
+            new_target = self.add_actor(target_object_type,target_name, new_pose, True,model_id)
+            target.copy_to(new_target)
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}_new.png",'front_camera')
+        # print("object after pick")
         if get_grasp_type(target.get_object_type()) == "predict":
             grasp_pose, grasp_point = self.get_grasp_pose_from_zerograsp(target)
             use_contact_point = False
         else:
             use_contact_point = True
             grasp_pose = None
-        # grasp_pose, grasp_point = self.get_grasp_pose_from_zerograsp(target)
-        # grasp_point = target.get_pose().p
-        # quat = GRASP_DIRECTION_DIC['down_right']
-        # grasp_pose = [grasp_point[0],grasp_point[1],grasp_point[2],quat[0],quat[1],quat[2],quat[3]]
-        frame_idx = self.FRAME_IDX
-        action_str = "pick"
-        self.add_subplan(action_str, frame_idx, [target.get_name()])
         self.move(
             self.grasp_actor(
                 target, 
                 arm_tag=arm_tag, 
-                pre_grasp_dis=0.1, 
+                pre_grasp_dis=0.08, 
                 grasp_dis=0.0,
                 use_contact_point=use_contact_point,
                 grasp_pose = grasp_pose
                 ),  # arm_tag
         )
-        # print('grasp done \n plan_success:',self.plan_success)
-
+        # # print('grasp done \n plan_success:',self.plan_success)
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}_pick.png",'front_camera')
+        # print("arm after pick")
         if not self.plan_success:
             return False
 
-        # print("pick move up")
-        self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.2,move_axis="world"))
         # self.get_scene_contact()
         is_grasp = self.check_grasp(target)
 
@@ -221,7 +239,9 @@ class Pick_Place_Task(Base_Task):
         self.plan_success = True
         if container == self.table:
             pos = target.get_pose().p
-            place_pose = [pos[0], pos[1], 0.745]+[0.5312539375275843, -0.46665886518430555, 0.4666393704291426, 0.5312687223729883]
+            pos[0] += random.uniform(-0.02, 0.02)
+            pos[1] += random.uniform(-0.02, 0.02)
+            place_pose = [pos[0], pos[1], 0.745]+[0.5, -0.5, 0.5, 0.5]
             # place_point = None
         else:
             if condition == "on":
@@ -230,9 +250,23 @@ class Pick_Place_Task(Base_Task):
             # elif condition == "left":
             #     container_area = container.get_area()
             # TODO: add more place condition
-        frame_idx = self.FRAME_IDX
+        frame_idx = self.FRAME_IDX - 1
         action_str = "place"
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}.png",'front_camera')
+        # print("before place")
         self.add_subplan(action_str, frame_idx, [target.get_name(),container.get_name()])
+        # target_pose_p = target.get_pose().p
+        target_pose_q = target.get_pose().q
+        target_object_type = target.get_object_type()
+        target_name = target.get_name()
+        model_id = target.get_model_id()
+        self.scene.remove_actor(target.actor)
+        place_pose[2] += 0.08
+        new_pose = sapien.Pose(place_pose[:3],target_pose_q)
+        new_target = self.add_actor(target_object_type,target_name, new_pose, False,model_id)
+        target.copy_to(new_target)
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}_new.png",'front_camera')
+        # print("object after place")
         self.move(
             self.place_actor(
                 target,
@@ -240,22 +274,26 @@ class Pick_Place_Task(Base_Task):
                 target_pose = place_pose,
                 use_functional_point=False,
                 arm_tag=arm_tag,
-                pre_dis=0.23,
-                dis=0.14,
+                pre_dis=0.25,
+                dis=0.15,
             ))
         # print('place plan success: ',self.plan_success)
-        
+        # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}_place.png",'front_camera')
+        # print("arm after place")
         if not self.plan_success:
             return False
-        # print("place move up")
-        self.move(self.move_by_displacement(arm_tag=arm_tag,z=0.15, move_axis="world"))  # arm_tag
 
-        # print("check success")
-        # target_pose = target.get_pose().p
-        # container_pose = container.get_pose().p
-        # eps = np.array([0.08, 0.08, 0.1])
+        target_pose_p = target.get_pose().p
+        target_pose_q = target.get_pose().q
+        target_object_type = target.get_object_type()
+        target_name = target.get_name()
+        model_id = target.get_model_id()
+        self.scene.remove_actor(target.actor)
+        new_pose = sapien.Pose(target_pose_p,target_pose_q)
+        new_target = self.add_actor(target_object_type,target_name, new_pose, True, model_id)
+        target.copy_to(new_target)
 
-        success = self.check_actors_contact(target, container)
+        success = self.check_on(target, container)
         # print("place success:",success)
         return success
     
@@ -305,7 +343,7 @@ class Pick_Place_Task(Base_Task):
     def pick_block(self,block):
 
         arm_tag = ArmTag("left")
-        frame_idx = self.FRAME_IDX
+        frame_idx = self.FRAME_IDX - 1
         pose = block.get_pose().p
         camera_config = self.cameras.get_config()['front_camera']
         instrinsic_cv = camera_config['intrinsic_cv']
@@ -326,7 +364,7 @@ class Pick_Place_Task(Base_Task):
         
         self.plan_success = True
         place_pose, place_point = self.get_place_pose_from_container(container)
-        frame_idx = self.FRAME_IDX
+        frame_idx = self.FRAME_IDX - 1
         action_str = "place"
         self.add_subplan(action_str, frame_idx, [block.get_name(),container.get_name()])
         self.move(
@@ -340,10 +378,13 @@ class Pick_Place_Task(Base_Task):
                 dis=0.03,
             ))
         
-        self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.2, move_axis="world"))
+        self.move(self.move_by_displacement(arm_tag=arm_tag, z=0.1, move_axis="world"))
         success = self.check_actors_contact(block, container)
 
         return success
+    
+    def add_end(self):
+        self.add_subplan("done", self.FRAME_IDX - 1, [])
 
     def pick_place_block(self, block, container):
 

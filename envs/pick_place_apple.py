@@ -40,6 +40,7 @@ class pick_place_apple(Pick_Place_Task):
             rotate_rand=True,
             modelname="035_apple",
             convex=True,
+            is_static=False,
             model_id=0,
         )
         self.add_prohibit_area(self.fruit1, padding=0.02)
