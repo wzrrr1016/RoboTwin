@@ -56,7 +56,7 @@ def compute_points_for_subplan(
     subplan: List[Dict[str, Any]],
     hdf5_path: str,
     camera_name: str,
-) -> Tuple[List[Dict[str, Any]], DefaultDict[int, List[Dict[str, Any]]]]:
+) -> Tuple[List[Dict[str, Any]], DefaultDict[int, List[Dict[str, Any]]], List[Dict[str, Any]]]:
     results: List[Dict[str, Any]] = []
     points_by_frame: DefaultDict[int, List[Dict[str, Any]]] = defaultdict(list)
     with h5py.File(hdf5_path, "r") as root:
@@ -122,7 +122,30 @@ def compute_points_for_subplan(
                 "targets": target_points,
             })
 
-    return results, points_by_frame
+        # Append the final frame with done action and empty points
+        last_frame_idx = int(K_seq.shape[0] - 1)
+        results.append({
+            "frame_idx": last_frame_idx,
+            "action": "done",
+            "camera": camera_name,
+            "targets": [],
+        })
+
+    # Build augmented plan by appending a final done step if missing
+    augmented_plan = list(subplan)
+    has_final_done = any(
+        int(step.get("frame_idx", -1)) == last_frame_idx and (step.get("action", "").lower() == "done")
+        for step in augmented_plan
+    )
+    if not has_final_done:
+        augmented_plan.append({
+            "frame_idx": last_frame_idx,
+            "action": "done",
+            "target_name": [],
+            "pose": {},
+        })
+
+    return results, points_by_frame, augmented_plan
 
 
 def save_episode_package(
@@ -209,7 +232,7 @@ def main():
             continue
         subplan = read_subplan(subplan_path)
         try:
-            results, points_by_frame = compute_points_for_subplan(subplan, hdf5_path, args.camera)
+            results, points_by_frame, augmented_plan = compute_points_for_subplan(subplan, hdf5_path, args.camera)
         except Exception as e:
             print(f"Error processing episode {eid}: {e}")
             continue
@@ -218,7 +241,7 @@ def main():
             args.task_name,
             args.task_config,
             eid,
-            subplan,
+            augmented_plan,
             results,
             points_by_frame,
             hdf5_path,
