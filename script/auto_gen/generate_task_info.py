@@ -15,23 +15,35 @@ except Exception:
     from prompts import PROMPT_BUILDERS
 
 # ---------------- LLM bridge (local backend via code_gen/gpt_agent) ----------------
-from openai import OpenAI
+# from openai import OpenAI
+# def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
+#     OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
+#     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
+#     MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
 
+#     client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+#     resp = client.chat.completions.create(
+#         model=MODEL,
+#         messages=messages,
+#         stream=False,
+#         temperature=temperature,
+#     )
+#     return resp.choices[0].message.content
 
 def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
-    OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
-    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-    MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
+    from zai import ZhipuAiClient
+    API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
+    MODEL = "glm-4.6"
 
-    client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+    # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+    client = ZhipuAiClient(api_key=API_KEY)
     resp = client.chat.completions.create(
         model=MODEL,
         messages=messages,
-        stream=False,
+        # stream=False,
         temperature=temperature,
     )
     return resp.choices[0].message.content
-
 
 # ---------------- Category hints and allowed objects ----------------
 CATEGORY_HINTS: Dict[str, str] = {
