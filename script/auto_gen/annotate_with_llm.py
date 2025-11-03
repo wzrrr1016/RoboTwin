@@ -7,16 +7,14 @@ from typing import Any, Dict, List, Optional, Tuple
 # ============== Plug-in LLM Caller (replace with your gpt_agent) ==============
 def gpt_agent(messages: List[Dict[str, str]], model: str = "local") -> str:
     """Use code_gen/gpt_agent.py local backend to generate text."""
-    import sys, os
-    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if repo_root not in sys.path:
-        sys.path.insert(0, repo_root)
+    # Defer import to avoid global dependency when unused
     from code_gen.gpt_agent import generate
+    # The local gpt_agent ignores the model string and uses its own MODEL path
     return generate(messages, gpt="local", temperature=0)
 
 
 # ============================ Prompt Builders =============================
-def build_instruction_prompt_from_refs(ref_tasks: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+def build_instruction_prompt(task_info: Dict[str, Any]) -> List[Dict[str, str]]:
     """Builds chat messages to produce a single instruction for the whole dataset.
 
     Requirements:
@@ -33,11 +31,11 @@ def build_instruction_prompt_from_refs(ref_tasks: List[Dict[str, Any]]) -> List[
         "Output only the instruction without extra commentary."
     )
 
-    ref_compact = [{"task_name": r.get("task_name"), "task_description": r.get("task_description")} for r in ref_tasks[:8]]
     user = (
-        "Based on the following reference task descriptions, synthesize one concise instruction\n"
-        "that would guide the agent implicitly for similar episodes.\n\n"
-        f"reference_tasks:\n{json.dumps(ref_compact, ensure_ascii=False, indent=2)}\n"
+        "Given the following task_info (JSON), write a single instruction that\n"
+        "guides the agent implicitly. Avoid direct step descriptions and avoid any\n"
+        "error correction content.\n\n"
+        f"task_info:\n{json.dumps(task_info, ensure_ascii=False, indent=2)}\n"
     )
 
     return [
@@ -47,7 +45,7 @@ def build_instruction_prompt_from_refs(ref_tasks: List[Dict[str, Any]]) -> List[
 
 
 def build_reasoning_prompt(
-    ref_tasks: List[Dict[str, Any]],
+    task_info: Dict[str, Any],
     subplan_step: Dict[str, Any],
     candidate_points: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, str]]:
@@ -63,9 +61,14 @@ def build_reasoning_prompt(
     """
     system = (
         "You are an expert robot planner.\n"
-        "Given a subplan step, provide concise reasoning (why this step is needed).\n"
-        "Do not include correction or critique content.\n"
-        "Final action will be auto-filled using real points; you do NOT output the action."
+        "When given a subplan step, provide concise reasoning (why this step is needed)\n"
+        "and then output exactly one final action wrapped in <action>...</action>.\n"
+        "Allowed actions:\n"
+        "1. pick(target, point)\n2. place(container, point)\n3. done()\n"
+        "Constraints:\n"
+        "- The final action must be the last line and be wrapped by <action> tags.\n"
+        "- Do not include any correction or critique content.\n"
+        "- If a pixel point is provided for a target/container, use it verbatim."
     )
 
     # Normalize candidate points (list of dicts with fields: target_name, pixel)
@@ -76,13 +79,13 @@ def build_reasoning_prompt(
         ]
         cand_desc = f"\n\nCandidate points (if applicable):\n{json.dumps(compact, ensure_ascii=False)}"
 
-    ref_compact = [{"task_name": r.get("task_name"), "task_description": r.get("task_description")} for r in ref_tasks[:6]]
     user = (
-        "Given the reference task family and the subplan step, provide a brief reasoning for this step.\n\n"
-        f"reference_tasks:\n{json.dumps(ref_compact, ensure_ascii=False, indent=2)}\n\n"
-        f"subplan_step:\n{json.dumps(subplan_step, ensure_ascii=False, indent=2)}\n"
+        "Given task_info and the following subplan step, reason about why this step is done\n"
+        "and then choose exactly one action from the allowed set.\n\n"
+        f"task_info (JSON):\n{json.dumps(task_info, ensure_ascii=False, indent=2)}\n\n"
+        f"subplan_step (JSON):\n{json.dumps(subplan_step, ensure_ascii=False, indent=2)}\n"
         f"{cand_desc}\n\n"
-        "Only output reasoning; do NOT output the final action."
+        "Remember: the final line must be <action>...</action>."
     )
 
     return [
@@ -92,8 +95,8 @@ def build_reasoning_prompt(
 
 
 # =============================== I/O Helpers ===============================
-def load_subplan_dir(task_name: str, task_config: str) -> str:
-    return os.path.join("data", task_name, task_config, "sub_plan")
+def load_task_name(task_name: str,task_config:str) -> str:
+    return os.path.join("robotwin_data", task_name, task_config)
 
 
 def load_points_for_episode(
@@ -116,93 +119,17 @@ def index_points_by_frame(points_doc: Optional[List[Dict[str, Any]]]) -> Dict[in
         by_frame.setdefault(frame, []).extend(entry.get("targets", []))
     return by_frame
 
-def load_reference_tasks_from_task_info_dir(limit: int = 50) -> List[Dict[str, Any]]:
-    base = os.path.join("code_gen", "task_info")
-    refs: List[Dict[str, Any]] = []
-    if not os.path.isdir(base):
-        return refs
-    for fname in os.listdir(base):
-        if not fname.endswith(".jsonl"):
-            continue
-        fpath = os.path.join(base, fname)
-        try:
-            with open(fpath, "r", encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    try:
-                        obj = json.loads(line)
-                        if isinstance(obj, dict) and "task_description" in obj:
-                            refs.append(obj)
-                            if len(refs) >= limit:
-                                return refs
-                    except Exception:
-                        continue
-        except Exception:
-            continue
-    return refs
 
-def load_reference_tasks_from_new_task_info(limit: int = 50) -> List[Dict[str, Any]]:
-    refs: List[Dict[str, Any]] = []
-    try:
-        import sys
-        repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        if repo_root not in sys.path:
-            sys.path.insert(0, repo_root)
-        import code_gen.new_task_info as nti
-        for k in dir(nti):
-            if k.isupper():
-                v = getattr(nti, k)
-                if isinstance(v, dict) and "task_description" in v:
-                    refs.append({"task_name": v.get("task_name", k.lower()), "task_description": v.get("task_description")})
-                    if len(refs) >= limit:
-                        break
-    except Exception:
-        pass
-    return refs
-
-def choose_reference_tasks(max_n: int = 12) -> List[Dict[str, Any]]:
-    refs = load_reference_tasks_from_task_info_dir(limit=max_n)
-    if len(refs) < max_n:
-        extra = load_reference_tasks_from_new_task_info(limit=max_n - len(refs))
-        refs.extend(extra)
-    return refs[:max_n]
-
-def build_action_with_real_points(step: Dict[str, Any], frame_points: List[Dict[str, Any]]) -> str:
-    action_type = (step.get("action") or "").lower()
-    names = step.get("target_name", []) or []
-    pix_map = {}
-    for rec in frame_points or []:
-        nm = rec.get("target_name")
-        px = rec.get("pixel")
-        if nm is not None and isinstance(px, (list, tuple)) and len(px) >= 2:
-            pix_map[nm] = (float(px[0]), float(px[1]))
-
-    if action_type == "pick" and names:
-        tgt = names[0]
-        pt = pix_map.get(tgt) or (list(pix_map.values())[0] if pix_map else None)
-        return f"<action>pick({tgt},({int(round(pt[0]))},{int(round(pt[1]))}))</action>" if pt else "<action>done()</action>"
-
-    if action_type == "place" and len(names) >= 2:
-        container = names[1]
-        pt = pix_map.get(container) or (list(pix_map.values())[0] if pix_map else None)
-        return f"<action>place({container},({int(round(pt[0]))},{int(round(pt[1]))}))</action>" if pt else "<action>done()</action>"
-
-    if action_type == "done":
-        return "<action>done()</action>"
-
-    return "<action>done()</action>"
-
-
-def list_episode_ids(subplan_dir: str) -> List[int]:
+def list_episode_ids(task_name: str) -> List[int]:
     eps = []
-    if not os.path.isdir(subplan_dir):
+    if not os.path.isdir(task_name):
         return eps
-    for fn in os.listdir(subplan_dir):
-        if fn.startswith("episode") and fn.endswith(".json"):
+    for fn in os.listdir(task_name):
+        print(fn)
+        if fn.startswith("episode"):
             try:
-                eps.append(int(fn[len("episode"): -len(".json")]))
+                print(int(fn[len("episode"):]))
+                eps.append(int(fn[len("episode"):]))
             except Exception:
                 continue
     return sorted(eps)
@@ -223,22 +150,24 @@ def save_json(path: str, obj: Any):
 def annotate(
     task_name: str,
     task_config: str,
+    task_info_path: str,
     model: str = "local",
     only_episode: Optional[int] = None,
 ) -> None:
-    ref_tasks = choose_reference_tasks(max_n=12)
-    subplan_dir = load_subplan_dir(task_name, task_config)
-    episode_ids = [only_episode] if only_episode is not None else list_episode_ids(subplan_dir)
-
+    task_info = read_json(task_info_path)
+    task_name = load_task_name(task_name,task_config)
+    episode_ids = [only_episode] if only_episode is not None else list_episode_ids(task_name)
+    print(task_info)
+    print(f"Annotating {len(episode_ids)} episodes in {task_name}...")
     for eid in episode_ids:
-        subplan_path = os.path.join(subplan_dir, f"episode{eid}.json")
+        subplan_path = os.path.join(task_name, f"episode{eid}","plan.json")
         if not os.path.exists(subplan_path):
             print(f"Skip episode {eid}: no subplan at {subplan_path}")
             continue
         subplan = read_json(subplan_path)
 
         # 1) Instruction for this episode (based on task_info)
-        instr_msgs = build_instruction_prompt_from_refs(ref_tasks)
+        instr_msgs = build_instruction_prompt(task_info)
         try:
             instruction = gpt_agent(instr_msgs, model=model)
         except Exception as e:
@@ -252,14 +181,13 @@ def annotate(
         for step in subplan:
             frame_idx = int(step.get("frame_idx", 0))
             candidates = points_by_frame.get(frame_idx, [])
-            msgs = build_reasoning_prompt(ref_tasks, step, candidates)
+            msgs = build_reasoning_prompt(task_info, step, candidates)
+            print(msgs)
             try:
-                reasoning = gpt_agent(msgs, model=model)
+                reasoning_and_action = gpt_agent(msgs, model=model)
+                print(reasoning_and_action)
             except Exception as e:
-                reasoning = f"<REASONING_GENERATION_FAILED: {e}>"
-
-            final_action = build_action_with_real_points(step, candidates)
-            reasoning_and_action = f"{reasoning}\n{final_action}"
+                reasoning_and_action = f"<REASONING_GENERATION_FAILED: {e}>\n<action>done()</action>"
 
             step_outputs.append({
                 "frame_idx": frame_idx,
@@ -278,6 +206,7 @@ def main():
     parser = argparse.ArgumentParser(description="Annotate data using LLM: instruction + per-step reasoning/actions.")
     parser.add_argument("task_name", type=str)
     parser.add_argument("task_config", type=str)
+    parser.add_argument("task_info_path", type=str, help="Path to task_info JSON (e.g., scene_info.json)")
     parser.add_argument("--model", type=str, default="local")
     parser.add_argument("--only_episode", type=int, default=None)
     args = parser.parse_args()
@@ -285,6 +214,7 @@ def main():
     annotate(
         task_name=args.task_name,
         task_config=args.task_config,
+        task_info_path=args.task_info_path,
         model=args.model,
         only_episode=args.only_episode,
     )
