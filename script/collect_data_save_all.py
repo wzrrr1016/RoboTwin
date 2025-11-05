@@ -25,26 +25,55 @@ parent_directory = os.path.dirname(current_file_path)
 
 
 def class_decorator(task_name):
-    # Try direct import first: envs.<task_name>
+    import re
+
+    # Convert old format to new format if needed
+    # e.g., "1_healthy_food_organization_correction" -> "healthy_food_organization_correction_1"
+    original_task_name = task_name
+    match = re.match(r'^(\d+)_(.+)$', task_name)
+    if match:
+        number = match.group(1)
+        name_part = match.group(2)
+        # Both module name and class name use the new format
+        module_name = f"{number}_{name_part}"
+        class_name = f"{name_part}_{number}"
+    else:
+        module_name = task_name
+        class_name = task_name
+
+    # Try direct import first: envs.<module_name>
     try:
-        envs_module = importlib.import_module(f"envs.{task_name}")
-        env_class = getattr(envs_module, task_name)
+        envs_module = importlib.import_module(f"envs.{module_name}")
+        env_class = getattr(envs_module, class_name)
         return env_class()
     except Exception:
         pass
 
-    # Fallback: recursively search all submodules under envs for a class named task_name
+    # Try with subdirectory: envs.common_sense_correction.<module_name>
+    try:
+        envs_module = importlib.import_module(f"envs.common_sense_correction.{module_name}")
+        env_class = getattr(envs_module, class_name)
+        return env_class()
+    except Exception:
+        pass
+
+    # Fallback: recursively search all submodules under envs for a class named class_name or task_name
     import envs as envs_pkg
     prefix = envs_pkg.__name__ + "."
     for finder, name, ispkg in pkgutil.walk_packages(envs_pkg.__path__, prefix):
         try:
             mod = importlib.import_module(name)
+            # Try the converted class name first
+            if hasattr(mod, class_name):
+                env_class = getattr(mod, class_name)
+                return env_class()
+            # Fall back to original task name
             if hasattr(mod, task_name):
                 env_class = getattr(mod, task_name)
                 return env_class()
         except Exception:
             continue
-    raise SystemExit("No such task")
+    raise SystemExit(f"No such task: {original_task_name} (module: {module_name}, class: {class_name})")
 
 
 def get_embodiment_config(robot_file):
@@ -217,8 +246,8 @@ def run(TASK_ENV, args):
                 TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
                 info = TASK_ENV.play_once()
 
-                # if TASK_ENV.plan_success and TASK_ENV.check_success():
-                if True:
+                if TASK_ENV.plan_success and TASK_ENV.check_success():
+                # if True:
                     print(f"simulate data episode {suc_num} success! (seed = {epid})")
                     seed_list.append(epid)
 

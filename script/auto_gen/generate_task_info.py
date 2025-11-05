@@ -1,68 +1,63 @@
 import os
 import json
 import argparse
+import random
 from typing import Dict, Any, List, Optional, Tuple
 import sys
 import os
 try:
     # When executed as a module: python -m script.auto_gen.generate_task_info
-    from .prompts import PROMPT_BUILDERS
+    from .prompt_info import PROMPT_BUILDERS
 except Exception:
     # When executed as a script: python script/auto_gen/generate_task_info.py
     _CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     if _CURR_DIR not in sys.path:
         sys.path.append(_CURR_DIR)
-    from prompts import PROMPT_BUILDERS
+    from prompt_info import PROMPT_BUILDERS
 
 # ---------------- LLM bridge (local backend via code_gen/gpt_agent) ----------------
-# from openai import OpenAI
-# def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
-#     OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
-#     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-#     MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
-
-#     client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
-#     resp = client.chat.completions.create(
-#         model=MODEL,
-#         messages=messages,
-#         stream=False,
-#         temperature=temperature,
-#     )
-#     return resp.choices[0].message.content
-
+from openai import OpenAI
 def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
-    from zai import ZhipuAiClient
-    API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
-    MODEL = "glm-4.6"
+    OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
+    OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
+    MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
 
-    # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
-    client = ZhipuAiClient(api_key=API_KEY)
+    client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
     resp = client.chat.completions.create(
         model=MODEL,
         messages=messages,
-        # stream=False,
+        stream=False,
         temperature=temperature,
     )
     return resp.choices[0].message.content
 
-# ---------------- Category hints and allowed objects ----------------
-CATEGORY_HINTS: Dict[str, str] = {
-    "common_sense": "根据日常常识进行分类与放置（如食物与工具的区分）",
-    "counting": "按数量与颜色进行选择与放置（精确计数）",
-    "spatial": "依据空间关系安排物体（左/右/内/上/附近等）",
-}
+# def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
+#     from zai import ZhipuAiClient
+#     API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
+#     MODEL = "glm-4-flash"
 
-AVAILABLE_OBJECTS: List[str] = [
-    # containers
-    "bowl", "plate", "tray", "wooden_box", "dustbin", "fluted_block", "shoe_box","coaster"
-    # objects
+#     # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+#     client = ZhipuAiClient(api_key=API_KEY)
+#     resp = client.chat.completions.create(
+#         model=MODEL,
+#         messages=messages,
+#         # stream=False,
+#         temperature=temperature,
+#     )
+#     return resp.choices[0].message.content
+
+# ---------------- Category hints and allowed objects ----------------
+CONTAINERS: List[str] = [
+    "plate", "tray", "wooden_box", "dustbin", "fluted_block", "shoe_box", "coaster",
+]
+
+OBJECTS: List[str] = [
     "hammer", "microphone", "bottle", "can", "cup", "cup_with_handle", "cup_without_handle", "pot-with-plant",
-    "apple", "hamburg", "bread", "french_fries", "toycar","tissue-box","scanner","drill","screwdriver","fork",
-    "knife","mug","shoe","book","sand-clock","alarm-clock","mouse","stapler","shampoo","bell","dumbbell","teanet",
-    
-    # color blocks
+    "apple", "hamburg", "bread", "french_fries", "toycar", "tissue-box", "scanner", "drill", "screwdriver", "fork",
+    "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse", "stapler", "shampoo", "bell", "dumbbell", "teanet",
     "red_block", "blue_block", "green_block", "yellow_block", "purple_block", "orange_block", "pink_block",
 ]
+
 
 
 def read_jsonl(path: str) -> List[Dict[str, Any]]:
@@ -127,11 +122,36 @@ def safe_filename(name: str) -> str:
     return "".join(keep)
 
 
-def build_task_prompt(category: str, mode: str, previous_descs: List[str]) -> List[Dict[str, str]]:
-    builder = PROMPT_BUILDERS.get((category, mode))
+def _strip_reasoning_segment(desc: str) -> str:
+    """Remove any '/reasoning: .../' segment from the description.
+    Keeps only 'scene:', 'task:', and 'action:' segments in original order if possible.
+    """
+    parts = [p.strip() for p in desc.split('/') if p.strip()]
+    kept = []
+    for p in parts:
+        head = p.split(':', 1)[0].strip().lower()
+        if head == 'reasoning':
+            continue
+        kept.append(p)
+    return '/'.join(kept)
+
+
+def _sample_items() -> Tuple[List[str], List[str]]:
+    # Randomly choose 1-2 containers (without replacement)
+    k_cont = random.randint(1, 2)
+    containers = random.sample(CONTAINERS, k_cont)
+    # Randomly choose 4-6 objects (with replacement allowed via random.choice)
+    k_obj = random.randint(4, 6)
+    objects: List[str] = [random.choice(OBJECTS) for _ in range(k_obj)]
+    return containers, objects
+
+
+def build_task_prompt(mode: str, previous_descs: List[str]) -> List[Dict[str, str]]:
+    builder = PROMPT_BUILDERS.get(("common_sense", mode))
     if builder is None:
-        raise ValueError(f"Unsupported category/mode: {category}/{mode}")
-    return builder(previous_descs, AVAILABLE_OBJECTS)
+        raise ValueError(f"Unsupported mode: {mode}")
+    containers, objects = _sample_items()
+    return builder(previous_descs, containers, objects)
 
 
 def is_duplicate(desc: str, prev_set: set) -> bool:
@@ -140,8 +160,8 @@ def is_duplicate(desc: str, prev_set: set) -> bool:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="按类别与模式(correction/wo_correction)生成任务，包含推理段且避免重复。")
-    parser.add_argument("--categories", type=str, required=True, help="逗号分隔类别：common_sense,counting,spatial")
+    parser = argparse.ArgumentParser(description="仅生成 common_sense 类别任务。任务描述不包含显式 reasoning 字段，但在 'task:' 中体现复杂常识推理。")
+    parser.add_argument("--categories", type=str, default="common_sense", help="固定为 common_sense")
     parser.add_argument("--num_per_mode", type=int, default=5, help="每个类别每个模式生成数量")
     parser.add_argument("--temperature", type=float, default=0.0)
     parser.add_argument("--output_dir", type=str, default="code_gen/task_info")
@@ -154,13 +174,14 @@ def main():
     args = parser.parse_args()
 
     ensure_output_dir(args.output_dir)
-    categories = [c.strip() for c in args.categories.split(",") if c.strip()]
+    categories = ["common_sense"]
     modes = [m.strip() for m in args.modes.split(",") if m.strip() in ("correction", "wo_correction")]
     if not modes:
         raise ValueError("--modes must include 'correction' and/or 'wo_correction'")
 
     for cat in categories:
         # Load context across both modes to avoid duplicates within the category
+        # Do not feed previously generated tasks into prompt context; only enforce de-duplication in output files
         previous_all = collect_previous_descriptions(cat, args.output_dir)
         prev_set = set([p.strip() for p in previous_all])
 
@@ -169,34 +190,36 @@ def main():
             if args.file_mode == "category" and args.truncate:
                 open(out_path, "w").close()
 
-            # Refresh per-mode previous for context (after possible truncate)
-            previous_mode_descs = collect_previous_descriptions(cat, args.output_dir)
+            # Do not include previous tasks in prompt; keep an empty context list
+            previous_mode_descs: List[str] = []
 
             for i in range(args.num_per_mode):
                 retries = 0
                 obj: Optional[Dict[str, Any]] = None
                 while retries <= args.max_retries:
-                    msgs = build_task_prompt(cat, mode, previous_mode_descs)
+                    msgs = build_task_prompt(mode, previous_mode_descs)
                     try:
                         out = gpt_agent(msgs, temperature=args.temperature)
                     except Exception as e:
                         obj = {
                             "task_name": f"{cat}_{mode}_gen_error_{i}",
-                            "task_description": f"scene: n/a/reasoning: {cat}/task: generation failed ({e})/action: n/a",
+                            "task_description": f"scene: n/a/task: generation failed ({e})/action: n/a",
                         }
                         break
 
                     cand = extract_json_line(out) or {
                         "task_name": f"{cat}_{mode}_fallback_{i}",
-                        "task_description": "scene: fallback/reasoning: {cat}/task: fallback/action: fallback",
+                        "task_description": "scene: fallback/task: fallback/action: fallback",
                     }
 
                     # Normalize
                     if "task_name" not in cand:
                         cand["task_name"] = f"{cat}_{mode}_auto_{i}"
                     if "task_description" not in cand:
-                        cand["task_description"] = f"scene: .../reasoning: {cat}/task: .../action: ..."
+                        cand["task_description"] = f"scene: .../task: .../action: ..."
 
+                    # Ensure no explicit 'reasoning:' segment remains
+                    cand["task_description"] = _strip_reasoning_segment(cand.get("task_description", "").strip())
                     desc = cand["task_description"].strip()
 
                     # Enforce duplication check
@@ -209,7 +232,7 @@ def main():
                 if obj is None:
                     obj = {
                         "task_name": f"{cat}_{mode}_dup_exhausted_{i}",
-                        "task_description": f"scene: placeholder/reasoning: {cat}/task: failed to produce unique/action: placeholder",
+                        "task_description": f"scene: placeholder/task: failed to produce unique/action: placeholder",
                     }
 
                 if args.file_mode == "category":
@@ -219,11 +242,10 @@ def main():
                     with open(task_file, "w", encoding="utf-8") as f:
                         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-                # Update context sets
+                # Update deduplication set only
                 prev_set.add(obj["task_description"].strip())
-                previous_mode_descs.append(obj["task_description"].strip())
 
-            print(f"Generated {args.num_per_mode} tasks for '{cat}' [{mode}] -> {out_path if args.file_mode=='category' else args.output_dir}")
+            print(f"Generated {args.num_per_mode} tasks for 'common_sense' [{mode}] -> {out_path if args.file_mode=='category' else args.output_dir}")
 
 
 if __name__ == "__main__":

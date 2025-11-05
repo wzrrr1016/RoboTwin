@@ -102,3 +102,9 @@ def get_color(color):
         cl_list = COLORS[color]
         cl = random.choice(cl_list)
         return (cl[0]/255.0,cl[1]/255.0,cl[2]/255.0)
+    
+def get_color_from_name(object_name):
+    for color in COLORS.keys():
+        if color in object_name.lower():
+            return color
+    return "grey"

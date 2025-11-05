@@ -53,11 +53,11 @@ def generate_code(task_info, las_error=None, message=None):
         # First attempt case - create initial code file
         res = f'''
 from envs._base_task import Base_Task
-from envs._pick_place_task import Pick_Place_Task
+from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class gpt_{task_name}(Pick_Place_Task):
+class {task_name}(Imagine_Task):
     def load_actors(self):
         pass
     def play_once(self):
@@ -65,7 +65,7 @@ class gpt_{task_name}(Pick_Place_Task):
     def check_success(self):
         pass
         '''
-        file_name = f"envs_gen/gpt_{task_name}.py"
+        file_name = f"envs_gen/{task_name}.py"
         with open(file_name, 'w') as file:
             file.write(res)
         
@@ -101,11 +101,11 @@ class gpt_{task_name}(Pick_Place_Task):
 
     res = f'''
 from envs._base_task import Base_Task
-from envs._pick_place_task import Pick_Place_Task
+from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class gpt_{task_name}(Pick_Place_Task):
+class gpt_{task_name}(Imagine_Task):
     {load_actors_code}
     {play_once_code}
     {check_success_code}
@@ -113,7 +113,7 @@ class gpt_{task_name}(Pick_Place_Task):
 
     
     # Save generated code to file
-    file_name = f"envs_gen/gpt_{task_name}.py"
+    file_name = f"envs_gen/{task_name}.py"
     with open(file_name, 'w') as file:
         file.write(res)
     

@@ -9,7 +9,7 @@ class pick_place_anything_imagine(Imagine_Task):
     def load_actors(self):
 
         self.plate = self.add_actor("wooden_box","plate")
-        self.object = self.add_actor("bottle","object")
+        self.object = self.add_actor("teanet","object")
         # self.apple = self.add_actor("apple","apple")
         # self.fruit = self.add_actor("fruit","fruit")
         # self.bottle = self.add_actor("bottle","bottle")

@@ -21,7 +21,7 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=5, damping=(0.1, 0.5)):
+    def __init__(self, actor: Entity, actor_data: dict, mass=0.5, damping=(0.1, 0.5)):
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)

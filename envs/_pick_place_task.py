@@ -14,6 +14,8 @@ class Pick_Place_Task(Base_Task):
         super()._init_task_env_(**kwags)
     
     def add_actor(self, object_type, object_name, object_pose = None):
+        if object_type == "block":
+            return self.add_actor_block(object_name, object_pose)
         modelname, model_type, scale = get_modelname(object_type)
         model_id = get_model_id(object_type)
         rotate_lim, rotate_rand, qpos, is_static, convex = get_args_from_modeltype(model_type, model_id)
@@ -43,6 +45,15 @@ class Pick_Place_Task(Base_Task):
         actor.set_object_type(object_type)
         return actor
 
+    def add_actor_block(self, object_name, object_pose = None):
+        color = get_color_from_name(object_name)
+        if block_pose is None:
+            block_pose = self.create_box_pose(1)[0]
+        block = self.create_block(block_pose, color_name=color)
+        block.set_name(object_name)
+        block.set_object_type("block")
+        self.add_prohibit_area(block,padding=0.02)
+        return block
     
     def create_box_pose(self,num, block_half_size=0.02):
         block_pose_lst = []
@@ -59,6 +70,11 @@ class Pick_Place_Task(Base_Task):
             )
 
             def check_block_pose(block_pose):
+                for area in self.prohibited_area:
+                    x, y = block_pose.p[0], block_pose.p[1]
+                    x_min, y_min, x_max, y_max = area[0], area[1], area[2], area[3]
+                    if x_min <= x <= x_max and y_min <= y <= y_max:
+                        return False
                 for j in range(len(block_pose_lst)):
                     if (np.sum(pow(block_pose.p[:2] - block_pose_lst[j].p[:2], 2)) < 0.01):
                         return False
@@ -67,8 +83,8 @@ class Pick_Place_Task(Base_Task):
             while not check_block_pose(block_pose):
 
                 block_pose = rand_pose(
-                    xlim=[-0.2, 0.2],
-                    ylim=[-0.1, 0.1],
+                    xlim=[-0.25, 0.25],
+                    ylim=[-0.2, 0.1],
                     zlim=[0.741 + block_half_size],
                     qpos=[1, 0, 0, 0],
                     ylim_prop=True,
@@ -261,7 +277,8 @@ class Pick_Place_Task(Base_Task):
     
 
     def pick_and_place(self, target, container, arm_tag=ArmTag('left'), try_times=0):
-
+        if target.get_object_type() == "block":
+            return self.pick_place_block(target, container)
         # success = self.check_actors_contact(target, container)
         if container != self.table:
             success = self.check_on(target, container)
@@ -323,6 +340,9 @@ class Pick_Place_Task(Base_Task):
 
     def place_block(self,block,container):
         arm_tag = ArmTag("left")
+        if container == self.table:
+            pos = block.get_pose().p
+            place_pose = [pos[0], pos[1], 0.745]+[0.5312539375275843, -0.46665886518430555, 0.4666393704291426, 0.5312687223729883]
         
         self.plan_success = True
         place_pose, place_point = self.get_place_pose_from_container(container)
@@ -347,9 +367,10 @@ class Pick_Place_Task(Base_Task):
 
     def pick_place_block(self, block, container):
 
-        success = self.check_actors_contact(block, container)
-        if success:
-            return True
+        if container != self.table:
+            success = self.check_on(block, container)
+            if success:
+                return True
 
         target_pose = block.get_pose().p
         if target_pose[2] < 0.7:
@@ -378,5 +399,3 @@ class Pick_Place_Task(Base_Task):
 
         return success
          
-
-        

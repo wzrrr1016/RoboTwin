@@ -22,7 +22,18 @@ asset_models = {
         "type": "container",
         "scale":(1.2,1.2,1.2)
         },
+    "fluted_block": {
+        "model": "004_fluted-block",
+        "idx": [0,1],
+        "type": "container",
+        "scale":(1.2,1.2,1.2)
+        },
     "french-fries": {
+        "model": "005_french-fries",
+        "idx": [0,1,2,3],
+        "type": "object_flat"
+        },
+    "french_fries": {
         "model": "005_french-fries",
         "idx": [0,1,2,3],
         "type": "object_flat"
@@ -33,6 +44,11 @@ asset_models = {
         "type": "object_flat"
         },
     "shoe-box": {
+        "model": "007_shoe-box",
+        "idx": [0],
+        "type": "container"
+        },
+    "shoe_box": {
         "model": "007_shoe-box",
         "idx": [0],
         "type": "container"
@@ -53,7 +69,18 @@ asset_models = {
         "type": "object_flat",
         "scale": (0.5,0.7,0.5)
         },
+    "pot_with_plant": {
+        "model": "012_plant-pot",
+        "idx": [0,2,3],
+        "type": "object_flat",
+        "scale": (0.5,0.7,0.5)
+        },
     "plant-pot": {
+        "model": "012_plant-pot",
+        "idx": [1,4],
+        "type": "container"
+        },
+    "plant_pot": {
         "model": "012_plant-pot",
         "idx": [1,4],
         "type": "container"
@@ -109,42 +136,54 @@ asset_models = {
         "model": "022_cup-with-liquid",
         "idx": [0],
         "type": "bottle",
-        "scale": (0.7,0.7,0.7)
+        "scale": (0.05,0.05,0.05)
         },
     "tissue-box": {
         "model": "023_tissue-box",
         "idx": [0,1,2,3,4,5,6],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.95,0.95,0.95)
+        },
+    "tissue_box": {
+        "model": "023_tissue-box",
+        "idx": [0,1,2,3,4,5,6],
+        "type": "object_flat",
+        "scale": (0.95,0.95,0.95)
         },
     "scanner": {
         "model": "024_scanner",
         "idx": [0,1,2,3,4],
-        "type": "tool"
+        "type": "object_flat"
         },
     "chips-tub": {
         "model": "025_chips-tub",
         "idx": [0,1,2,3],
-        "type": "bottle"
+        "type": "bottle",
+        "scale": (0.07,0.07,0.07)
         },
     "pet-collar": {
         "model": "026_pet-collar",
         "idx": [0,1,2,3],
-        "type": "object"
+        "type": "object_flat",
+        "scale": (0.06,0.06,0.06)
         },
     "table-tennis": {
         "model": "027_table-tennis",
         "idx": [0,1],
-        "type": "object"
+        "type": "object",
+        "scale": (0.03,0.03,0.03)
         },
     "roll-paper": {
         "model": "028_roll-paper",
         "idx": [0,1,2,3],
-        "type": "object"
+        "type": "object_flat",
+        "scale": (0.05,0.05,0.05)
         },
     "olive-oil": {
         "model": "029_olive-oil",
         "idx": [0,1,2,3,4],
-        "type": "bottle"
+        "type": "bottle",
+        "scale":(0.8,0.8,0.8)
         },
     "drill": {
         "model": "030_drill",
@@ -154,22 +193,24 @@ asset_models = {
     "jam-jar": {
         "model": "031_jam-jar",
         "idx": [0,1,2,3,4],
-        "type": "bottle"
+        "type": "bottle",
+        "scale": (0.05,0.05,0.05)
         },
     "screwdriver": {
         "model": "032_screwdriver",
         "idx": [0],
-        "type": "object_flat"
+        "type": "tool"
         },
     "fork": {
         "model": "033_fork",
         "idx": [0],
-        "type": "object_flat"
+        "type": "tool"
         },
     "knife": {
         "model": "034_knife",
         "idx": [0],
-        "type": "object_flat"
+        "type": "tool",
+        "scale": (0.6,0.6,0.6)
         },
     "apple": {
         "model": "035_apple",
@@ -179,7 +220,14 @@ asset_models = {
     "milk-box": {
         "model": "038_milk-box",
         "idx": [0,1,2,3],
-        "type": "bottle"
+        "type": "bottle",
+        "scale": (0.7,0.7,0.7)
+        },
+    "milk_box": {
+        "model": "038_milk-box",
+        "idx": [0,1,2,3],
+        "type": "bottle",
+        "scale": (0.7,0.7,0.7)
         },
     "mug": {
         "model": "039_mug",
@@ -189,12 +237,13 @@ asset_models = {
     "rack": {
         "model": "040_rack",
         "idx": [0],
-        "type": "container"
+        "type": "container_hangup"
         },
     "shoe": {
         "model": "041_shoe",
         "idx": [0,1,2,3,4,5,6,7,8,9],
-        "type": "object_flat"},
+        "type": "object_flat"
+        },
     "wooden_box": {
         "model": "042_wooden_box",
         "idx": [0],
@@ -204,17 +253,32 @@ asset_models = {
     "book": {
         "model": "043_book",
         "idx": [0,1],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.7,0.7,0.7)
         },
     "sand-clock": {
         "model": "045_sand-clock",
         "idx": [0,1,3],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.9,0.9,0.9)
+        },
+    "sand_clock": {
+        "model": "045_sand-clock",
+        "idx": [0,1,3],
+        "type": "object_flat",
+        "scale": (0.9,0.9,0.9)
         },
     "alarm-clock": {
         "model": "046_alarm-clock",
         "idx": [0,1,2,3,4,5],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.9,0.9,0.9)
+        },
+    "alarm_clock": {
+        "model": "046_alarm-clock",
+        "idx": [0,1,2,3,4,5],
+        "type": "object_flat",
+        "scale": (0.9,0.9,0.9)
         },
     "mouse": {
         "model": "047_mouse",
@@ -239,12 +303,14 @@ asset_models = {
     "candlestick": {
         "model": "051_candlestick",
         "idx": [0,1,2,3,4],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.8,0.8,0.8)
         },
     "dumbbell": {
         "model": "052_dumbbell",
         "idx": [0,1,2,3,4,5,6],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.85,0.85,0.85)
         },
     "teanet": {
         "model": "053_teanet",
@@ -566,7 +632,8 @@ asset_models = {
 # }
 
 # point_grasp_list = ['bottle','french-fries','hamburg']
-predict_grasp_list = ['calculator','fruit']
+predict_grasp_list = ['calculator','fruit','cup-with-liquid','chips-tub','pet-collar',
+                      'table-tennis','roll-paper','olive-oil','jam-jar','milk-box']
 
 
 '''

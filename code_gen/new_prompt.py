@@ -12,11 +12,11 @@ Access functional points using actor.get_functional_point(point_id, return_type)
 
 CODE_TEMPLATE = '''
 from envs._base_task import Base_Task  
-from envs.$TASK_NAME$ import $TASK_NAME$
+from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class gpt_$TASK_NAME$($TASK_NAME$):
+class $TASK_NAME$(Imagine_Task):
     def load_actors(self):
         pass
         
@@ -117,7 +117,7 @@ For example:
 The complete code is as follow:
 
 ```python
-class gpt_{task_name}(Pick_Place_Task):
+class {task_name}(Imagine_Task):
     def load_actors(self):
 
         self.plate = self.add_actor("plate","plate")
@@ -143,11 +143,14 @@ class gpt_{task_name}(Pick_Place_Task):
 ```
 All the available object types are:
 
-object able to pick:
-bottle, french-fries, hamburg, cup_without_handle, can, bread, toycar, apple
+CONTAINERS:
+    "plate", "tray", "wooden_box", "dustbin", "fluted_block", "shoe_box", "coaster",
 
-container:
-bowl, plate, fluted-block, shoe-box, tray, wooden_box
+OBJECTS able to pick:
+    "hammer", "microphone", "bottle", "can", "cup", "cup_with_handle", "cup_without_handle", "pot-with-plant",
+    "apple", "hamburg", "bread", "french_fries", "toycar", "tissue-box", "scanner", "drill", "screwdriver", "fork",
+    "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse", "stapler", "shampoo", "bell", "dumbbell", "teanet",
+    "red_block", "blue_block", "green_block", "yellow_block", "purple_block", "orange_block", "pink_block",
 
 You can use the 'self.table' to get the table actor in the environment.
 '''

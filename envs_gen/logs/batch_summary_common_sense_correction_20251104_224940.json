@@ -1,0 +1,315 @@
+{
+  "jsonl_file": "code_gen/task_info/common_sense_correction.jsonl",
+  "output_dir": "envs_gen/common_sense_correction",
+  "total_tasks": 50,
+  "successful_tasks": 47,
+  "error_tasks": 3,
+  "model": "local",
+  "temperature": 0,
+  "results": [
+    {
+      "task_name": "1_healthy_food_organization_correction",
+      "task_description": "scene: Containers: fluted_block, dustbin. Objects: apple, hamburg, fork, book, sand-clock./task: Organize healthy items on the fluted_block and place unhealthy items into the dustbin./action: Pick apple and place into fluted_block. Pick hamburg and place into dustbin (wrong). Pick apple from fluted_block and place into dustbin. Pick fork and place into dustbin. Pick book and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/1_healthy_food_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_color_block_storage_correction",
+      "task_description": "scene: Containers: shoe_box, table. Objects: purple_block, can, scanner, book./task: Store the purple_block in the shoe_box and place the scanner on the table./action: Pick purple_block and place into shoe_box (wrong). Pick purple_block from shoe_box and place on table. Pick scanner and place on table.",
+      "output_file": "envs_gen/common_sense_correction/2_color_block_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "3_color_block_storage_correction",
+      "task_description": "scene: Containers: wooden_box, coaster. Objects: bottle, orange_block, tissue-box, french_fries./task: Store the orange_block in the wooden_box and place the bottle on the coaster./action: Pick orange_block and place into coaster (wrong). Pick orange_block from wooden_box and place into coaster. Pick bottle and place into wooden_box. Pick tissue-box and place into wooden_box. Pick french_fries and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/3_color_block_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "4_color_block_sorting_correction",
+      "task_description": "scene: Containers: tray, plate. Objects: red_block, blue_block, green_block, yellow_block, mug./task: Sort the primary color blocks into the tray and the secondary color block into the plate./action: Pick red_block and place into tray. Pick blue_block and place into tray (wrong). Pick blue_block from tray and place into plate. Pick green_block and place into tray. Pick yellow_block and place into plate. Pick mug and place on table.",
+      "output_file": "envs_gen/common_sense_correction/4_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "5_electronic_device_storage_correction",
+      "task_description": "scene: Containers: shoe_box, table. Objects: microphone, cup_with_handle, alarm-clock, shampoo, book./task: Store electronic devices in the shoe_box and non-electronic items on the table./action: Pick alarm-clock and place into shoe_box (wrong). Pick alarm-clock from shoe_box and place on table. Pick microphone and place into shoe_box. Pick cup_with_handle and place on table.",
+      "output_file": "envs_gen/common_sense_correction/5_electronic_device_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "6_container_organization_with_correction",
+      "task_description": "scene: Containers: tray, dustbin. Objects: bottle, cup_without_handle, mouse, stapler, knife./task: Organize office supplies into the tray and non-office items into the dustbin./action: Pick mouse and place into tray. Pick stapler and place into tray. Pick bottle and place into dustbin (wrong). Pick bottle from dustbin and place into tray. Pick cup_without_handle and place into dustbin. Pick knife and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/6_container_organization_with_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "7_container_organization_correction",
+      "task_description": "scene: Containers: fluted_block, table. Objects: mug, toycar, french_fries, bread, book./task: Organize items with handles into the fluted_block and items without handles onto the table./action: Pick mug and place into fluted_block. Pick toycar and place onto table (wrong). Pick toycar from fluted_block and place onto table. Pick french_fries and place into fluted_block. Pick bread and place onto table.",
+      "output_file": "envs_gen/common_sense_correction/7_container_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "8_tool_storage_rearrangement_correction",
+      "task_description": "scene: Containers: wooden_box, table. Objects: drill, hammer, dumbbell, screwdriver, book./task: Store power tools in the wooden_box and hand tools on the table./action: Pick drill and place into wooden_box (wrong). Pick drill from wooden_box and place on table. Pick hammer and place into wooden_box. Pick dumbbell and place into wooden_box. Pick screwdriver and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/8_tool_storage_rearrangement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "9_healthy_food_sorting_correction",
+      "task_description": "scene: Containers: plate, wooden_box. Objects: apple, hamburg, fork, dumbbell, scanner./task: Place the healthy foods into the plate and the office supplies into the wooden_box./action: Pick apple and place into wooden_box (wrong). Pick apple from wooden_box and place into plate. Pick fork and place into plate. Pick scanner and place into wooden_box. Pick hamburg and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/9_healthy_food_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "10_color_block_sorting_correction",
+      "task_description": "scene: Containers: coaster, plate. Objects: red_block, blue_block, green_block, orange_block, stapler./task: Sort the primary color blocks into the coaster and the secondary color blocks into the plate./action: Pick red_block and place into plate (wrong). Pick red_block from plate and place into coaster. Pick blue_block and place into coaster. Pick green_block and place into plate. Pick orange_block and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/10_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "11_electronic_device_organization_correction",
+      "task_description": "scene: Containers: fluted_block, tray. Objects: cup_with_handle, knife, microphone, stapler, scanner./task: Organize electronic devices into the fluted_block and non-electronic items into the tray./action: Pick knife and place into fluted_block (wrong). Pick knife from fluted_block and place into tray. Pick microphone and place into fluted_block. Pick scanner and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/11_electronic_device_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "12_healthy_food_and_tableware_placement",
+      "task_description": "scene: Containers: plate, dustbin. Objects: apple, french_fries, knife, fork, cup_without_handle./task: Place healthy foods on the plate and tableware into the dustbin./action: Pick apple and place into plate. Pick fork and place into dustbin (wrong). Pick fork from plate and place into dustbin. Pick knife and place into dustbin. Pick cup_without_handle and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/12_healthy_food_and_tableware_placement.py",
+      "status": "success"
+    },
+    {
+      "task_name": "13_tool_storage_correction",
+      "task_description": "scene: Containers: shoe_box, table. Objects: drill, hammer, mouse, tissue-box, alarm-clock, bottle./task: Store power tools in the shoe_box and electronic devices on the table./action: Pick drill and place into shoe_box (wrong). Pick drill from shoe_box and place into table. Pick hammer and place into shoe_box. Pick mouse and place into shoe_box. Pick tissue-box and place into shoe_box. Pick alarm-clock and place into shoe_box. Pick bottle and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/13_tool_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "14_timekeeping_device_storage_correction",
+      "task_description": "scene: Containers: coaster, plate. Objects: sand-clock, alarm-clock, yellow_block, purple_block, bread./task: Store timekeeping devices in the coaster and place other items on the plate./action: Pick sand-clock and place into coaster (wrong). Pick sand-clock from coaster and place into plate. Pick alarm-clock and place into coaster. Pick yellow_block and place into plate. Pick purple_block and place into plate. Pick bread and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/14_timekeeping_device_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "15_color_block_sorting_correction",
+      "task_description": "scene: Containers: tray, plate. Objects: green_block, blue_block, toycar, mug, pot-with-plant, cup_with_handle./task: Sort the primary color blocks into the tray and the secondary color blocks into the plate./action: Pick green_block and place into tray. Pick blue_block and place into tray (wrong). Pick blue_block from tray and place into plate. Pick toycar and place on table. Pick mug and place into pot-with-plant.",
+      "output_file": "envs_gen/common_sense_correction/15_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "16_color_block_sorting_correction",
+      "task_description": "scene: Containers: coaster, dustbin. Objects: screwdriver, yellow_block, microphone./task: Sort the yellow blocks into the coaster and the other objects into the dustbin./action: Pick yellow_block and place into coaster (wrong). Pick yellow_block from coaster and place into dustbin. Pick screwdriver and place into dustbin. Pick microphone and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/16_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "17_healthy_food_organization",
+      "task_description": "scene: Containers: fluted_block, plate. Objects: shampoo, drill, pot-with-plant, bread, cup_with_handle./task: Organize items that require hygiene into the fluted_block and items that are consumable into the plate./action: Pick shampoo and place into fluted_block. Pick drill and place into fluted_block (wrong). Pick drill from fluted_block and place into plate. Pick pot-with-plant and place into fluted_block. Pick bread and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/17_healthy_food_organization.py",
+      "status": "success"
+    },
+    {
+      "task_name": "18_timekeeping_device_storage_correction",
+      "task_description": "scene: Containers: wooden_box, shoe_box. Objects: sand-clock, alarm-clock, cup_without_handle, tissue-box, bottle./task: Store timekeeping devices in the wooden_box and other items in the shoe_box./action: Pick sand-clock and place into shoe_box (wrong). Pick sand-clock from shoe_box and place into wooden_box. Pick alarm-clock and place into wooden_box. Pick cup_without_handle and place into shoe_box. Pick tissue-box and place into shoe_box. Pick bottle and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/18_timekeeping_device_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "19_tool_organization_correction",
+      "task_description": "scene: Containers: tray, dustbin. Objects: screwdriver, purple_block, bell, mouse, cup_without_handle./task: Organize metal tools into the tray and non-metal objects into the dustbin./action: Pick screwdriver and place into tray. Pick purple_block and place into tray (wrong). Pick purple_block from tray and place into dustbin. Pick bell and place into dustbin. Pick mouse and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/19_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "20_color_block_sorting_correction",
+      "task_description": "scene: Containers: fluted_block, wooden_box. Objects: red_block, blue_block, green_block, yellow_block, purple_block, orange_block, toycar./task: Sort the primary color blocks into the fluted_block and the secondary color blocks into the wooden_box./action: Pick red_block and place into wooden_box (wrong). Pick red_block from wooden_box and place into fluted_block. Pick blue_block and place into wooden_box. Pick green_block and place into wooden_box. Pick yellow_block and place into fluted_block. Pick purple_block and place into wooden_box. Pick orange_block and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/20_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "21_tool_storage_correction",
+      "task_description": "scene: Containers: shoe_box, coaster. Objects: hammer, dumbbell, shampoo, bottle, book./task: Store metal tools in the shoe_box and non-metal items in the coaster./action: Pick hammer and place into shoe_box (wrong). Pick hammer from shoe_box and place into coaster. Pick dumbbell and place into shoe_box. Pick shampoo and place into coaster. Pick bottle and place into coaster. Pick book and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/21_tool_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "22_tool_organization_correction",
+      "task_description": "scene: Containers: fluted_block, dustbin. Objects: drill, dumbbell, fork, mouse, toycar./task: Organize power tools into the fluted_block and non-power tools into the dustbin./action: Pick drill and place into fluted_block (wrong). Pick drill from fluted_block and place into dustbin. Pick dumbbell and place into dustbin. Pick fork and place into dustbin. Pick mouse and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/22_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "23_healthy_food_and_container_sorting_correction",
+      "task_description": "scene: Containers: plate, tray. Objects: apple, hamburg, can, scanner, toycar./task: Place healthy foods into the plate and metal containers into the tray./action: Pick apple and place into tray (wrong). Pick apple from tray and place into plate. Pick can and place into tray. Pick scanner and place into tray. Pick hamburg and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/23_healthy_food_and_container_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "24_container_usage_correction",
+      "task_description": "scene: Containers: coaster, plate. Objects: mug, sand-clock, hammer, tissue-box, french_fries./task: Place items that are for drinking into the coaster and items that are for cleaning into the plate./action: Pick mug and place into coaster. Pick sand-clock and place into plate (wrong). Pick sand-clock from plate and place into coaster. Pick hammer and place into plate. Pick tissue-box and place into plate. Pick french_fries and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/24_container_usage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "25_color_block_sorting_correction",
+      "task_description": "scene: Containers: wooden_box, plate. Objects: green_block, red_block, purple_block, apple, pot-with-plant, stapler./task: Sort the primary color blocks into the wooden_box and the secondary color blocks into the plate./action: Pick green_block and place into wooden_box. Pick purple_block and place into plate (wrong). Pick purple_block from wooden_box and place into plate. Pick red_block and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/25_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "26_hygiene_and_food_storage_correction",
+      "task_description": "scene: Containers: shoe_box, fluted_block. Objects: shampoo, microphone, bread, toycar./task: Store hygiene products in the shoe_box and food items in the fluted_block./action: Pick shampoo and place into shoe_box. Pick microphone and place into shoe_box (wrong). Pick microphone from shoe_box and place into fluted_block. Pick bread and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/26_hygiene_and_food_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "27_food_sorting_and_correction",
+      "task_description": "scene: Containers: dustbin, plate. Objects: orange_block, pot-with-plant, knife, hamburg./task: Sort the non-food items into the dustbin and the food items into the plate./action: Pick knife and place into dustbin (wrong). Pick knife from dustbin and place into plate. Pick orange_block and place into dustbin. Pick pot-with-plant and place into dustbin. Pick hamburg and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/27_food_sorting_and_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "28_tool_organization_correction",
+      "task_description": "scene: Containers: tray, shoe_box. Objects: stapler, screwdriver, can, book, hammer./task: Organize metal tools into the tray and non-metal items into the shoe_box./action: Pick stapler and place into tray. Pick screwdriver and place into tray (wrong). Pick screwdriver from tray and place into shoe_box. Pick can and place into shoe_box. Pick book and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/28_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "29_timekeeping_device_storage_correction",
+      "task_description": "scene: Containers: wooden_box, plate. Objects: shampoo, book, sand-clock, alarm-clock, microphone, dumbbell./task: Store timekeeping devices with sound in the wooden_box and those without sound in the plate./action: Pick alarm-clock and place into wooden_box (wrong). Pick alarm-clock from wooden_box and place into plate. Pick microphone and place into wooden_box. Pick sand-clock and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/29_timekeeping_device_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "30_tool_storage_correction",
+      "task_description": "scene: Containers: wooden_box, dustbin. Objects: screwdriver, fork, tissue-box, scanner./task: Store metal tools in the wooden_box and non-metal objects in the dustbin./action: Pick screwdriver and place into dustbin (wrong). Pick screwdriver from dustbin and place into wooden_box. Pick fork and place into wooden_box. Pick tissue-box and place into dustbin. Pick scanner and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/30_tool_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "31_healthy_food_and_drinkware_grouping",
+      "task_description": "scene: Containers: coaster, wooden_box. Objects: apple, bottle, french_fries, cup_with_handle, mug, toycar./task: Place the healthy foods into the wooden_box and the drinkware into the coaster./action: Pick apple and place into wooden_box. Pick bottle and place into coaster. Pick french_fries and place into wooden_box (wrong). Pick french_fries from wooden_box and place into coaster. Pick cup_with_handle and place into coaster. Pick mug and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/31_healthy_food_and_drinkware_grouping.py",
+      "status": "success"
+    },
+    {
+      "task_name": "32_food_classification_correction",
+      "task_description": "scene: Containers: tray, fluted_block. Objects: knife, orange_block, hamburg, bread./task: Separate the food items into the tray and the fluted_block./action: Pick orange_block and place into tray (wrong). Pick orange_block from tray and place into fluted_block. Pick bread and place into tray. Pick hamburg and place into tray (wrong). Pick hamburg from tray and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/32_food_classification_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "33_color_block_sorting_correction",
+      "task_description": "scene: Containers: tray, wooden_box. Objects: red_block, green_block, blue_block, yellow_block, purple_block, orange_block, toycar./task: Sort the primary color blocks into the tray and the secondary color blocks into the wooden_box./action: Pick red_block and place into wooden_box (wrong). Pick red_block from tray and place into wooden_box. Pick green_block and place into tray. Pick blue_block and place into tray. Pick yellow_block and place into wooden_box. Pick purple_block and place into wooden_box. Pick orange_block and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/33_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "34_color_block_sorting_correction",
+      "task_description": "scene: Containers: shoe_box, wooden_box. Objects: blue_block, apple, mug, french_fries, cup_without_handle, drill./task: Sort the primary color blocks into the shoe_box and the secondary color blocks into the wooden_box./action: Pick blue_block and place into wooden_box. Pick apple and place into shoe_box (wrong). Pick apple from shoe_box and place into wooden_box. Pick mug and place into shoe_box. Pick french_fries and place into wooden_box. Pick cup_without_handle and place into shoe_box. Pick drill and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/34_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "35_container_usage_correction",
+      "task_description": "scene: Containers: coaster, dustbin. Objects: fork, stapler, knife./task: Place metal tableware into the coaster and non-metal office items into the dustbin./action: Pick fork and place into dustbin (wrong). Pick fork from dustbin and place into coaster. Pick stapler and place into coaster. Pick knife and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/35_container_usage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "36_decorative_item_sorting_correction",
+      "task_description": "scene: Containers: coaster, wooden_box. Objects: pot-with-plant, tissue-box, scanner, can, stapler, book, toycar./task: Place decorative items into the coaster and office items into the wooden_box./action: Pick pot-with-plant and place into wooden_box (wrong). Pick pot-with-plant from wooden_box and place into coaster. Pick tissue-box and place into coaster. Pick scanner and place into wooden_box. Pick can and place into wooden_box. Pick stapler and place into wooden_box. Pick book and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/36_decorative_item_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "37_electronic_device_organization_correction",
+      "task_description": "scene: Containers: tray, shoe_box. Objects: microphone, mouse, alarm-clock, dumbbell, toycar./task: Organize electronic devices into the tray and non-electronic items into the shoe_box./action: Pick microphone and place into tray. Pick mouse and place into tray. Pick alarm-clock and place into shoe_box (wrong). Pick alarm-clock from shoe_box and place into tray. Pick dumbbell and place into shoe_box. Pick toycar and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/37_electronic_device_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "38_food_container_organization_correction",
+      "task_description": "scene: Containers: fluted_block, coaster. Objects: bread, cup_without_handle, cup_with_handle, hamburg, fork./task: Organize the bread into the fluted_block and the drinkware into the coaster./action: Pick bread and place into coaster (wrong). Pick bread from coaster and place into fluted_block. Pick cup_without_handle and place into coaster. Pick cup_with_handle and place into coaster. Pick hamburg and place into fluted_block. Pick fork and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/38_food_container_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "39_tool_storage_correction",
+      "task_description": "scene: Containers: plate, wooden_box. Objects: screwdriver, yellow_block, drill, bottle, cup_with_handle./task: Store hand tools in the wooden_box and power tools in the plate./action: Pick screwdriver and place into plate (wrong). Pick screwdriver from wooden_box and place into plate. Pick yellow_block and place into wooden_box. Pick drill and place into plate.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "40_tool_storage_correction",
+      "task_description": "scene: Containers: dustbin, wooden_box. Objects: cup_with_handle, pot-with-plant, hammer, cup_without_handle./task: Store metal tools in the wooden_box and non-metal containers in the dustbin./action: Pick hammer and place into wooden_box (wrong). Pick hammer from wooden_box and place into dustbin. Pick cup_with_handle and place into dustbin. Pick pot-with-plant and place into dustbin. Pick cup_without_handle and place into dustbin.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "41_electronic_device_organization_correction",
+      "task_description": "scene: Containers: fluted_block, wooden_box. Objects: mouse, cup_without_handle, alarm-clock, sand-clock, scanner./task: Organize electronic devices into the fluted_block and non-electronic items into the wooden_box./action: Pick mouse and place into wooden_box (wrong). Pick mouse from fluted_block and place into wooden_box. Pick scanner and place into fluted_block. Pick cup_without_handle and place into wooden_box. Pick alarm-clock and place into fluted_block. Pick sand-clock and place into wooden_box.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "42_color_block_sorting_correction",
+      "task_description": "scene: Containers: shoe_box, fluted_block. Objects: purple_block, knife, tissue-box, shampoo, yellow_block./task: Sort the secondary color blocks into the shoe_box and the primary color blocks into the fluted_block./action: Pick purple_block and place into shoe_box (wrong). Pick purple_block from shoe_box and place into fluted_block. Pick yellow_block and place into shoe_box. Pick knife and place on table (wrong). Pick knife from table and place into shoe_box. Pick tissue-box and place into shoe_box. Pick shampoo and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/42_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "43_color_block_sorting_correction",
+      "task_description": "scene: Containers: shoe_box, dustbin. Objects: red_block, green_block, bell, mouse, toycar./task: Sort the red blocks into the shoe_box and the green blocks into the dustbin./action: Pick red_block and place into dustbin (wrong). Pick red_block from dustbin and place into shoe_box. Pick green_block and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/43_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "44_color_block_sorting_correction",
+      "task_description": "scene: Containers: tray, plate. Objects: yellow_block, green_block, blue_block, bottle./task: Sort the yellow blocks into the tray and the blue blocks into the plate./action: Pick yellow_block and place into plate (wrong). Pick yellow_block from tray and place into tray. Pick blue_block and place into tray. Pick bottle and place on table.",
+      "output_file": "envs_gen/common_sense_correction/44_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "45_tool_storage_correction",
+      "task_description": "scene: Containers: coaster, wooden_box. Objects: hammer, dumbbell, sand-clock, mug, drill./task: Store hand tools in the coaster and power tools in the wooden_box./action: Pick hammer and place into wooden_box. Pick dumbbell and place into wooden_box (wrong). Pick dumbbell from wooden_box and place into coaster. Pick sand-clock and place into coaster. Pick mug and place into coaster. Pick drill and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/45_tool_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "46_healthy_food_sorting_correction",
+      "task_description": "scene: Containers: plate, coaster. Objects: apple, bread, french_fries, fork, alarm-clock./task: Sort the healthy foods into the plate and the unhealthy foods into the coaster./action: Pick apple and place into coaster (wrong). Pick apple from coaster and place into plate. Pick bread and place into plate. Pick french_fries and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/46_healthy_food_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "47_color_block_organization_correction",
+      "task_description": "scene: Containers: fluted_block, wooden_box. Objects: red_block, orange_block, scanner, bottle, drill./task: Organize primary color blocks into the fluted_block and secondary color blocks into the wooden_box./action: Pick red_block and place into wooden_box (wrong). Pick red_block from wooden_box and place into fluted_block. Pick orange_block and place into fluted_block. Pick scanner and place into wooden_box. Pick bottle and place into wooden_box. Pick drill and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/47_color_block_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "48_healthy_food_and_sound_device_placement",
+      "task_description": "scene: Containers: plate, wooden_box. Objects: pot-with-plant, hamburg, mug, microphone./task: Place the healthy item into the plate and the sound device into the wooden_box./action: Pick pot-with-plant and place into wooden_box. Pick hamburg and place into plate (wrong). Pick hamburg from plate and place into wooden_box. Pick mug and place into plate. Pick microphone and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/48_healthy_food_and_sound_device_placement.py",
+      "status": "success"
+    },
+    {
+      "task_name": "49_color_block_sorting_correction",
+      "task_description": "scene: Containers: shoe_box, tray. Objects: red_block, orange_block, blue_block, yellow_block, green_block, purple_block, apple./task: Sort the primary color blocks into the shoe_box and the secondary color blocks into the tray./action: Pick red_block and place into shoe_box. Pick orange_block (wrong) and place into tray. Pick red_block from shoe_box and place into tray. Pick blue_block and place into shoe_box. Pick yellow_block and place into tray. Pick green_block and place into shoe_box. Pick purple_block and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/49_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "50_tool_storage_correction",
+      "task_description": "scene: Containers: plate, wooden_box. Objects: hammer, screwdriver, book, shampoo, mug./task: Store metal tools in the wooden_box and non-metal items in the plate./action: Pick hammer and place into plate (wrong). Pick hammer from plate and place into wooden_box. Pick screwdriver and place into wooden_box. Pick book and place into plate. Pick shampoo and place into plate. Pick mug and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/50_tool_storage_correction.py",
+      "status": "success"
+    }
+  ],
+  "timestamp": "20251104_224940"
+}
