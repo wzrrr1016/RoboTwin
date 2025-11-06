@@ -152,5 +152,5 @@ OBJECTS able to pick:
     "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse", "stapler", "shampoo", "bell", "dumbbell", "teanet",
     "red_block", "blue_block", "green_block", "yellow_block", "purple_block", "orange_block", "pink_block",
 
-You can use the 'self.table' to get the table actor in the environment.
+You can use the 'self.table' to get the table actor in the environment and you don't need to create a table in load_actor().
 '''

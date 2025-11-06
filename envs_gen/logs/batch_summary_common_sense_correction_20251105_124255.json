@@ -1,0 +1,24 @@
+{
+  "jsonl_file": "code_gen/task_info/common_sense_correction.jsonl",
+  "output_dir": "envs_gen/common_sense_correction",
+  "total_tasks": 7,
+  "successful_tasks": 2,
+  "error_tasks": 0,
+  "model": "local",
+  "temperature": 0,
+  "results": [
+    {
+      "task_name": "1_non_drinkware_placement_correction",
+      "task_description": "scene: Containers: wooden_box. Objects: bread, hammer, scanner, can, mug, tissue-box./task: Put non-drinkware items into the wooden_box./action: Pick bread and place into wooden_box. Pick hammer and place into wooden_box. Pick scanner and place into wooden_box. Pick mug and place into wooden_box (wrong). Pick mug from wooden_box and place on table (recovery). Pick tissue-box and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/1_non_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_non_tool_organization_correction",
+      "task_description": "scene: Containers: fluted_block. Objects: microphone, mouse, stapler, toycar, bottle, drill./task: Put non-tool items into the fluted_block./action: Pick stapler and place into fluted_block (wrong). Pick stapler from fluted_block and put the stapler back on the table (recovery). Pick microphone and place into fluted_block. Pick mouse and place into fluted_block. Pick toycar and place into fluted_block. Pick bottle and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/2_non_tool_organization_correction.py",
+      "status": "success"
+    }
+  ],
+  "timestamp": "20251105_124255"
+}
