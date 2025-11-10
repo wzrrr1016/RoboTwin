@@ -8,12 +8,15 @@ def get_modelname(actor_name):
         modelname = asset_models[actor_name]["model"]
         model_type = asset_models[actor_name].get("type","other")
         scale = asset_models[actor_name].get("scale",(1.0,1.0,1.0))
-        if model_type != "container":
-            scale = (scale[0]*0.95,scale[1]*0.95,scale[2]*0.95)
-        return modelname, model_type, scale
+        model_extents = asset_models[actor_name].get("extents",(0.1,0.1,0.1))
+        model_size = np.array(model_extents)*np.array(scale)
+        model_radius = max(np.linalg.norm(model_size[:2])/2.0, np.linalg.norm(model_size[1:])/2.0, np.linalg.norm(model_size[::2])/2.0)
+        # if model_type != "container":
+        #     scale = (scale[0]*0.95,scale[1]*0.95,scale[2]*0.95)
+        return modelname, model_type, scale, model_radius
     else:
-        print(f"Error: {actor_name} not in asset list")
-        return None, None, None
+        # print(f"Error: {actor_name} not in asset list")
+        return None, None, (1.0,1.0,1.0), 0.05
 
 def get_model_id(actor_name):
     if actor_name in asset_models.keys():
@@ -21,7 +24,7 @@ def get_model_id(actor_name):
         model_id = random.choice(idx_list)
         return model_id
     else:
-        print(f"Error: {actor_name} not in asset list")
+        # print(f"Error: {actor_name} not in asset list")
         return None
     
 def get_grasp_type(actor_name):
@@ -30,11 +33,7 @@ def get_grasp_type(actor_name):
     else:
         return "point"
     
-def get_args_from_modeltype(model_type, prohibited_area=None):
-    object_pose = None
-    zlim = [0.743]
-    xlim = [-0.28, 0.28]
-    ylim = [-0.20, 0.10]
+def get_args_from_modeltype(model_type,object_pose=None, radius=0.05, prohibited_area=None,xlim=[-0.28,0.28],ylim=[-0.20,0.10],zlim=[0.743]):
     if model_type == "object":
         rotate_lim = [1, 1, 1]
         rotate_rand = True
@@ -85,15 +84,17 @@ def get_args_from_modeltype(model_type, prohibited_area=None):
         is_static = False
         convex = True
 
-    object_pose = rand_pose(
-                xlim=xlim,
-                ylim=ylim,
-                zlim=zlim,
-                rotate_rand=rotate_rand,
-                rotate_lim=rotate_lim,
-                qpos=qpos,
-                prohibit_area=prohibited_area,
-            )
+    if object_pose is None:
+        object_pose = rand_pose(
+                    xlim=xlim,
+                    ylim=ylim,
+                    zlim=zlim,
+                    rotate_rand=rotate_rand,
+                    rotate_lim=rotate_lim,
+                    qpos=qpos,
+                    radius=radius,
+                    prohibit_area=prohibited_area,
+                )
 
     return object_pose, is_static, convex
 

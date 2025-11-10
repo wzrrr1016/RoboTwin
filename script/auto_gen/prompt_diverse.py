@@ -1,85 +1,23 @@
-from typing import List, Dict
+from typing import List, Dict, Optional, Any
 import json
 import random
+import os
+import sys
+try:
+    from .all_object import ATTR_KB, CONTAINER_KB, DISTRACTOR_KB
+except Exception:
+    # When executed as a script: python script/auto_gen/generate_task_info_diverse.py
+    _CURR_DIR = os.path.dirname(os.path.abspath(__file__))
+    if _CURR_DIR not in sys.path:
+        sys.path.append(_CURR_DIR)
+    from all_object import ATTR_KB, CONTAINER_KB, DISTRACTOR_KB
 
-
-def _format_selected(containers: List[str], objects: List[str]) -> str:
+def _format_selected(containers: List[str], object_candidates: List[str]) -> str:
     return (
         "Candidate containers: " + ", ".join(containers) + "\n" +
-        "Candidate objects: " + ", ".join(objects)
+        "Candidate task objects pool (choose 3-5 from these): " + ", ".join(object_candidates)
     )
 
-
-# Extended attribute knowledge base
-ATTR_KB: Dict[str, List[str]] = {
-    # foods and nutrition
-    "apple": ["food", "healthy", "red", "round", "natural", "fruit", "edible", "organic", "perishable"],
-    "bread": ["food", "fermented", "grain", "carbohydrate", "edible", "soft", "perishable"],
-    "hamburg": ["food", "unhealthy", "has_bread", "fermented", "contains_meat", "processed", "fast_food", "edible"],
-    "french_fries": ["food", "unhealthy", "fried", "yellow", "fast_food", "hot", "oily", "edible"],
-
-    # drinkware / liquid holders and handles
-    "bottle": ["liquid_container", "no_handle", "transparent", "plastic_or_glass", "portable", "drinkware", "recyclable"],
-    "cup": ["liquid_container", "unknown_handle", "drinkware", "for_drinking"],
-    "cup_with_handle": ["liquid_container", "has_handle", "drinkware", "for_hot_drinks", "easy_to_hold"],
-    "cup_without_handle": ["liquid_container", "no_handle", "drinkware", "for_cold_drinks", "hard_to_hold_when_hot"],
-    "mug": ["liquid_container", "has_handle", "drinkware", "for_hot_drinks", "ceramic"],
-    "can": ["liquid_container", "metal", "no_handle", "sealed", "cylindrical", "drinkware", "recyclable"],
-
-    # tableware and danger
-    "knife": ["tableware", "dangerous", "sharp", "metal", "cutting_tool", "requires_care"],
-    "fork": ["tableware", "metal", "for_eating", "has_prongs", "safe"],
-
-    # tools / repair / office
-    "screwdriver": ["tool", "repair", "metal", "hand_tool", "for_screws", "maintenance"],
-    "drill": ["tool", "repair", "electric", "power_tool", "for_holes", "maintenance", "heavy"],
-    "stapler": ["tool", "office", "metal", "for_paper", "binding_tool"],
-    "scanner": ["electronic", "office", "for_documents", "digital", "stationary"],
-    "mouse": ["electronic", "office", "computer_accessory", "plastic", "handheld"],
-    "hammer": ["tool", "repair", "metal", "hand_tool", "for_striking", "heavy"],
-
-    # toys / decor
-    "toycar": ["toy", "wheels", "for_children", "entertainment", "movable", "plastic"],
-    "pot-with-plant": ["plant", "decor", "green", "living", "needs_water", "decorative", "natural", "organic"],
-
-    # time / sound utilities
-    "alarm-clock": ["time", "sound", "electronic", "wakes_up", "displays_time", "makes_noise"],
-    "sand-clock": ["time", "no_sound", "analog", "visual", "passive", "decorative"],
-    "microphone": ["sound", "audio_input", "electronic", "for_recording", "captures_sound"],
-    "bell": ["sound", "audio_output", "metal", "for_alerting", "produces_sound", "ringing"],
-
-    # cleaning / bath / weight
-    "tissue-box": ["cleaning", "paper", "disposable", "for_wiping", "hygiene", "single_use", "recyclable"],
-    "shampoo": ["bath", "liquid", "hygiene", "for_hair", "personal_care", "consumable", "bottle_container"],
-    "dumbbell": ["heavy", "metal", "exercise", "fitness", "weight_training", "solid"],
-
-    # clothing
-    "shoe": ["clothing", "footwear", "wearable", "protective", "for_feet", "outdoor"],
-
-    # reading / material
-    "book": ["reading", "wood_material", "paper", "educational", "rectangular", "has_pages", "knowledge", "recyclable"],
-    "teanet": ["tea", "kitchen", "for_tea", "mesh", "strainer"],
-
-    # colored square blocks (RGB color model)
-    "red_block": ["block", "red", "primary_color", "square", "solid", "toy_or_tool"],
-    "green_block": ["block", "green", "primary_color", "square", "solid", "toy_or_tool"],
-    "blue_block": ["block", "blue", "primary_color", "square", "solid", "toy_or_tool"],
-    "yellow_block": ["block", "yellow", "secondary_color", "square", "solid", "toy_or_tool"],
-    "purple_block": ["block", "purple", "secondary_color", "square", "solid", "toy_or_tool"],
-    "orange_block": ["block", "orange", "tertiary_color", "square", "solid", "toy_or_tool"],
-    "pink_block": ["block", "pink", "tint", "square", "solid", "toy_or_tool"],
-}
-
-# Container attributes
-CONTAINER_KB: Dict[str, List[str]] = {
-    "plate": ["container", "food_surface", "flat", "circular", "for_food", "kitchen", "ceramic"],
-    "tray": ["container", "group_surface", "flat", "rectangular", "for_organization", "holds_multiple_items"],
-    "wooden_box": ["container", "storage", "enclosed", "wood", "for_general_items", "has_lid"],
-    "dustbin": ["container", "waste", "for_trash", "disposal", "unwanted_items", "recyclable_items"],
-    "fluted_block": ["container", "group_surface", "flat", "for_organization", "stable_base"],
-    "shoe_box": ["container", "for_shoe", "enclosed", "specific_purpose", "storage", "rectangular"],
-    "coaster": ["container", "for_drinkware", "flat", "protects_surface", "for_cups_and_mugs"],
-}
 
 # Color theory (RGB additive color model - mixing outcomes)
 COLOR_MIX = {
@@ -89,15 +27,15 @@ COLOR_MIX = {
 }
 
 
-def _format_attribute_sheet(containers: List[str], objects: List[str]) -> str:
+def _format_attribute_sheet(containers: List[str], object_candidates: List[str]) -> str:
     lines: List[str] = []
     lines.append("Attributes (use for reasoning, do not invent):")
     for c in containers:
         lines.append(f"- {c}: " + ", ".join(CONTAINER_KB.get(c, ["container"])))
-    for o in objects:
-        tags = ATTR_KB.get(o, [])
+    for obj in object_candidates:
+        tags = ATTR_KB.get(obj, [])
         if tags:
-            lines.append(f"- {o}: " + ", ".join(tags))
+            lines.append(f"- {obj}: " + ", ".join(tags))
     lines.append("Color mixing: " + ", ".join(f"{k}=>{v}" for k, v in COLOR_MIX.items()))
     return "\n".join(lines)
 
@@ -113,19 +51,37 @@ def _recent_summaries(previous_descs: List[str], max_items: int = 12) -> str:
 def _examples_correction() -> str:
     ex1 = {
         "task_name": "healthy_food_placement_correction",
-        "task_description": (
-            "scene: Containers: plate, wooden_box. Objects: apple, hamburg, french_fries,toycar./"
-            "task: Put the healthy items into the plate and unhealthy items into the wooden_box./"
-            "action: Pick apple and place into wooden_box (wrong). Pick apple from wooden_box and place into plate (recovery). Pick hamburg and place into wooden_box. Pick french_fries and place into wooden_box."
-        ),
+        "task_description": {
+            "scene": {
+                "containers": ["plate", "wooden_box"],
+                "objects": ["apple", "hamburg", "french_fries","bread"]
+            },
+            "task": "Put the healthy items into the plate and unhealthy items into the wooden_box.",
+            "action": [
+                "Pick apple and place it into wooden_box (wrong)",
+                "Pick apple from wooden_box and place it into plate (recovery)",
+                "Pick bread and place it into plate",
+                "Pick hamburg and place it into wooden_box",
+                "Pick french_fries and place it into wooden_box"
+            ]
+        }
     }
     ex2 = {
         "task_name": "liquid_container_grouping_correction",
-        "task_description": (
-            "scene: Containers: coaster, dustbin. Objects: bottle, cup_with_handle, mug,book./"
-            "task: Put drinkware with handles into the coaster and those without handles into the dustbin./"
-            "action: Pick bottle and place into coaster (wrong). Pick bottle from coaster and place into dustbin (recovery). Pick cup_with_handle and place into coaster. Pick mug and place into coaster."
-        ),
+        "task_description": {
+            "scene": {
+                "containers": ["coaster", "dustbin"],
+                "objects": ["bottle", "cup_with_handle", "mug", "cup_without_handle"]
+            },
+            "task": "Put drinkware with handles into the coaster and those without handles into the dustbin.",
+            "action": [
+                "Pick bottle and place it into coaster (wrong)",
+                "Pick bottle from coaster and place it into dustbin (recovery)",
+                "Pick cup_without_handle and place it into dustbin",
+                "Pick cup_with_handle and place it into coaster",
+                "Pick mug and place it into coaster"
+            ]
+        }
     }
     return json.dumps(ex1, ensure_ascii=False) + "\n" + json.dumps(ex2, ensure_ascii=False)
 
@@ -133,19 +89,33 @@ def _examples_correction() -> str:
 def _examples_wo_correction() -> str:
     ex1 = {
         "task_name": "shoe_storage_task",
-        "task_description": (
-            "scene: Containers: shoe_box, wooden_box. Objects: shoe, screwdriver./"
-            "task: Put footwear items into their designated storage and repair tools into general storage./"
-            "action: Pick shoe and place into shoe_box. Pick screwdriver and place into wooden_box."
-        ),
+        "task_description": {
+            "scene": {
+                "containers": ["shoe_box", "wooden_box"],
+                "objects": ["shoe", "screwdriver", "drill"]
+            },
+            "task": "Put footwear items into their designated storage and repair tools into general storage.",
+            "action": [
+                "Pick shoe and place it into shoe_box",
+                "Pick screwdriver and place it into wooden_box",
+                "Pick drill and place into it wooden_box"
+            ]
+        }
     }
     ex2 = {
         "task_name": "time_utility_organization",
-        "task_description": (
-            "scene: Containers: tray, dustbin. Objects: alarm-clock, sand-clock, bell./"
-            "task: Put time-related items into the tray and sound-only items into the dustbin./"
-            "action: Pick alarm-clock and place into tray. Pick sand-clock and place into tray. Pick bell and place into dustbin."
-        ),
+        "task_description": {
+            "scene": {
+                "containers": ["tray", "dustbin"],
+                "objects": ["alarm-clock", "sand-clock", "bell"]
+            },
+            "task": "Put time-related items into the tray and sound-only items into the dustbin.",
+            "action": [
+                "Pick alarm-clock and place it into tray",
+                "Pick sand-clock and place it into tray",
+                "Pick bell and place into it dustbin"
+            ]
+        }
     }
     return json.dumps(ex1, ensure_ascii=False) + "\n" + json.dumps(ex2, ensure_ascii=False)
 
@@ -154,67 +124,57 @@ def _system_block(mode: str) -> str:
     if mode == "correction":
         return (
             "Design a pick-place task with common sense reasoning and ONE mistake that gets corrected.\n"
-            "Output: {'task_name': '...', 'task_description': 'scene: .../task: .../action: ...'}\n\n"
+            "Output JSON format: {'task_name': '...', 'task_description': {'scene': {'containers': [...], 'objects': [...]}, 'task': '...', 'action': [...]}}\n\n"
+            "Process:\n"
+            "1. Select 1-2 containers from the provided list\n"
+            "2. Select 3-5 objects from the 'task objects pool'\n"
+            "3. Design the task based on common-sense properties\n"
+            "4. Design actions with ONE mistake\n\n"
             "Requirements:\n"
-            "- Use ONLY provided candidates (1-2 containers, 4-6 objects)\n"
-            "- IMPORTANT: Total items (containers + objects) must NOT exceed 8\n"
-            "- scene: MUST use format 'scene: Containers: X, Y. Objects: A, B, C./' (clearly separate containers and objects)\n"
-            "  * Can include 0-2 distractor objects (items not involved in the task)\n"
-            "- task: Use category descriptions requiring reasoning (e.g., 'Put healthy foods into plate')\n"
-            "  * NO specific item names, NO vague phrases like 'arrange by color'\n"
-            "  * Must specify target containers clearly\n"
-            "- action: Use format 'Pick X and place into/on Y'\n"
-            "  * Include ONE mistake: either wrong container OR wrong object (distractor)\n"
-            "  * Mark mistake with '(wrong)', then correct it with '(recovery)'\n"
-            "  * If wrong object: 'Pick X and place on table' to put it back\n"
-            "  * Mistake can occur at any step, not just first\n"
-            "  * MAXIMUM 6 pick-place operations (including correction)\n"
-            "\n"
-            "Knowledge:\n"
-            "• apple=healthy; hamburg,french_fries=unhealthy\n"
-            "• mug,cup_with_handle=has_handle; bottle,cup_without_handle=no_handle\n"
-            "• knife=dangerous; screwdriver,drill,hammer=repair; stapler,scanner,mouse=office\n"
-            "• alarm-clock=time+sound; sand-clock=time; bell,microphone=sound\n"
-            "• RGB color model: red/green/blue=primary; yellow/purple=secondary; orange=tertiary\n"
-            "• Color mixing: red+green=yellow, red+blue=purple, red+yellow=orange\n"
+            "- Use ONLY provided containers and objects\n"
+            "- scene: JSON format with 'containers' (list) and 'objects' (list)\n"
+            "- task: Single string describing the task using common-sense categories or features.Don't use one feature for one item, but a feature for a few objects. (e.g., 'Put healthy foods into plate')\n"
+            "  * NO specific item names, NO vague phrases like 'sort by color'\n" 
+            "  * Don't use opposite categories that every objects in the world can be categoried into the two categories(e.g., electronic item and non-electronic item)\n"
+            "- action: List of strings, each 'Pick X and place it into/on Y'\n"
+            "  * Include ONE mistake: mark with '(wrong)', then correct with '(recovery)'. \n"
+            "  * Mistake can occur at any step\n"
+            "  Mistake can be pick a wrong object and put it back on the table, or put an object into/on a wrong container and then correct it.\n"
+            "  * MAXIMUM 6 operations (including correction)\n"
         )
     else:
         return (
             "Design a pick-place task with common sense reasoning.\n"
-            "Output: {'task_name': '...', 'task_description': 'scene: .../task: .../action: ...'}\n\n"
+            "Output JSON format: {'task_name': '...', 'task_description': {'scene': {'containers': [...], 'objects': [...]}, 'task': '...', 'action': [...]}}\n\n"
+            "Process:\n"
+            "1. Select 1-2 containers from the provided list\n"
+            "2. Select 3-5 objects from the 'task objects pool' that share common attributes for your task\n"
+            "3. Design the task based on common-sense properties\n"
+            "4. Design correct actions\n\n"
             "Requirements:\n"
-            "- Use ONLY provided candidates (1-2 containers, 4-6 objects)\n"
-            "- IMPORTANT: Total items (containers + objects) must NOT exceed 8\n"
-            "- scene: MUST use format 'scene: Containers: X, Y. Objects: A, B, C./' (clearly separate containers and objects)\n"
-            "  * Can include 0-2 distractor objects (items not involved in the task)\n"
-            "- task: Use category descriptions requiring reasoning (e.g., 'Put healthy foods into plate')\n"
+            "- Use ONLY provided containers and objects\n"
+            "- scene: JSON format with 'containers' (list) and 'objects' (list)\n"
+            "- task: Single string describing the task using common-sense categories (e.g., 'Put healthy foods into plate')\n"
             "  * NO specific item names, NO vague phrases like 'arrange by color'\n"
-            "  * Must specify target containers clearly\n"
-            "- action: Use format 'Pick X and place into/on Y'\n"
-            "  * MAXIMUM 6 pick-place operations\n"
+            "  * Don't use opposite categories (e.g., 'electronic vs non-electronic')\n"
+            "- action: List of strings, each 'Pick X and place it into/on Y'\n"
             "  * All actions correct, NO mistakes\n"
-            "\n"
-            "Knowledge:\n"
-            "• apple=healthy; hamburg,french_fries=unhealthy\n"
-            "• mug,cup_with_handle=has_handle; bottle,cup_without_handle=no_handle\n"
-            "• knife=dangerous; screwdriver,drill,hammer=repair; stapler,scanner,mouse=office\n"
-            "• alarm-clock=time+sound; sand-clock=time; bell,microphone=sound\n"
-            "• RGB color model: red/green/blue=primary; yellow/purple=secondary; orange=tertiary\n"
-            "• Color mixing: red+green=yellow, red+blue=purple, red+yellow=orange\n"
+            "  * MAXIMUM 6 operations\n"
         )
 
 
 def common_sense_diverse(previous_descs: List[str], selected_containers: List[str],
-                        selected_objects: List[str], mode: str) -> List[Dict[str, str]]:
+                        object_candidates: List[str], mode: str) -> List[Dict[str, str]]:
     system = _system_block(mode)
     recent = _recent_summaries(previous_descs)
-    attr_sheet = _format_attribute_sheet(selected_containers, selected_objects)
+    attr_sheet = _format_attribute_sheet(selected_containers, object_candidates)
 
     user = (
-        _format_selected(selected_containers, selected_objects) + "\n\n" +
+        _format_selected(selected_containers, object_candidates) + "\n\n" +
         attr_sheet + "\n\n" +
-        "Recent tasks (avoid similar):\n" + recent + "\n\n" +
-        "Design ONE new task using ONLY candidates above. Return one JSON line.\n"
+        # "Recent tasks (avoid similar):\n" + recent + "\n\n" +
+        "Design ONE new task using ONLY candidates above.\n"
+        "Return one JSON object.\n\n"
         "Examples:\n" +
         (_examples_correction() if mode == "correction" else _examples_wo_correction())
     )
@@ -222,13 +182,66 @@ def common_sense_diverse(previous_descs: List[str], selected_containers: List[st
 
 
 def common_sense_correction(previous_descs: List[str], selected_containers: List[str],
-                           selected_objects: List[str]) -> List[Dict[str, str]]:
-    return common_sense_diverse(previous_descs, selected_containers, selected_objects, mode="correction")
+                           object_candidates: List[str]) -> List[Dict[str, str]]:
+    return common_sense_diverse(previous_descs, selected_containers, object_candidates, mode="correction")
 
 
 def common_sense_wo_correction(previous_descs: List[str], selected_containers: List[str],
-                               selected_objects: List[str]) -> List[Dict[str, str]]:
-    return common_sense_diverse(previous_descs, selected_containers, selected_objects, mode="wo_correction")
+                               object_candidates: List[str]) -> List[Dict[str, str]]:
+    return common_sense_diverse(previous_descs, selected_containers, object_candidates, mode="wo_correction")
+
+
+# New function for distractor selection (Stage 2)
+def select_distractors_prompt(task_description: Dict[str, Any], distractor_candidates: List[str],
+                              previous_distractors: Optional[List[str]] = None,
+                              validation_error: Optional[str] = None) -> List[Dict[str, str]]:
+    """
+    Generate prompt for LLM to select distractors that are irrelevant to the task.
+
+    Args:
+        task_description: Task description dict
+        distractor_candidates: Available distractor candidates (not used if using all from DISTRACTOR_KB)
+        previous_distractors: Previously selected distractors that failed validation (optional)
+        validation_error: The validation error message (optional)
+    """
+    task_text = task_description.get("task", "")
+    objects = task_description.get("scene", {}).get("objects", [])
+
+    # Get all available distractors (excluding task objects)
+    distractor_info = DISTRACTOR_KB.keys()
+    distractor_info = [k for k in distractor_info if k not in objects]
+
+    system = (
+        "You are selecting distractor objects for a robotic pick-and-place task.\n"
+        "Distractors are objects that should be present in the scene but NOT manipulated or mentioned in the task.\n"
+        "They must be completely IRRELEVANT to the task objectives."
+    )
+
+    user_parts = []
+    user_parts.append(f"Task description: {task_text}\n")
+    user_parts.append(f"Task objects (objects being manipulated): {', '.join(objects)}\n")
+
+    # If this is a retry, show previous failure
+    if previous_distractors and validation_error:
+        user_parts.append(f"\n⚠️ PREVIOUS ATTEMPT FAILED ⚠️")
+        user_parts.append(f"Previously selected distractors: {', '.join(previous_distractors)}")
+        user_parts.append(f"Validation error: {validation_error}")
+        user_parts.append(f"Please select DIFFERENT distractors that avoid this error.\n")
+
+    user_parts.append(f"Available distractor candidates:\n" + "\n".join(distractor_info) + "\n")
+    user_parts.append(
+        "Select 3-6 distractors that are:\n"
+        "1. Completely UNRELATED to the task objectives\n"
+        "2. NOT in the same category as task objects\n"
+        "3. Would NOT be confused with task objects\n"
+        "4. Do NOT share attributes mentioned in the task description\n\n"
+        "CRITICAL: DON'T select items that could be categorized by the same properties mentioned in the task.\n"
+        "Example: If task is 'Put drinkware items...', don't select items that are drinkware.\n\n"
+        "Return JSON format: {\"distractors\": [\"item1\", \"item2\", ...]}\n"
+        "Only output the JSON object, no additional text."
+    )
+
+    return [{"role": "system", "content": system}, {"role": "user", "content": "\n".join(user_parts)}]
 
 
 PROMPT_BUILDERS = {

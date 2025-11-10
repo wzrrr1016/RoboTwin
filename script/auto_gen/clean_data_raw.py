@@ -9,11 +9,11 @@ This script converts data from source directory to target directory format by:
 
 Usage:
     python script/auto_gen/clean_data_raw.py \
-        --source_dir data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
-        --target_dir robotwin_data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
-        --task_name 1_non_drinkware_placement_correction \
+        --source_dir data/pick_place_anything_imagine/demo_randomized \
+        --target_dir robotwin_data/pick_place_anything_imagine/demo_randomized \
+        --task_name pick_place_anything_imagine \
         --task_info code_gen/task_info/common_sense_correction.jsonl \
-        --episode 0
+        --episode 28
 
     Or use full path for task_name (will auto-extract short name):
     python script/auto_gen/clean_data_raw.py \

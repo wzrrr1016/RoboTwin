@@ -4,6 +4,22 @@ import transforms3d as t3d
 import sapien.physx as sapienp
 from .create_actor import *
 
+def check_overlap(radius, x, y, area):
+    if x <= area[0]:
+        dx = area[0] - x
+    elif area[0] < x and x < area[2]:
+        dx = 0
+    elif x >= area[2]:
+        dx = x - area[2]
+    if y <= area[1]:
+        dy = area[1] - y
+    elif area[1] < y and y < area[3]:
+        dy = 0
+    elif y >= area[3]:
+        dy = y - area[3]
+
+    return dx * dx + dy * dy <= radius * radius
+
 
 def rand_pose(
     xlim: np.ndarray,
@@ -13,6 +29,7 @@ def rand_pose(
     rotate_rand=False,
     rotate_lim=[0, 0, 0],
     qpos=[1, 0, 0, 0],
+    radius=0.1,
     prohibit_area=None,
 ) -> sapien.Pose:
     if len(xlim) < 2 or xlim[1] < xlim[0]:
@@ -33,6 +50,9 @@ def rand_pose(
             for area in prohibit_area:
                 x_min, y_min, x_max, y_max = area[0], area[1], area[2], area[3]
                 if x_min <= x <= x_max and y_min <= y <= y_max:
+                    flag = False
+                    break
+                if check_overlap(radius, x, y, area):
                     flag = False
                     break
             if flag:

@@ -15,6 +15,7 @@ import os
 import json
 import argparse
 from datetime import datetime
+from typing import Dict, Any, List, Optional, Tuple
 
 # Add the project root directory to the system path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -81,9 +82,25 @@ def generate_code_for_task(task_info, gpt_model="local", temperature=0):
         {"role": "user", "content": Prompt}
     ]
 
+    def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
+        from zai import ZhipuAiClient
+        API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
+        MODEL = "glm-4-flash"
+
+        # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+        client = ZhipuAiClient(api_key=API_KEY)
+        resp = client.chat.completions.create(
+            model=MODEL,
+            messages=messages,
+            # stream=False,
+            temperature=temperature,
+        )
+        return resp.choices[0].message.content
+
     # Use model to generate code
     print("Calling model to generate...")
-    res = generate(messages, gpt=gpt_model, temperature=temperature)
+    # res = generate(messages, gpt=gpt_model, temperature=temperature)
+    res = gpt_agent(messages, temperature=temperature)
     print("Model generation completed")
 
     # Extract relevant parts of the generated code

@@ -9,13 +9,15 @@ class pick_place_anything_imagine(Imagine_Task):
     def load_actors(self):
 
         self.plate = self.add_actor("wooden_box","plate")
-        self.object = self.add_actor("teanet","object")
+        self.object = self.add_actor("bottle","object")
         # self.apple = self.add_actor("apple","apple")
         # self.fruit = self.add_actor("fruit","fruit")
         # self.bottle = self.add_actor("bottle","bottle")
         # self.bowl = self.add_actor("bowl","bowl")
         # self.can = self.add_actor("can","can")
         # self.calculator = self.add_actor("calculator","calculator")
+        distractor_list = ["apple","fruit","bowl","can","calculator","blue_block","red_block","green_block"]
+        self.add_distractors(distractor_list)
 
     def play_once(self):
         self.save_camera_rgb("/home/wangzhuoran/RoboTwin/data/first_img.png",'front_camera')

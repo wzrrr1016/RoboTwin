@@ -3,7 +3,7 @@ from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class non_tool_organization_correction_2(Imagine_Task):
+class non_tool_organization_correction(Imagine_Task):
     def load_actors(self):
         # Add the container
         self.fluted_block = self.add_actor("fluted_block", "fluted_block")

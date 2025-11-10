@@ -138,7 +138,7 @@ class Base_Task(gym.Env):
         self.load_actors()
 
         if self.cluttered_table:
-            self.get_cluttered_table()
+            self.get_cluttered_table(cluttered_numbers=0)
 
         is_stable, unstable_list = self.check_stable()
         if not is_stable:
@@ -333,6 +333,16 @@ class Base_Task(gym.Env):
         self.wall = create_box(
             self.scene,
             sapien.Pose(p=[0, 1, 1.5]),
+            half_size=[3, 0.6, 1.5],
+            color=(1, 0.9, 0.9),
+            name="wall",
+            texture_id=self.wall_texture,
+            is_static=True,
+        )
+
+        self.wall2 = create_box(
+            self.scene,
+            sapien.Pose(p=[0, -1.5, 1.5]),
             half_size=[3, 0.6, 1.5],
             color=(1, 0.9, 0.9),
             name="wall",

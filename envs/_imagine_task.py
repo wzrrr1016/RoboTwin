@@ -19,15 +19,12 @@ class Imagine_Task(Base_Task):
         if "block" in object_type and object_type != "fluted_block":
             object_type = "block"
             return self.add_actor_block(object_name, object_pose)
-        modelname, model_type, scale = get_modelname(object_type)
+        modelname, model_type, scale, radius = get_modelname(object_type)
         if model_id is None:
             model_id = get_model_id(object_type)
-        rand_object_pose, is_static, convex = get_args_from_modeltype(model_type, self.prohibited_area)
+        object_pose, is_static, convex = get_args_from_modeltype(model_type, object_pose, radius, self.prohibited_area)
         if static is not None:
             is_static = static
-        # print("create object:",object_name, " type:",object_type," model:",modelname," id:",model_id)
-        if object_pose is None:
-            object_pose = rand_object_pose
             
         actor = create_actor(
             scene=self,
@@ -54,7 +51,42 @@ class Imagine_Task(Base_Task):
         block.set_object_type("block")
         self.add_prohibit_area(block,padding=0.02)
         return block
+    
+    def add_distractors(self, distractor_list=[],xlim=[-0.45, 0.45], ylim=[-0.3, 0.3], zlim=[0.741]):
+        self.record_cluttered_objects = distractor_list
 
+        xlim[0] += self.table_xy_bias[0]
+        xlim[1] += self.table_xy_bias[0]
+        ylim[0] += self.table_xy_bias[1]
+        ylim[1] += self.table_xy_bias[1]
+        for distractor_name in distractor_list:
+            object_pose = None
+            object_type = object_name = distractor_name
+            # if "block" in object_type and object_type != "fluted_block":
+            modelname, model_type, scale, radius = get_modelname(object_type)
+            model_id = get_model_id(object_type)
+
+            object_pose, is_static, convex = get_args_from_modeltype(model_type, object_pose, radius, self.prohibited_area,xlim,ylim,zlim)
+
+            if "block" in object_type and object_type != "fluted_block":
+                object_type = "block"
+                return self.add_actor_block(object_name, object_pose)
+                
+            actor = create_actor(
+                scene=self,
+                pose=object_pose,
+                modelname=modelname,
+                convex=convex,
+                is_static=is_static,
+                scale=scale,
+                model_id=model_id,
+            )
+
+            self.add_prohibit_area(actor,padding=0.01)
+            actor.set_name(object_name)
+            actor.set_object_type(object_type)
+            actor.set_model_id(model_id)
+            
     def create_box_pose(self,num, block_half_size=0.02):
         block_pose_lst = []
     

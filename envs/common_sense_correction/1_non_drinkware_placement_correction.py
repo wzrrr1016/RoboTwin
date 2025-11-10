@@ -3,7 +3,7 @@ from envs._imagine_task import Imagine_Task
 from envs.utils import *
 import sapien
 
-class non_drinkware_placement_correction_1(Imagine_Task):
+class non_drinkware_placement_correction(Imagine_Task):
     def load_actors(self):
         # Load the wooden box as a container
         self.wooden_box = self.add_actor("wooden_box", "wooden_box")

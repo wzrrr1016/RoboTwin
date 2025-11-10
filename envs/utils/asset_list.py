@@ -320,7 +320,8 @@ asset_models = {
     "baguette": {
         "model": "054_baguette",
         "idx": [2,3],
-        "type": "object_flat"
+        "type": "object_flat",
+        "scale": (0.85,0.85,0.85)
         },
     "small-speaker": {
         "model": "055_small-speaker",
@@ -345,7 +346,8 @@ asset_models = {
     "battery": {
         "model": "061_battery",
         "idx": [0,1,2,3,4,5],
-        "type": "object"
+        "type": "object",
+        "scale":(0.04,0.04,0.04)
         },
     "plasticbox": {
         "model": "062_plasticbox",
@@ -355,17 +357,20 @@ asset_models = {
     "tabletrashbin": {
         "model": "063_tabletrashbin",
         "idx": [0,1,2,3,4,5,6,7,8,9,10],
-        "type": "container"
+        "type": "container",
+        "scale":(1.1,1.1,1.1)
         },
     "msg": {
         "model": "064_msg",
         "idx": [0,1,2,3,4,5],
-        "type": "bottle"
+        "type": "bottle",
+        "scale":(0.06,0.06,0.06)
         },
     "soy-sauce": {
         "model": "065_soy-sauce",
         "idx": [0,1,2,3,4],
-        "type": "bottle"
+        "type": "bottle",
+        "scale":(0.6,0.6,0.6)
         },
     "vinegar": {
         "model": "066_vinegar",
@@ -633,10 +638,5 @@ asset_models = {
 
 # point_grasp_list = ['bottle','french-fries','hamburg']
 predict_grasp_list = ['calculator','fruit','cup-with-liquid','chips-tub','pet-collar',
-                      'table-tennis','roll-paper','olive-oil','jam-jar','milk-box']
-
-
-'''
-object able to pick:
-bottle, 
-'''
+                      'table-tennis','roll-paper','olive-oil','jam-jar','milk-box','baguette',
+                      'battery','msg','soy-sauce']

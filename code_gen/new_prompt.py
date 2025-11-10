@@ -34,7 +34,11 @@ AVAILABLE_ENV_FUNCTION_LOAD_ACTORS = {
         Args:\
         object_type: The type of the object to be added, eg. plate \
         object_name: The name of the object to be added, eg. plate_0\
-        return: actor"
+        return: actor",
+    "add_distractor":
+    "def add_distractor(self, object_list):\
+        Args:\
+        object_list: create distractor objects to the environment."
 }
 
 AVAILABLE_ENV_FUNCTION_PLAY_ONCE = {
@@ -68,6 +72,7 @@ First you need to complete the load_actors function, which is used to load the a
 You can use the following functions to load actors:
 
 add_actor: Add an actor to the environment.
+add_distractor: Add distractor objects to the environment.
 
 For example:
 ```python
@@ -78,6 +83,8 @@ For example:
         self.fruit = self.add_actor("fruit","fruit")
         self.bottle = self.add_actor("bottle","bottle")
         self.can = self.add_actor("can","can")
+        distractor_list = ["bottle", "shampoo", "bread", "calculator"]
+        self.add_distractors(distractor_list)
 ```
 
 Next, you need to complete the play_once function, which is used to define the action of the robot arm. 

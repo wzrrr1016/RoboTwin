@@ -24,7 +24,7 @@ current_file_path = os.path.abspath(__file__)
 parent_directory = os.path.dirname(current_file_path)
 
 
-def class_decorator(task_name):
+def class_decorator(task_name, task_folder=None):
     import re
 
     # Convert old format to new format if needed
@@ -36,10 +36,36 @@ def class_decorator(task_name):
         name_part = match.group(2)
         # Both module name and class name use the new format
         module_name = f"{number}_{name_part}"
-        class_name = f"{name_part}_{number}"
+        class_name = f"{name_part}"
     else:
         module_name = task_name
         class_name = task_name
+
+    # If task_folder is provided, try to import from that folder first
+    if task_folder:
+        # Convert path like "envs_gen/common_sense_correction_glm4" to module path
+        # "envs_gen.common_sense_correction_glm4"
+        folder_module = task_folder.replace('/', '.')
+
+        # Try to import from the specified folder
+        try:
+            envs_module = importlib.import_module(f"{folder_module}.{module_name}")
+            env_class = getattr(envs_module, class_name)
+            print(f"Successfully loaded class '{class_name}' from {folder_module}.{module_name}")
+            return env_class()
+        except Exception as e:
+            print(f"Failed to import from {folder_module}.{module_name}: {e}")
+            pass
+
+        # Try with original task_name as class name
+        try:
+            envs_module = importlib.import_module(f"{folder_module}.{module_name}")
+            env_class = getattr(envs_module, task_name)
+            print(f"Successfully loaded class '{task_name}' from {folder_module}.{module_name}")
+            return env_class()
+        except Exception as e:
+            print(f"Failed to import class '{task_name}' from {folder_module}.{module_name}: {e}")
+            pass
 
     # Try direct import first: envs.<module_name>
     try:
@@ -83,9 +109,9 @@ def get_embodiment_config(robot_file):
     return embodiment_args
 
 
-def main(task_name=None, task_config=None):
+def main(task_name=None, task_config=None, task_folder=None):
 
-    task = class_decorator(task_name)
+    task = class_decorator(task_name, task_folder)
     config_path = f"./task_config/{task_config}.yml"
 
     with open(config_path, "r", encoding="utf-8") as f:
@@ -299,19 +325,19 @@ def run(TASK_ENV, args):
                     TASK_ENV.viewer.close()
                 clear_cache()
                 time.sleep(0.3)
-            except Exception as e:
-                # stack_trace = traceback.format_exc()
-                print(" -------------")
-                print(f"simulate data episode {suc_num} fail! (seed = {epid})")
-                print("Error: ", e)
-                print(" -------------")
-                fail_num += 1
-                TASK_ENV.close_env()
+            # except Exception as e:
+            #     # stack_trace = traceback.format_exc()
+            #     print(" -------------")
+            #     print(f"simulate data episode {suc_num} fail! (seed = {epid})")
+            #     print("Error: ", e)
+            #     print(" -------------")
+            #     fail_num += 1
+            #     TASK_ENV.close_env()
 
-                if args["render_freq"]:
-                    TASK_ENV.viewer.close()
-                time.sleep(1)
-                clear_cache()
+            #     if args["render_freq"]:
+            #         TASK_ENV.viewer.close()
+            #     time.sleep(1)
+            #     clear_cache()
             epid += 1
 
             with open(os.path.join(args["save_path"], "seed.txt"), "w") as file:
@@ -338,10 +364,13 @@ if __name__ == "__main__":
     mp.set_start_method("spawn", force=True)
 
     parser = ArgumentParser()
-    parser.add_argument("task_name", type=str)
-    parser.add_argument("task_config", type=str)
-    parser = parser.parse_args()
-    task_name = parser.task_name
-    task_config = parser.task_config
+    parser.add_argument("task_name", type=str, help="Task name (e.g., 1_tool_organization_correction)")
+    parser.add_argument("task_config", type=str, help="Task config file name (without .yml)")
+    parser.add_argument("--task_folder", type=str, default=None,
+                        help="Optional task folder path (e.g., envs_gen/common_sense_correction_glm4)")
+    args = parser.parse_args()
+    task_name = args.task_name
+    task_config = args.task_config
+    task_folder = args.task_folder
 
-    main(task_name=task_name, task_config=task_config)
+    main(task_name=task_name, task_config=task_config, task_folder=task_folder)

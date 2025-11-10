@@ -1,3 +1,14 @@
+'''
+Usage:
+python script/auto_gen/generate_task_info_diverse.py \
+    --categories common_sense \
+    --output_dir /home/wangzhuoran/RoboTwin/code_gen/task_info/ \
+    --num_per_mode 5 \
+    --modes correction \
+    --enable_validation
+    
+'''
+
 import os
 import json
 import argparse
@@ -8,56 +19,59 @@ import sys
 
 try:
     # When executed as a module: python -m script.auto_gen.generate_task_info_diverse
-    from .prompt_diverse import PROMPT_BUILDERS, ATTR_KB
+    from .prompt_diverse import PROMPT_BUILDERS, select_distractors_prompt
+    from .all_object import ATTR_KB, CONTAINER_KB, DISTRACTOR_KB
 except Exception:
     # When executed as a script: python script/auto_gen/generate_task_info_diverse.py
     _CURR_DIR = os.path.dirname(os.path.abspath(__file__))
     if _CURR_DIR not in sys.path:
         sys.path.append(_CURR_DIR)
-    from prompt_diverse import PROMPT_BUILDERS, ATTR_KB
+    from prompt_diverse import PROMPT_BUILDERS, select_distractors_prompt
+    from all_object import ATTR_KB, CONTAINER_KB, DISTRACTOR_KB
 
 # ---------------- LLM bridge (local backend via code_gen/gpt_agent) ----------------
-# from openai import OpenAI
-# def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.2) -> str:
-#     OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
-#     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-#     MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
+from openai import OpenAI
+def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.7) -> str:
+    # OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
+    # OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
+    # MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
 
-#     client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
-#     resp = client.chat.completions.create(
-#         model=MODEL,
-#         messages=messages,
-#         stream=False,
-#         temperature=temperature,
-#     )
-#     return resp.choices[0].message.content
-
-def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
-    from zai import ZhipuAiClient
-    API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
-    MODEL = "glm-4-flash"
-
-    # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
-    client = ZhipuAiClient(api_key=API_KEY)
+    MODEL = os.environ.get("OPENAI_API_BASE", "gpt-5-mini")
+    OPENAI_API_BASE = os.environ.get("OPENAI_API_KEY", "https://chatapi.onechats.ai/v1")
+    OPENAI_API_KEY = "sk-Eve6SR1Tr2zZ0IhiJE8G14MzVpyun4rhbNfi49ast5ufyl5G"
+    client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
     resp = client.chat.completions.create(
         model=MODEL,
         messages=messages,
-        # stream=False,
+        stream=False,
         temperature=temperature,
     )
     return resp.choices[0].message.content
+
+# def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.7) -> str:
+#     from zai import ZhipuAiClient
+#     API_KEY = os.environ.get("OPENAI_API_KEY", "a540dedc345f7f25a6e5443cf533cc11.P1UxjgNxul3PEP0d")
+#     MODEL = "glm-4.6"
+
+#     # client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
+#     client = ZhipuAiClient(api_key=API_KEY)
+#     resp = client.chat.completions.create(
+#         model=MODEL,
+#         messages=messages,
+#         # stream=False,
+#         temperature=temperature,
+#     )
+#     return resp.choices[0].message.content
 
 # ---------------- Allowed items ----------------
 CONTAINERS: List[str] = [
     "plate", "tray", "wooden_box", "dustbin", "fluted_block", "shoe_box", "coaster",
 ]
 
-OBJECTS: List[str] = [
-    "hammer", "microphone", "bottle", "can", "cup", "cup_with_handle", "cup_without_handle", "pot-with-plant",
-    "apple", "hamburg", "bread", "french_fries", "toycar", "tissue-box", "scanner", "drill", "screwdriver", "fork",
-    "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse", "stapler", "shampoo", "bell", "dumbbell", "teanet",
-    "red_block", "blue_block", "green_block", "yellow_block", "purple_block", "orange_block", "pink_block",
-]
+OBJECTS: List[str] = [k for k in ATTR_KB.keys()]
+
+# Get available distractors from DISTRACTOR_KB
+DISTRACTORS: List[str] = [k for k in DISTRACTOR_KB.keys() if k not in OBJECTS]
 
 
 def read_jsonl(path: str) -> List[Dict[str, Any]]:
@@ -82,7 +96,13 @@ def collect_previous_descriptions(category: str, output_dir: str) -> List[str]:
         path = os.path.join(output_dir, f"{category}_{mode}.jsonl")
         for row in read_jsonl(path):
             desc = row.get("task_description")
-            if isinstance(desc, str):
+            if isinstance(desc, dict):
+                # New format: extract task text
+                task_text = desc.get("task", "")
+                if task_text:
+                    prev.append(task_text.strip())
+            elif isinstance(desc, str):
+                # Old format: use as is
                 prev.append(desc.strip())
     return prev
 
@@ -133,8 +153,14 @@ def _strip_reasoning_segment(desc: str) -> str:
     return '/'.join(kept)
 
 
-def _sample_items(prev_descs: List[str]) -> Tuple[List[str], List[str]]:
-    # Prioritize underused items AND ensure diverse attribute coverage
+def _sample_items(prev_descs: List[str]) -> Tuple[List[str], List[str], List[str]]:
+    """
+    Sample containers, a pool of candidate objects, and a pool of candidate distractors.
+    The LLM will later select from each pool separately.
+
+    Returns:
+        (containers, object_candidates, distractor_candidates)
+    """
     def usage_counts(items: List[str]) -> Dict[str, int]:
         counts = {it: 0 for it in items}
         for desc in prev_descs:
@@ -145,10 +171,7 @@ def _sample_items(prev_descs: List[str]) -> Tuple[List[str], List[str]]:
 
     cont_counts = usage_counts(CONTAINERS)
     obj_counts = usage_counts(OBJECTS)
-
-    # Underused ranking
-    under_cont = sorted(CONTAINERS, key=lambda x: (cont_counts.get(x, 0), random.random()))
-    under_obj = sorted(OBJECTS, key=lambda x: (obj_counts.get(x, 0), random.random()))
+    distractor_counts = usage_counts(DISTRACTORS)
 
     # Expanded attribute buckets for greater diversity
     target_attrs_groups = [
@@ -158,7 +181,7 @@ def _sample_items(prev_descs: List[str]) -> Tuple[List[str], List[str]]:
         ["time", "sound"],                           # time/sound utilities
         ["heavy", "light"],                          # weight contrast
         ["cleaning", "hygiene"],                     # cleaning/hygiene
-        ["clothing", "footwear"],                    # wearable items
+        ["clothing", "footwear", "wearable"],        # wearable items
         ["dangerous", "sharp", "safe"],              # safety levels
         ["tableware", "for_eating"],                 # eating utensils
         ["primary_color", "red", "green", "blue"],   # primary colors
@@ -175,65 +198,169 @@ def _sample_items(prev_descs: List[str]) -> Tuple[List[str], List[str]]:
         ["recyclable", "disposable"],                # environmental
         ["portable", "stationary"],                  # mobility
         ["for_hot_drinks", "for_cold_drinks"],       # drink temperature
+        # Additional attribute groups
+        ["round", "square", "cylindrical", "rectangular", "circular"],  # shapes
+        ["flat", "solid"],                           # structure
+        ["sealed", "filled", "liquid"],              # container states
+        ["kitchen", "cooking"],                      # kitchen items
+        ["audio_input", "audio_output", "captures_sound", "produces_sound"],  # audio functionality
+        ["hand_tool", "power_tool", "electric"],     # tool types
+        ["fruit", "grain", "carbohydrate", "protein"],  # food types
+        ["fermented", "fried", "processed", "raw"],  # food processing
+        ["soft", "hard", "bouncy"],                  # texture
+        ["transparent", "opaque"],                   # visibility
+        ["sport", "fitness", "exercise"],            # sports/fitness
+        ["reading", "educational", "knowledge"],     # educational items
+        ["bath", "personal_care", "consumable"],     # personal care
+        ["for_children", "for_adults"],              # age groups
+        ["needs_water", "living", "decorative"],     # living things
+        ["writing_tool", "stationery"],              # writing items
+        ["pet_accessory", "for_animals"],            # pet items
+        ["battery_powered", "power_source", "energy_storage"],  # power related
+        ["fast_food", "snack"],                      # junk food
+        ["nutritious", "dairy"],                     # healthy food types
+        ["seasoning", "flavor_enhancer", "salty", "sweet"],  # flavors
+        ["handheld", "movable"],                     # portability
+        ["absorbent", "single_use"],                 # disposable items
+        ["cutting_tool", "for_screws", "for_holes", "for_striking"],  # tool functions
+        ["for_drinking", "for_wiping", "for_hair"],  # specific purposes
+        ["computer_accessory", "for_documents", "digital"],  # tech accessories
+        ["packaged", "bottle_container", "glass_container", "carton"],  # packaging types
+        ["oily", "spillable"],                       # liquid properties
+        ["needs_care", "requires_care", "protective"],  # care requirements
+        ["strap", "adjustable"],                     # accessories
+        ["small", "lightweight"],                    # size
+        ["white", "black", "dark"],                  # neutral colors
+        ["pink", "tint"],                            # light colors
+        ["blocks", "toy_or_tool"],                   # blocks
     ]
 
-    # Choose a larger subset for more diverse coverage (increased from 5 to 6-8)
-    num_groups = random.randint(6, 8)
+    # Choose multiple attribute groups for diverse coverage
+    num_groups = random.randint(8, 12)  # Increased to provide more diverse candidates
     chosen_groups = random.sample(target_attrs_groups, k=min(num_groups, len(target_attrs_groups)))
     chosen_attrs = set(a for g in chosen_groups for a in g)
 
-    # Containers: ensure at least one that aligns with rules (plate, shoe_box, coaster, dustbin, wooden_box)
+    # Select containers (1-2)
     priority_containers = ["plate", "shoe_box", "coaster", "dustbin", "wooden_box", "tray", "fluted_block"]
     under_cont_sorted = sorted(priority_containers, key=lambda x: (cont_counts.get(x, 0), random.random()))
-    k_cont = random.randint(1, 2)  # 1-2 containers
+    k_cont = random.randint(1, 2)
     containers = under_cont_sorted[:k_cont]
 
-    # Calculate max objects to ensure total (containers + objects) <= 7
-    max_objects = 7 - k_cont  # Maximum objects allowed
-    k_total = random.randint(max(2, max_objects - 2), max_objects)  # 2-5 objects typically
+    # Build SEPARATE candidate pools for objects and distractors
+    # Objects pool: from OBJECTS that match chosen attributes
+    object_candidates: List[str] = []
+    objects_sorted = sorted(OBJECTS, key=lambda x: (obj_counts.get(x, 0), random.random()))
 
-    # Pick objects that collectively cover chosen attributes, preferring underused
-    selected: List[str] = []
-    covered: set = set()
-    for obj in under_obj:
+    for obj in objects_sorted:
         tags = set(ATTR_KB.get(obj, []))
         if tags & chosen_attrs:
-            selected.append(obj)
-            covered |= (tags & chosen_attrs)
-        if len(selected) >= k_total:
-            break
+            object_candidates.append(obj)
 
-    # Backfill with more underused/random objects if needed
-    for obj in under_obj:
-        if len(selected) >= k_total:
-            break
-        if obj not in selected:
-            selected.append(obj)
-    while len(selected) < k_total:
-        cand = random.choice(OBJECTS)
-        if cand not in selected:
-            selected.append(cand)
+    # Ensure we have enough object candidates (6-10 items)
+    target_obj_size = random.randint(6, 10)
+    if len(object_candidates) < target_obj_size:
+        remaining = [obj for obj in objects_sorted if obj not in object_candidates]
+        additional = random.sample(remaining, min(target_obj_size - len(object_candidates), len(remaining)))
+        object_candidates.extend(additional)
 
-    random.shuffle(selected)
+    random.shuffle(object_candidates)
+    object_candidates = object_candidates[:target_obj_size]
 
-    # Ensure total doesn't exceed 7
-    total_items = len(containers) + len(selected)
-    if total_items > 7:
-        selected = selected[:7 - len(containers)]
+    # Distractors pool: from DISTRACTORS that match chosen attributes
+    distractor_candidates: List[str] = []
+    distractors_sorted = sorted(DISTRACTORS, key=lambda x: (distractor_counts.get(x, 0), random.random()))
 
-    return containers, selected
+    for dist in distractors_sorted:
+        tags = set(DISTRACTOR_KB.get(dist, []))
+        if tags & chosen_attrs:
+            distractor_candidates.append(dist)
+
+    # Ensure we have enough distractor candidates (6-10 items)
+    target_dist_size = random.randint(6, 10)
+    if len(distractor_candidates) < target_dist_size:
+        remaining = [dist for dist in distractors_sorted if dist not in distractor_candidates]
+        additional = random.sample(remaining, min(target_dist_size - len(distractor_candidates), len(remaining)))
+        distractor_candidates.extend(additional)
+
+    random.shuffle(distractor_candidates)
+    distractor_candidates = distractor_candidates[:target_dist_size]
+
+    return containers, object_candidates, distractor_candidates
 
 
-def build_task_prompt(mode: str, previous_descs: List[str]) -> List[Dict[str, str]]:
+def build_task_prompt(mode: str, previous_descs: List[str]) -> Tuple[List[Dict[str, str]], List[str], List[str]]:
+    """
+    Build task generation prompt (Stage 1: without distractors).
+
+    Returns:
+        (messages, object_candidates, distractor_candidates)
+    """
     builder = PROMPT_BUILDERS.get(("common_sense", mode))
     if builder is None:
         raise ValueError(f"Unsupported mode: {mode}")
-    containers, objects = _sample_items(previous_descs)
-    return builder(previous_descs, containers, objects)
+    containers, object_candidates, distractor_candidates = _sample_items(previous_descs)
+    messages = builder(previous_descs, containers, object_candidates)
+    return messages, object_candidates, distractor_candidates
+
+
+def select_distractors_with_llm(task_description: Dict[str, Any], distractor_candidates: List[str],
+                                temperature: float = 0.0,
+                                previous_distractors: Optional[List[str]] = None,
+                                validation_error: Optional[str] = None) -> List[str]:
+    """
+    Stage 2: Use LLM to select distractors that are irrelevant to the generated task.
+
+    Args:
+        task_description: The task_description dict from stage 1
+        distractor_candidates: List of candidate distractors
+        temperature: LLM temperature
+        previous_distractors: Previously selected distractors that failed validation (optional)
+        validation_error: The validation error message (optional)
+
+    Returns:
+        List of selected distractor names
+    """
+    messages = select_distractors_prompt(task_description, distractor_candidates,
+                                        previous_distractors, validation_error)
+
+    try:
+        response = gpt_agent(messages, temperature=temperature)
+        result = extract_json_line(response)
+
+        if result and "distractors" in result:
+            selected = result["distractors"]
+            # Get all available distractors (from DISTRACTOR_KB, excluding task objects)
+            objects = task_description.get("scene", {}).get("objects", [])
+            all_available = [k for k in DISTRACTOR_KB.keys() if k not in objects]
+            # Validate that all selected items are available
+            valid_distractors = [d for d in selected if d in all_available]
+            # Ensure we have 3-6 distractors
+            # if len(valid_distractors) < 3:
+            #     # Fallback: randomly select from available distractors
+            #     return random.sample(all_available, min(random.randint(3, 6), len(all_available)))
+            return valid_distractors # Cap at 6
+        else:
+            # Fallback: randomly select
+            objects = task_description.get("scene", {}).get("objects", [])
+            all_available = [k for k in DISTRACTOR_KB.keys() if k not in objects]
+            return random.sample(all_available, min(random.randint(3, 6), len(all_available)))
+    except Exception as e:
+        print(f"  [Distractor Selection] Exception: {e}, using random selection")
+        objects = task_description.get("scene", {}).get("objects", [])
+        all_available = [k for k in DISTRACTOR_KB.keys() if k not in objects]
+        return random.sample(all_available, min(random.randint(3, 6), len(all_available)))
 
 
 def is_duplicate(desc: str, prev_set: set) -> bool:
-    key = desc.strip()
+    # For new format, extract task description text
+    if isinstance(desc, dict):
+        task_desc = desc.get("task_description", {})
+        if isinstance(task_desc, dict):
+            key = task_desc.get("task", "").strip()
+        else:
+            key = str(task_desc).strip()
+    else:
+        key = str(desc).strip()
     return key in prev_set
 
 
@@ -242,11 +369,32 @@ def validate_task_logic(task_obj: Dict[str, Any], temperature: float = 0.0) -> T
     Validate task logic using LLM to check for errors like:
     - Incorrect color classification (e.g., red as secondary_color)
     - Logical inconsistencies in task/action
+    - Distractors being related to task
 
     Returns:
         (is_valid, error_message)
     """
-    task_desc = task_obj.get("task_description", "")
+    task_desc_obj = task_obj.get("task_description", {})
+    if isinstance(task_desc_obj, dict):
+        # New format: format as string for validation
+        scene = task_desc_obj.get("scene", {})
+        task_text = task_desc_obj.get("task", "")
+        actions = task_desc_obj.get("action", [])
+
+        containers = scene.get("containers", [])
+        objects = scene.get("objects", [])
+        distractors = scene.get("distractor", [])
+
+        task_desc = (
+            f"Containers: {', '.join(containers)}. "
+            f"Objects: {', '.join(objects)}. "
+            f"Distractors: {', '.join(distractors)}. "
+            f"Task: {task_text}. "
+            f"Actions: {' '.join(actions)}"
+        )
+    else:
+        # Old format
+        task_desc = str(task_desc_obj)
 
     validation_prompt = f"""You are a task validation expert. Check if this robot task contains logical errors.
 
@@ -254,6 +402,11 @@ Task to validate:
 {task_desc}
 
 Common error types to check:
+IMPORTANT NOTES:    
+0. The distractors should NOT be related to the task objects.
+    - for example, the task is task: Organize electronic devices into the fluted_block and non-electronic items into the wooden_box. The distractors can be categorized as "non-electronic items". So it's not a valid task.
+    - Distractors should be irrelevant to any potential task involving the selected objects.
+
 1. Color classification errors:
    - Primary colors (RGB): red, green, blue
    - Secondary colors: yellow, purple (magenta), cyan
@@ -261,8 +414,9 @@ Common error types to check:
    - DO NOT classify red/green/blue as secondary colors
 
 2. Attribute mismatches:
-   - Check if objects are correctly categorized (healthy/unhealthy, has_handle/no_handle, etc.)
-   - Verify task instructions match the actions taken
+   - Check if objects are correctly categorized, not include the correction steps
+   - Verify task instructions match the actions 
+   - The Distractors should NOT be related to the task objects
 
 3. Action consistency:
    - Verify actions match the task requirements
@@ -337,11 +491,12 @@ def main():
                 obj: Optional[Dict[str, Any]] = None
 
                 while retries <= args.max_retries:
-                    msgs = build_task_prompt(mode, previous_mode_descs)
+                    # ========== STAGE 1: Generate task (without distractors) ==========
+                    msgs, object_candidates, distractor_candidates = build_task_prompt(mode, previous_mode_descs)
                     try:
                         out = gpt_agent(msgs, temperature=args.temperature)
                     except Exception as e:
-                        print(f"  [Attempt {attempt_count}] Generation error: {e}, skipping...")
+                        print(f"  [Attempt {attempt_count}] Stage 1 generation error: {e}, skipping...")
                         break  # Skip this attempt, don't write to file
 
                     cand = extract_json_line(out)
@@ -350,58 +505,106 @@ def main():
                         retries += 1
                         continue
 
-                    # Add sequence number to task name
-                    original_task_name = cand.get("task_name", f"{cat}_{mode}_auto_{success_count}")
-                    # Remove old numbering if exists
-                    if re.match(r'^\d+_', original_task_name):
-                        original_task_name = re.sub(r'^\d+_', '', original_task_name)
-                    # Add new sequence number (1-indexed)
-                    cand["task_name"] = f"{success_count + 1}_{original_task_name}"
-
+                    # Validate new JSON structure
                     if "task_description" not in cand:
                         print(f"  [Attempt {attempt_count}] Missing task_description, retrying...")
                         retries += 1
                         continue
-
-                    cand["task_description"] = _strip_reasoning_segment(cand.get("task_description", "").strip())
-                    desc = cand["task_description"].strip()
-
-                    # diversity check: must change phrasing and rules
-                    # Encourage category-driven language (avoid many direct item names in 'task:')
-                    task_part = next((seg for seg in desc.split('/') if seg.lower().startswith('task:')), '')
-                    # Use word boundary to avoid substring matches (e.g., "cup" shouldn't match "cup_with_handle")
-                    all_items = OBJECTS + CONTAINERS
-                    # Sort by length (longest first) to avoid substring issues
-                    all_items_sorted = sorted(all_items, key=len, reverse=True)
-                    name_count = 0
-                    for name in all_items_sorted:
-                        # Use word boundaries to match complete words
-                        if re.search(r'\b' + re.escape(name.replace('_', '[ _-]')) + r'\b', task_part, re.IGNORECASE):
-                            name_count += 1
-
-                    # Allow up to 3 explicit names in task (relaxed constraint)
-                    if name_count > 3:
-                        print(f"  [Attempt {attempt_count}] Too many explicit names in task ({name_count}), retrying...")
+                    print(cand)
+                    task_desc = cand.get("task_description")
+                    if not isinstance(task_desc, dict):
+                        print(f"  [Attempt {attempt_count}] task_description should be dict, retrying...")
                         retries += 1
                         continue
 
-                    # Check for duplicates
-                    if is_duplicate(desc, prev_set):
+                    if "scene" not in task_desc or "task" not in task_desc or "action" not in task_desc:
+                        print(f"  [Attempt {attempt_count}] Missing required fields in task_description, retrying...")
+                        retries += 1
+                        continue
+
+                    scene = task_desc.get("scene", {})
+                    if "containers" not in scene or "objects" not in scene:
+                        print(f"  [Attempt {attempt_count}] Missing containers or objects in scene, retrying...")
+                        retries += 1
+                        continue
+
+                    # Check for duplicates (using task text)
+                    task_text = task_desc.get("task", "")
+                    if is_duplicate(cand, prev_set):
                         print(f"  [Attempt {attempt_count}] Duplicate task detected, retrying...")
                         retries += 1
                         continue
 
-                    # Validate task logic using LLM (if enabled)
-                    if args.enable_validation:
-                        print(f"  [Attempt {attempt_count}] Validating task logic...")
-                        is_valid, error_msg = validate_task_logic(cand, temperature=0.0)
+                    # ========== STAGE 2: Select distractors with iterative validation ==========
+                    print(f"  [Attempt {attempt_count}] Stage 1 passed, selecting distractors...")
 
-                        if not is_valid:
-                            print(f"  [Attempt {attempt_count}] Validation failed: {error_msg}, retrying...")
-                            retries += 1
+                    # Filter out objects that were already selected in stage 1
+                    selected_objects = scene.get("objects", [])
+                    filtered_distractor_candidates = [d for d in distractor_candidates if d not in selected_objects]
+
+                    if len(filtered_distractor_candidates) < 3:
+                        print(f"  [Attempt {attempt_count}] Not enough distractor candidates after filtering, retrying...")
+                        retries += 1
+                        continue
+
+                    # Iterative distractor selection and validation
+                    max_distractor_retries = 2  # Maximum retries for distractor selection
+                    distractor_retry = 0
+                    distractors = None
+                    previous_distractors = None
+                    validation_error = None
+
+                    while distractor_retry < max_distractor_retries:
+                        try:
+                            # Select distractors (with previous failure info if available)
+                            distractors = select_distractors_with_llm(
+                                task_desc,
+                                filtered_distractor_candidates,
+                                temperature=0.0,
+                                previous_distractors=previous_distractors,
+                                validation_error=validation_error
+                            )
+                            print(f"  [Attempt {attempt_count}][Distractor retry {distractor_retry+1}] Selected {len(distractors)} distractors: {', '.join(distractors)}")
+                        except Exception as e:
+                            print(f"  [Attempt {attempt_count}][Distractor retry {distractor_retry+1}] Selection error: {e}")
+                            distractor_retry += 1
                             continue
 
-                        print(f"  [Attempt {attempt_count}] Validation passed!")
+                        # Add distractors to scene for validation
+                        scene["distractor"] = distractors
+                        task_desc["scene"] = scene
+                        cand["task_description"] = task_desc
+
+                        # Validate task logic (if enabled)
+                        if args.enable_validation:
+                            print(f"  [Attempt {attempt_count}][Distractor retry {distractor_retry+1}] Validating task logic...")
+                            is_valid, error_msg = validate_task_logic(cand, temperature=0.0)
+
+                            if not is_valid:
+                                print(f"  [Attempt {attempt_count}][Distractor retry {distractor_retry+1}] Validation failed: {error_msg}")
+                                # Store failed distractors and error for next iteration
+                                previous_distractors = distractors
+                                validation_error = error_msg
+                                distractor_retry += 1
+                                continue
+                            else:
+                                print(f"  [Attempt {attempt_count}][Distractor retry {distractor_retry+1}] Validation passed!")
+                                break
+                        else:
+                            # No validation enabled, accept distractors
+                            break
+
+                    # Check if we succeeded in finding valid distractors
+                    if distractor_retry >= max_distractor_retries:
+                        print(f"  [Attempt {attempt_count}] Failed to find valid distractors after {max_distractor_retries} retries, retrying entire task...")
+                        retries += 1
+                        continue
+
+                    # Add sequence number to task name
+                    original_task_name = cand.get("task_name", f"{cat}_{mode}_auto_{success_count}")
+                    if re.match(r'^\d+_', original_task_name):
+                        original_task_name = re.sub(r'^\d+_', '', original_task_name)
+                    cand["task_name"] = f"{success_count + 1}_{original_task_name}"
 
                     obj = cand
                     break
@@ -415,8 +618,12 @@ def main():
                         with open(task_file, "w", encoding="utf-8") as f:
                             f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-                    prev_set.add(obj["task_description"].strip())
-                    previous_all.append(obj["task_description"].strip())
+                    # Update prev_set with task text (for duplicate checking)
+                    task_desc = obj.get("task_description", {})
+                    if isinstance(task_desc, dict):
+                        task_text = task_desc.get("task", "")
+                        prev_set.add(task_text.strip())
+                        previous_all.append(task_text.strip())
                     previous_mode_descs = previous_all[-20:]
                     success_count += 1
                     print(f"  [Success {success_count}/{args.num_per_mode}] Generated: {obj['task_name']}")
