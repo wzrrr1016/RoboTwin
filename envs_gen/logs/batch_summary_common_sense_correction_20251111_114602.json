@@ -1,0 +1,111 @@
+{
+  "jsonl_file": "code_gen/task_info/common_sense_correction.jsonl",
+  "output_dir": "envs_gen/common_sense_correction",
+  "total_tasks": 500,
+  "successful_tasks": 3,
+  "error_tasks": 0,
+  "model": "local",
+  "temperature": 0,
+  "results": [
+    {
+      "task_name": "1_toy_and_metal_storage_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate",
+            "shoe_box"
+          ],
+          "objects": [
+            "green_block",
+            "pink_block",
+            "can",
+            "dumbbell"
+          ],
+          "distractor": [
+            "pet-collar",
+            "sand-clock",
+            "markerpen"
+          ]
+        },
+        "task": "Put small lightweight toys onto the plate and metallic or heavy non-toy items into the shoe_box.",
+        "action": [
+          "Pick green_block and place it on plate",
+          "Pick pink_block and place it on plate",
+          "Pick can and place it on plate (wrong)",
+          "Pick can from plate and place it into shoe_box (recovery)",
+          "Pick dumbbell and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/1_toy_and_metal_storage_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_serveable_items_and_personal_care_sorting_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "dustbin"
+          ],
+          "objects": [
+            "fork",
+            "knife",
+            "mug",
+            "shampoo"
+          ],
+          "distractor": [
+            "calculator",
+            "toycar",
+            "shoe",
+            "book",
+            "alarm-clock"
+          ]
+        },
+        "task": "Place utensils and drinkware intended for serving onto the tray, and personal-care liquid containers into the dustbin.",
+        "action": [
+          "Pick shampoo and place it onto tray (wrong)",
+          "Pick shampoo from tray and place it into dustbin (recovery)",
+          "Pick mug and place it onto tray",
+          "Pick fork and place it onto tray",
+          "Pick knife and place it onto tray"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/2_serveable_items_and_personal_care_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "3_sound_items_organize_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "fluted_block"
+          ],
+          "objects": [
+            "bell",
+            "microphone",
+            "book",
+            "sand-clock"
+          ],
+          "distractor": [
+            "apple",
+            "hammer",
+            "shoe",
+            "baguette",
+            "chips-tub"
+          ]
+        },
+        "task": "Put items that produce or capture sound into the fluted_block and leave visual or reading items on the table.",
+        "action": [
+          "Pick book and place it into fluted_block (wrong)",
+          "Pick book from fluted_block and place it on the table (recovery)",
+          "Pick bell and place it into fluted_block",
+          "Pick microphone and place it into fluted_block",
+          "Pick sand-clock and place it on the table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/3_sound_items_organize_correction.py",
+      "status": "success"
+    }
+  ],
+  "timestamp": "20251111_114602"
+}

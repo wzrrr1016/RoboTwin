@@ -1,0 +1,316 @@
+{
+  "jsonl_file": "code_gen/task_info/common_sense_correction.jsonl",
+  "output_dir": "envs_gen/common_sense_correction",
+  "total_tasks": 50,
+  "successful_tasks": 46,
+  "error_tasks": 4,
+  "model": "local",
+  "temperature": 0,
+  "results": [
+    {
+      "task_name": "1_repair_tool_organization_correction",
+      "task_description": "scene: Containers: tray, dustbin. Objects: drill, french_fries, bottle, red_block./task: Put repair tools on the tray and non-repair items in the dustbin./action: Pick drill and place onto tray. Pick red_block and place onto tray (wrong). Pick red_block from tray and place into dustbin (recovery). Pick french_fries and place into dustbin. Pick bottle and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/1_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_office_item_placement_correction",
+      "task_description": "scene: Containers: plate. Objects: apple, microphone, knife, scanner, fork./task: Put office items on the plate and non-office items on the table./action: Pick scanner and place on plate. Pick knife and place on plate (wrong). Pick knife from plate and place on table (recovery). Pick apple and place on table.",
+      "output_file": "envs_gen/common_sense_correction/2_office_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "3_edible_non_edible_placement_correction",
+      "task_description": "scene: Containers: coaster. Objects: hammer, orange_block, bread, bell, toycar./task: Put non-edible items on the coaster and edible items on the table./action: Pick bread and place on coaster (wrong). Pick bread from coaster and place on table (recovery). Pick hammer and place on coaster. Pick orange_block and place on coaster. Pick bell and place on coaster. Pick toycar and place on coaster.",
+      "output_file": "envs_gen/common_sense_correction/3_edible_non_edible_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "4_repair_tool_placement_correction",
+      "task_description": "scene: Containers: shoe_box. Objects: screwdriver, pot-with-plant, alarm-clock, cup, cup_with_handle./task: Put repair tools into the shoe_box and non-repair items on the table./action: Pick screwdriver and place into shoe_box. Pick alarm-clock and place into shoe_box (wrong). Pick alarm-clock from shoe_box and place on table (recovery). Pick pot-with-plant and place on table. Pick cup_with_handle and place on table. Pick cup and place on table.",
+      "output_file": "envs_gen/common_sense_correction/4_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "5_electronic_item_organization_correction",
+      "task_description": "scene: Containers: fluted_block. Objects: mouse, green_block, sand-clock, tissue-box, blue_block./task: Put electronic items into the fluted_block and non-electronic items on the table./action: Pick mouse and place into fluted_block. Pick sand-clock and place into fluted_block (wrong). Pick sand-clock from fluted_block and place on table (recovery). Pick green_block and place on table. Pick blue_block and place on table. Pick tissue-box and place on table.",
+      "output_file": "envs_gen/common_sense_correction/5_electronic_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "6_office_items_and_blocks_correction",
+      "task_description": "scene: Containers: wooden_box, plate. Objects: purple_block, stapler, yellow_block./task: Put office items into the wooden_box and non-office items onto the plate./action: Pick stapler and place into wooden_box. Pick purple_block and place into wooden_box (wrong). Pick purple_block from wooden_box and place onto plate (recovery). Pick yellow_block and place onto plate.",
+      "output_file": "envs_gen/common_sense_correction/6_office_items_and_blocks_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "7_secondary_color_grouping_correction",
+      "task_description": "scene: Containers: tray. Objects: can, purple_block, book, dumbbell./task: Put secondary color objects into the tray and non-secondary color objects on the table./action: Pick book and place into tray (wrong). Pick book from tray and place on table (recovery). Pick purple_block and place into tray. Pick can and place on table. Pick dumbbell and place on table.",
+      "output_file": "envs_gen/common_sense_correction/7_secondary_color_grouping_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "8_drinkware_placement_correction",
+      "task_description": "scene: Containers: coaster. Objects: mug, stapler, cup_without_handle, blue_block./task: Put drinkware items on the coaster and non-drinkware items on the table./action: Pick mug and place onto coaster. Pick cup_without_handle and place onto coaster. Pick stapler and place onto coaster (wrong). Pick stapler from coaster and place on table (recovery). Pick blue_block and place on table.",
+      "output_file": "envs_gen/common_sense_correction/8_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "9_repair_tool_organization_correction",
+      "task_description": "scene: Containers: fluted_block, dustbin. Objects: drill, shampoo, hamburg./task: Put repair tools into the fluted_block and non-repair items into the dustbin./action: Pick drill and place into fluted_block. Pick shampoo and place into fluted_block (wrong). Pick shampoo from fluted_block and place into dustbin (recovery). Pick hamburg and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/9_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "10_office_item_separation_correction",
+      "task_description": "scene: Containers: shoe_box, wooden_box. Objects: scanner, bread, apple, tissue-box, bottle./task: Put office items into the wooden_box and non-office items into the shoe_box./action: Pick scanner and place into wooden_box. Pick tissue-box and place into wooden_box (wrong). Pick tissue-box from wooden_box and place into shoe_box (recovery). Pick bread and place into shoe_box. Pick apple and place into shoe_box. Pick bottle and place into shoe_box.",
+      "output_file": "envs_gen/common_sense_correction/10_office_item_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "11_decorative_item_placement_correction",
+      "task_description": "scene: Containers: coaster, wooden_box. Objects: pot-with-plant, french_fries, yellow_block, fork./task: Put decorative items into the wooden_box and non-decorative items on the coaster./action: Pick pot-with-plant and place into wooden_box. Pick french_fries and place on coaster. Pick yellow_block and place into wooden_box (wrong). Pick yellow_block from wooden_box and place on coaster (recovery). Pick fork and place on coaster.",
+      "output_file": "envs_gen/common_sense_correction/11_decorative_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "12_repair_tool_placement_correction",
+      "task_description": "scene: Containers: plate, shoe_box. Objects: orange_block, cup_without_handle, dumbbell, screwdriver./task: Put repair tools into the shoe_box and non-repair items into the plate./action: Pick screwdriver and place into shoe_box. Pick cup_without_handle and place into shoe_box (wrong). Pick cup_without_handle from shoe_box and place into plate (recovery). Pick orange_block and place into plate. Pick dumbbell and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/12_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "13_handle_item_placement_correction",
+      "task_description": "scene: Containers: tray, dustbin. Objects: hamburg, green_block, red_block, cup_with_handle, book./task: Put items with handles into the tray and items without handles into the dustbin./action: Pick book and place onto tray (wrong). Pick book from tray and place into dustbin (recovery). Pick cup_with_handle and place onto tray. Pick hamburg and place into dustbin. Pick green_block and place into dustbin. Pick red_block and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/13_handle_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "14_safe_item_organization_correction",
+      "task_description": "scene: Containers: fluted_block. Objects: knife, hammer, toycar, pot-with-plant./task: Put non-dangerous items into the fluted_block and dangerous items on the table./action: Pick hammer and place into fluted_block. Pick toycar and place into fluted_block. Pick pot-with-plant and place into fluted_block. Pick knife and place into fluted_block (wrong). Pick knife from fluted_block and place on table (recovery).",
+      "output_file": "envs_gen/common_sense_correction/14_safe_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "15_electronic_item_placement_correction",
+      "task_description": "scene: Containers: wooden_box, mug. Objects: alarm-clock, shampoo, red_block, sand-clock, microphone./task: Put electronic items into the wooden_box and non-electronic items into the mug./action: Pick sand-clock and place into wooden_box (wrong). Pick sand-clock from wooden_box and place into mug (recovery). Pick alarm-clock and place into wooden_box. Pick microphone and place into wooden_box. Pick shampoo and place into mug. Pick red_block and place into mug.",
+      "output_file": "envs_gen/common_sense_correction/15_electronic_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "16_repair_tool_organization_correction",
+      "task_description": "scene: Containers: tray, shoe_box. Objects: french_fries, screwdriver, knife, apple, stapler./task: Put repair tools into the shoe_box and non-repair items into the tray./action: Pick screwdriver and place into shoe_box. Pick knife and place into shoe_box (wrong). Pick knife from shoe_box and place into tray (recovery). Pick apple and place into tray. Pick french_fries and place into tray. Pick stapler and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/16_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "17_handle_item_disposal_correction",
+      "task_description": "scene: Containers: dustbin. Objects: mouse, cup_with_handle, cup_without_handle, tissue-box, mug./task: Put items without handles into the dustbin and items with handles on the table./action: Pick cup_without_handle and place into dustbin. Pick mouse and place into dustbin. Pick tissue-box and place into dustbin. Pick cup_with_handle and place into dustbin (wrong). Pick cup_with_handle from dustbin and place onto table (recovery). Pick mug and place onto table.",
+      "output_file": "envs_gen/common_sense_correction/17_handle_item_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "18_electronic_item_organization_correction",
+      "task_description": "scene: Containers: fluted_block, plate. Objects: alarm-clock, scanner, bread, fork, hammer./task: Put electronic items into the fluted_block and non-electronic items onto the plate./action: Pick scanner and place into fluted_block. Pick fork and place into fluted_block (wrong). Pick fork from fluted_block and place onto plate (recovery). Pick alarm-clock and place into fluted_block. Pick bread and place onto plate. Pick hammer and place onto plate.",
+      "output_file": "envs_gen/common_sense_correction/18_electronic_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "19_electronic_item_placement_correction",
+      "task_description": "scene: Containers: coaster. Objects: green_block, microphone, mouse, blue_block, yellow_block, purple_block./task: Put electronic items on the coaster and non-electronic items on the table./action: Pick microphone and place onto coaster. Pick mouse and place onto coaster. Pick green_block and place onto coaster (wrong). Pick green_block from coaster and place onto table (recovery). Pick blue_block and place onto table. Pick yellow_block and place onto table. Pick purple_block and place onto table.",
+      "output_file": "envs_gen/common_sense_correction/19_electronic_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "20_repair_tool_organization_correction",
+      "task_description": "scene: Containers: tray, shoe_box. Objects: bottle, blue_block, green_block, toycar, drill./task: Put repair tools into the shoe_box and non-repair items into the tray./action: Pick bottle and place into shoe_box (wrong). Pick bottle from shoe_box and place into tray (recovery). Pick drill and place into shoe_box. Pick blue_block and place into tray. Pick green_block and place into tray. Pick toycar and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/20_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "1_food_tool_separation_correction",
+      "task_description": "scene: Containers: plate, coaster. Objects: hamburg, hammer, dumbbell./task: Put food items into the plate and non-food items into the coaster./action: Pick hamburg and place into plate. Pick hammer and place into plate (wrong). Pick hammer from plate and place into coaster (recovery). Pick dumbbell and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/1_food_tool_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_recyclable_placement_correction",
+      "task_description": "scene: Containers: dustbin, fluted_block. Objects: bottle, book, shampoo, orange_block, sand-clock./task: Put recyclable items into the dustbin and non-recyclable items into the fluted_block./action: Pick bottle and place into dustbin. Pick book and place into dustbin. Pick shampoo and place into fluted_block (wrong). Pick shampoo from fluted_block and place into dustbin (recovery). Pick orange_block and place into fluted_block. Pick sand-clock and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/2_recyclable_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "3_office_dangerous_item_sorting_correction",
+      "task_description": "scene: Containers: wooden_box, dustbin. Objects: apple, french_fries, knife, scanner./task: Put office items into the wooden_box and dangerous items into the dustbin./action: Pick apple and place into wooden_box (wrong). Pick apple from wooden_box and place onto table (recovery). Pick scanner and place into wooden_box. Pick knife and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/3_office_dangerous_item_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "4_repair_tool_organization_correction",
+      "task_description": "scene: Containers: coaster, tray. Objects: drill, bread, tissue-box, orange_block, fork./task: Put repair tools into the tray and non-repair items into the coaster./action: Pick drill and place into tray. Pick bread and place into tray (wrong). Pick bread from tray and place into coaster (recovery). Pick tissue-box and place into coaster. Pick orange_block and place into coaster. Pick fork and place into coaster.",
+      "output_file": "envs_gen/common_sense_correction/4_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "5_repair_tool_placement_correction",
+      "task_description": "scene: Containers: plate, table. Objects: screwdriver, cup_without_handle, french_fries, cup_with_handle, toycar./task: Put repair tools into the plate and non-repair items on the table./action: Pick screwdriver and place into plate. Pick cup_without_handle and place into plate (wrong). Pick cup_without_handle from plate and place on table (recovery). Pick french_fries and place on table. Pick cup_with_handle and place on table. Pick toycar and place on table.",
+      "output_file": "envs_gen/common_sense_correction/5_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "6_sound_office_item_separation_correction",
+      "task_description": "scene: Containers: shoe_box. Objects: microphone, alarm-clock, mouse, scanner, orange_block./task: Put electronic items related to sound into the shoe_box and office items on the table./action: Pick alarm-clock and place on table (wrong). Pick alarm-clock from table and place into shoe_box (recovery). Pick microphone and place into shoe_box. Pick mouse and place on table. Pick scanner and place on table.",
+      "output_file": "envs_gen/common_sense_correction/6_sound_office_item_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "7_color_block_sorting_correction",
+      "task_description": "scene: Containers: wooden_box, fluted_block. Objects: yellow_block, purple_block, red_block, pot-with-plant, stapler./task: Put primary color blocks into the wooden_box and secondary color blocks into the fluted_block./action: Pick red_block and place into wooden_box. Pick yellow_block and place into wooden_box (wrong). Pick yellow_block from wooden_box and place into fluted_block (recovery). Pick purple_block and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/7_color_block_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "8_sound_time_categorization_correction",
+      "task_description": "scene: Containers: plate. Objects: microphone, bell, mug, sand-clock./task: Put sound-related items on the plate and time-related items on the table./action: Pick sand-clock and place into plate (wrong). Pick sand-clock from plate and place on table (recovery). Pick bell and place into plate. Pick microphone and place into plate. Pick mug and place on table.",
+      "output_file": "envs_gen/common_sense_correction/8_sound_time_categorization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "9_drinkware_organization_correction",
+      "task_description": "scene: Containers: tray, coaster. Objects: apple, alarm-clock, pot-with-plant, cup_with_handle, bell./task: Put drinkware into the coaster and non-drinkware items into the tray./action: Pick apple and place into coaster (wrong). Pick apple from coaster and place into tray (recovery). Pick alarm-clock and place into tray. Pick pot-with-plant and place into tray. Pick cup_with_handle and place into coaster. Pick bell and place into tray.",
+      "output_file": "envs_gen/common_sense_correction/9_drinkware_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "10_repair_tool_placement_correction",
+      "task_description": "scene: Containers: dustbin, fluted_block. Objects: drill, dumbbell, hamburg, purple_block, blue_block./task: Put repair tools into the fluted_block and non-repair items into the dustbin./action: Pick drill and place into dustbin (wrong). Pick drill from dustbin and place into fluted_block (recovery). Pick hamburg and place into dustbin. Pick dumbbell and place into dustbin. Pick purple_block and place into dustbin. Pick blue_block and place into dustbin.",
+      "output_file": "envs_gen/common_sense_correction/10_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "11_tool_placement_correction",
+      "task_description": "scene: Containers: shoe_box, wooden_box. Objects: screwdriver, bread, hammer, stapler, apple./task: Put repair tools into the wooden_box and office tools into the shoe_box./action: Pick screwdriver and place into wooden_box. Pick hammer and place into wooden_box. Pick stapler and place into wooden_box (wrong). Pick stapler from wooden_box and place into shoe_box (recovery).",
+      "output_file": "envs_gen/common_sense_correction/11_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "12_drinkware_placement_correction",
+      "task_description": "scene: Containers: coaster, wooden_box. Objects: tissue-box, shampoo, bottle, fork, can./task: Put drinkware into the coaster and non-drinkware items into the wooden_box./action: Pick shampoo and place into coaster (wrong). Pick shampoo from coaster and place into wooden_box (recovery). Pick bottle and place into coaster. Pick can and place into coaster. Pick tissue-box and place into wooden_box. Pick fork and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/12_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "13_repair_tool_organization_correction",
+      "task_description": "scene: Containers: shoe_box, plate. Objects: screwdriver, knife, book, cup_without_handle, dumbbell./task: Put repair tools into the shoe_box and non-repair items into the plate./action: Pick screwdriver and place into plate (wrong). Pick screwdriver from plate and place into shoe_box (recovery). Pick knife and place into plate. Pick book and place into plate. Pick cup_without_handle and place into plate. Pick dumbbell and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/13_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "14_repair_tool_disposal_correction",
+      "task_description": "scene: Containers: dustbin, table. Objects: dumbbell, drill, fork, toycar, mouse, pot-with-plant./task: Put repair tools into the dustbin and non-repair items on the table./action: Pick mouse and place into dustbin (wrong). Pick mouse from dustbin and place on table (recovery). Pick drill and place into dustbin. Pick fork and place on table. Pick toycar and place on table. Pick dumbbell and place on table. Pick pot-with-plant and place on table.",
+      "output_file": "envs_gen/common_sense_correction/14_repair_tool_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "15_time_related_item_organization_correction",
+      "task_description": "scene: Containers: tray. Objects: stapler, sand-clock, toycar, book, tissue-box./task: Put time-related items into the tray and non-time items on the table./action: Pick sand-clock and place into tray. Pick book and place into tray (wrong). Pick book from tray and place on table (recovery). Pick toycar and place on table. Pick stapler and place on table. Pick tissue-box and place on table.",
+      "output_file": "envs_gen/common_sense_correction/15_time_related_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "16_handle_drinkware_primary_color_correction",
+      "task_description": "scene: Containers: fluted_block, wooden_box. Objects: mug, red_block, green_block./task: Put drinkware with handles into the wooden_box and primary color blocks into the fluted_block./action: Pick mug and place into wooden_box. Pick red_block and place into wooden_box (wrong). Pick red_block from wooden_box and place into fluted_block (recovery). Pick green_block and place into fluted_block.",
+      "output_file": "envs_gen/common_sense_correction/16_handle_drinkware_primary_color_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "17_healthy_unhealthy_food_placement_correction",
+      "task_description": "scene: Containers: shoe_box, tray. Objects: apple, hamburg, french_fries, cup_with_handle, stapler./task: Put the healthy items into the tray and unhealthy items into the shoe_box./action: Pick apple and place into tray. Pick hamburg and place into tray (wrong). Pick hamburg from tray and place into shoe_box (recovery). Pick french_fries and place into shoe_box. Pick cup_with_handle and place on table. Pick stapler and place on table.",
+      "output_file": "envs_gen/common_sense_correction/17_healthy_unhealthy_food_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "18_drinkware_placement_correction",
+      "task_description": "scene: Containers: coaster, dustbin. Objects: shampoo, hamburg, bread, knife, hammer./task: Put drinkware into the coaster and non-drinkware items into the dustbin./action: Pick shampoo and place into coaster (wrong). Pick shampoo from coaster and place into dustbin (recovery). Pick hamburg and place into dustbin. Pick bread and place into dustbin. Pick knife and place into dustbin. Pick hammer and place into dustbin.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "19_drinkware_placement_correction",
+      "task_description": "scene: Containers: fluted_block, plate. Objects: red_block, mug, cup_without_handle, bottle./task: Put drinkware into the plate and non-drinkware items into the fluted_block./action: Pick red_block and place into fluted_block. Pick mug and place into fluted_block (wrong). Pick mug from fluted_block and place into plate (recovery). Pick cup_without_handle and place into plate. Pick bottle and place into plate.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "20_sound_time_disposal_correction",
+      "task_description": "scene: Containers: dustbin. Objects: scanner, alarm-clock, sand-clock, microphone./task: Put sound-related items into the dustbin and time-related items on the table./action: Pick sand-clock and place into dustbin (wrong). Pick sand-clock from dustbin and place on table (recovery). Pick alarm-clock and place into dustbin. Pick microphone and place into dustbin.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "21_repair_office_tool_separation_correction",
+      "task_description": "scene: Containers: tray, shoe_box. Objects: orange_block, drill, scanner, screwdriver, bottle./task: Put repair tools into the shoe_box and office tools into the tray./action: Pick scanner and place into shoe_box (wrong). Pick scanner from shoe_box and place into tray (recovery). Pick drill and place into shoe_box. Pick screwdriver and place into shoe_box.",
+      "output_file": null,
+      "status": "error",
+      "error": "Request timed out."
+    },
+    {
+      "task_name": "22_sound_related_items_placement_correction",
+      "task_description": "scene: Containers: coaster. Objects: alarm-clock, hammer, dumbbell, tissue-box, french_fries./task: Put sound-related items into the coaster and non-sound items on the table./action: Pick alarm-clock and place into coaster. Pick hammer and place into coaster (wrong). Pick hammer from coaster and place on table (recovery). Pick dumbbell and place on table. Pick tissue-box and place on table. Pick french_fries and place on table.",
+      "output_file": "envs_gen/common_sense_correction/22_sound_related_items_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "23_tertiary_color_and_time_placement_correction",
+      "task_description": "scene: Containers: plate, fluted_block. Objects: orange_block, sand-clock, cup_with_handle./task: Put tertiary color blocks into the fluted_block and time-related items into the plate./action: Pick cup_with_handle and place into fluted_block (wrong). Pick cup_with_handle from fluted_block and place on table (recovery). Pick orange_block and place into fluted_block. Pick sand-clock and place into plate.",
+      "output_file": "envs_gen/common_sense_correction/23_tertiary_color_and_time_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "24_dangerous_item_disposal_correction",
+      "task_description": "scene: Containers: wooden_box, dustbin. Objects: knife, mouse, scanner./task: Put office tools into the wooden_box and dangerous items into the dustbin./action: Pick knife and place into wooden_box (wrong). Pick knife from wooden_box and place into dustbin (recovery). Pick mouse and place into wooden_box. Pick scanner and place into wooden_box.",
+      "output_file": "envs_gen/common_sense_correction/24_dangerous_item_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "25_drinkware_placement_correction",
+      "task_description": "scene: Containers: coaster. Objects: shampoo, blue_block, green_block, bread, cup_without_handle./task: Put drinkware into the coaster and non-drinkware items on the table./action: Pick cup_without_handle and place into coaster. Pick shampoo and place into coaster (wrong). Pick shampoo from coaster and place on table (recovery). Pick bread and place on table. Pick blue_block and place on table. Pick green_block and place on table.",
+      "output_file": "envs_gen/common_sense_correction/25_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "26_repair_tool_placement_correction",
+      "task_description": "scene: Containers: tray. Objects: fork, cup_without_handle, book, toycar, screwdriver./task: Put repair tools into the tray and non-repair items on the table./action: Pick screwdriver and place into tray. Pick fork and place into tray (wrong). Pick fork from tray and place on table (recovery). Pick cup_without_handle and place on table. Pick book and place on table. Pick toycar and place on table.",
+      "output_file": "envs_gen/common_sense_correction/26_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "27_primary_color_and_sound_placement_correction",
+      "task_description": "scene: Containers: plate. Objects: mouse, blue_block, french_fries, microphone, green_block./task: Put primary color blocks into the plate and sound-related items on the table./action: Pick blue_block and place into plate. Pick green_block and place into plate. Pick microphone and place into plate (wrong). Pick microphone from plate and place on table (recovery). Pick mouse and place on table. Pick french_fries and place on table.",
+      "output_file": "envs_gen/common_sense_correction/27_primary_color_and_sound_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "28_sound_related_items_correction",
+      "task_description": "scene: Containers: shoe_box. Objects: tissue-box, bread, microphone, alarm-clock, fork./task: Put sound-related items into the shoe_box and non-sound items on the table./action: Pick alarm-clock and place on table (wrong). Pick alarm-clock from table and place into shoe_box (recovery). Pick microphone and place into shoe_box. Pick tissue-box and place on table. Pick bread and place on table. Pick fork and place on table.",
+      "output_file": "envs_gen/common_sense_correction/28_sound_related_items_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "29_repair_tool_organization_correction",
+      "task_description": "scene: Containers: fluted_block. Objects: hamburg, hammer, microphone, pot-with-plant, mug, drill./task: Put repair tools into the fluted_block and non-repair items on the table./action: Pick hammer and place into fluted_block. Pick drill and place into fluted_block. Pick mug and place into fluted_block (wrong). Pick mug from fluted_block and place on table (recovery). Pick microphone and place on table. Pick hamburg and place on table. Pick pot-with-plant and place on table.",
+      "output_file": "envs_gen/common_sense_correction/29_repair_tool_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "30_office_tool_and_healthy_food_placement_correction",
+      "task_description": "scene: Containers: plate, coaster. Objects: stapler, french_fries, apple, shampoo, orange_block./task: Put office tools into the coaster and healthy foods into the plate./action: Pick stapler and place into coaster. Pick apple and place into plate. Pick shampoo and place into coaster (wrong). Pick shampoo from coaster and place on table (recovery). Pick orange_block and place on table. Pick french_fries and place on table.",
+      "output_file": "envs_gen/common_sense_correction/30_office_tool_and_healthy_food_placement_correction.py",
+      "status": "success"
+    }
+  ],
+  "timestamp": "20251107_233238"
+}

@@ -20,7 +20,7 @@ from openai import OpenAI
 def gpt_agent(messages: List[Dict[str, str]], temperature: float = 0.0) -> str:
     OPENAI_API_BASE = os.environ.get("OPENAI_API_BASE", "http://localhost:8000/v1")
     OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "EMPTY")
-    MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B")
+    MODEL = os.environ.get("LOCAL_LLM_MODEL", "/home/wangzhuoran/data4/MODELS/Qwen/Qwen3-32B")
 
     client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
     resp = client.chat.completions.create(

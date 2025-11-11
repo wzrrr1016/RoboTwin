@@ -408,15 +408,13 @@ IMPORTANT NOTES:
     - Distractors should be irrelevant to any potential task involving the selected objects.
 
 1. Color classification errors:
-   - Primary colors (RGB): red, green, blue
-   - Secondary colors: yellow, purple (magenta), cyan
-   - Tertiary colors: orange
    - DO NOT classify red/green/blue as secondary colors
+   - DO NOT classify secondary colors (yellow, purple) as primary colors
 
 2. Attribute mismatches:
    - Check if objects are correctly categorized, not include the correction steps
    - Verify task instructions match the actions 
-   - The Distractors should NOT be related to the task objects
+   - For example, the knife is dangerous but it is categorized as safe or toy, which is incorrect.
 
 3. Action consistency:
    - Verify actions match the task requirements

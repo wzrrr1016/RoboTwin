@@ -1,13 +1,17 @@
 # ====================== PROMPT =============================
 
-BASIC_INFO = '''
-In this environment, distance 1 indicates 1 meter long. Pose is representated as 7 dimention, [x, y, z, qw, qx, qy, qz].
-For a 7-dimensional Pose object, you can use Pose.p to get the [x, y, z] coordinates and Pose.q to get the [qw, qx, qy, qz] quaternion orientation.
-All functions which has parameter actor, and all of actor should be in the Actor object.
-In the world coordinate system, the positive directions of the xyz coordinate axes are right, front, and upper respectively, so the direction vectors on the right, front,
-and upper sides are [1,0,0], [0,1,0], [0,0,1] respectively. In the same way, we can get the unit vectors of the left side, back side and down side.
-Each actor in the environment has one or more functional points, which are specific locations designed for interactions. 
-Access functional points using actor.get_functional_point(point_id, return_type), where return_type can be "pose", "p", or "q".
+# BASIC_INFO = '''
+# In this environment, distance 1 indicates 1 meter long. Pose is representated as 7 dimention, [x, y, z, qw, qx, qy, qz].
+# For a 7-dimensional Pose object, you can use Pose.p to get the [x, y, z] coordinates and Pose.q to get the [qw, qx, qy, qz] quaternion orientation.
+# All functions which has parameter actor, and all of actor should be in the Actor object.
+# In the world coordinate system, the positive directions of the xyz coordinate axes are right, front, and upper respectively, so the direction vectors on the right, front,
+# and upper sides are [1,0,0], [0,1,0], [0,0,1] respectively. In the same way, we can get the unit vectors of the left side, back side and down side.
+# Each actor in the environment has one or more functional points, which are specific locations designed for interactions. 
+# Access functional points using actor.get_functional_point(point_id, return_type), where return_type can be "pose", "p", or "q".
+# '''
+
+BASIC_INFO='''
+You are an expert Python programmer familiar with the robotics simulation environment. Now you need to help users to complete the task code in the simulation environment.
 '''
 
 CODE_TEMPLATE = '''
@@ -35,8 +39,8 @@ AVAILABLE_ENV_FUNCTION_LOAD_ACTORS = {
         object_type: The type of the object to be added, eg. plate \
         object_name: The name of the object to be added, eg. plate_0\
         return: actor",
-    "add_distractor":
-    "def add_distractor(self, object_list):\
+    "add_distractors":
+    "def add_distractors(self, object_list):\
         Args:\
         object_list: create distractor objects to the environment."
 }
@@ -132,6 +136,8 @@ class {task_name}(Imagine_Task):
         self.fruit = self.add_actor("fruit","fruit")
         self.bottle = self.add_actor("bottle","bottle")
         self.can = self.add_actor("can","can")
+        distractor_list = ["bottle", "shampoo", "bread", "calculator"]
+        self.add_distractors(distractor_list)
 
     def play_once(self):
         success = self.pick_and_place(self.bottle, self.plate)
@@ -159,5 +165,15 @@ OBJECTS able to pick:
     "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse", "stapler", "shampoo", "bell", "dumbbell", "teanet",
     "red_block", "blue_block", "green_block", "yellow_block", "purple_block", "orange_block", "pink_block",
 
+DISTRACTORS:
+    "bottle", "shampoo", "bread", "calculator", "cup", "can", "plate", "tray", "wooden_box", "dustbin", "fluted_block",
+    "shoe_box", "coaster", "hammer", "microphone", "cup_with_handle", "cup_without_handle", "pot-with-plant",
+    "apple", "hamburg", "french_fries", "toycar", "tissue-box", "scanner", "drill", "screwdriver", "fork",
+    "knife", "mug", "shoe", "book", "sand-clock", "alarm-clock", "mouse",  "stapler", "bell", "dumbbell", "teanet",
+    "red_block", "blue_block",  "green_block",  "yellow_block",  "purple_block",  "orange_block",  "pink_block",
+    'calculator','fruit','cup-with-liquid','chips-tub','pet-collar','table-tennis','roll-paper','olive-oil','jam-jar',
+    'milk-box','baguette','battery','msg','soy-sauce'
+
 You can use the 'self.table' to get the table actor in the environment and you don't need to create a table in load_actor().
+If you need to put an object back, you can put it on the table by using self.table as the container.
 '''

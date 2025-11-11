@@ -22,7 +22,7 @@ def generate(message, gpt="deepseek", temperature=0):
         client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
 
     elif gpt == "local":
-        MODEL = "/home/wangzhuoran/data0/MODELS/Qwen/Qwen3-8B"
+        MODEL = "/home/wangzhuoran/data4/MODELS/Qwen/Qwen3-32B"
         OPENAI_API_BASE = "http://localhost:8000/v1"
         OPENAI_API_KEY = local_api
         client = OpenAI(api_key=OPENAI_API_KEY, base_url=OPENAI_API_BASE)
