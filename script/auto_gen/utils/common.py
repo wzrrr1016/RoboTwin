@@ -39,20 +39,20 @@ def parse_task_actions(task_description: str) -> List[str]:
         List of action descriptions
     """
     # Extract the action part after "action: "
-    match = re.search(r'/action:\s*(.+)$', task_description)
-    if not match:
-        raise ValueError(f"Cannot find action section in task_description: {task_description}")
+    # match = re.search(r'/action:\s*(.+)$', task_description)
+    # if not match:
+    #     raise ValueError(f"Cannot find action section in task_description: {task_description}")
 
-    action_text = match.group(1)
-    # Split by ". " but keep the periods
-    actions = []
-    for action in action_text.split('. '):
-        action = action.strip()
-        if action and not action.endswith('.'):
-            action += '.'
-        if action:
-            actions.append(action.rstrip('.'))
-
+    # action_text = match.group(1)
+    # # Split by ". " but keep the periods
+    # actions = []
+    # for action in action_text.split('. '):
+    #     action = action.strip()
+    #     if action and not action.endswith('.'):
+    #         action += '.'
+    #     if action:
+    #         actions.append(action.rstrip('.'))
+    actions = task_description['action']
     return actions
 
 

@@ -51,7 +51,7 @@ ATTR_KB: Dict[str, List[str]] = {
     "teanet": ["tea", "kitchen", "for_tea", "mesh", "strainer"],
 
 
-    "markerpen": ["writing_tool", "for_marking", "black", "ink_based", "stationery"],
+    "markpen": ["writing_tool", "for_marking", "black", "ink_based", "stationery"],
 
     # colored square blocks (RGB color model)
     "red_block": ["block", "red", "primary_color", "square", "solid", "toy_or_tool"],

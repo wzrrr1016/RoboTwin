@@ -172,12 +172,19 @@ def generate_next_action(plan: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
                         # Found the first task after recovery
                         if found_recovery and task_desc != recovery_desc:
-                            next_action_val = plan[j].get('action', 'pick')
-                            next_target = plan[j].get('target_name', target_name)
-                            new_entry['next_action'] = {
-                                'action': next_action_val,
-                                'target': next_target
-                            }
+                            last_recovery = plan[j-1]
+                            if last_recovery['target_name'][1] != 'table':
+                                new_entry['next_action'] = {
+                                    'action': 'pick',
+                                    'target': entry['target_name']
+                                }
+                            else:
+                                next_action_val = plan[j].get('action', 'pick')
+                                next_target = plan[j].get('target_name', target_name)
+                                new_entry['next_action'] = {
+                                    'action': next_action_val,
+                                    'target': next_target
+                                }
                             break
                     else:
                         # No task after recovery, use current action
@@ -193,15 +200,16 @@ def generate_next_action(plan: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                     }
             elif action == 'place':
                 # Target object stays same, but container becomes 'table'
-                if len(target_name) >= 2:
+                last_entry = plan[i-1]
+                if last_entry['target_name'][0] == target_name[0]: # same object
                     new_entry['next_action'] = {
                         'action': 'place',
-                        'target': [target_name[0], 'table']
+                        'target': plan[i+2]['target_name']
                     }
                 else:
                     new_entry['next_action'] = {
-                        'action': action,
-                        'target': target_name
+                        'action': 'place',
+                        'target': [target_name[0], 'table']
                     }
         else:
             # Normal or recovery action: next_action = current action with same target

@@ -8,20 +8,21 @@ This script converts data from source directory to target directory format by:
 3. Saving frames to frames_raw and frames_points directories
 
 Usage:
-    python script/auto_gen/clean_data_raw.py \
-        --source_dir data/pick_place_anything_imagine/demo_randomized \
-        --target_dir robotwin_data/pick_place_anything_imagine/demo_randomized \
-        --task_name pick_place_anything_imagine \
-        --task_info code_gen/task_info/common_sense_correction.jsonl \
-        --episode 28
+python script/auto_gen/clean_data_raw.py \
+    --source_dir data/1_toy_and_metal_storage_correction/data_collect \
+    --target_dir robotwin_data/1_toy_and_metal_storage_correction/data_collect/front_camera \
+    --task_name 1_toy_and_metal_storage_correction \
+    --task_info code_gen/task_info/common_sense_correction.jsonl \
+    --camera front_camera \
+    --all
 
     Or use full path for task_name (will auto-extract short name):
-    python script/auto_gen/clean_data_raw.py \
-        --source_dir data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
-        --target_dir robotwin_data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
-        --task_name common_sense_correction/1_non_drinkware_placement_correction \
-        --task_info code_gen/task_info/common_sense_correction.jsonl \
-        --episode 0
+python script/auto_gen/clean_data_raw.py \
+    --source_dir data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
+    --target_dir robotwin_data/common_sense_correction/1_non_drinkware_placement_correction/demo_randomized \
+    --task_name common_sense_correction/1_non_drinkware_placement_correction \
+    --task_info code_gen/task_info/common_sense_correction.jsonl \
+    --episode 0
 """
 
 import os
@@ -178,6 +179,29 @@ def main():
         default="front_camera",
         help="Camera name to use"
     )
+
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Process all episodes in the source directory"
+    )
+
+    args = parser.parse_args()
+
+    if args.all:
+        episodes = range(len(os.listdir(os.path.join(args.source_dir, "data"))))
+    else:
+        episodes = [args.episode]
+
+    for episode in episodes:
+        process_episode(
+            source_dir=args.source_dir,
+            target_dir=args.target_dir,
+            task_name=args.task_name,
+            task_info_path=args.task_info,
+            episode_id=episode,
+            camera_name=args.camera,
+        )
 
     args = parser.parse_args()
 
