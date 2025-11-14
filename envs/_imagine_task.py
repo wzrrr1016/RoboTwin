@@ -362,8 +362,8 @@ class Imagine_Task(Base_Task):
     
 
     def pick_and_place(self, target, container, arm_tag=ArmTag('left'), try_times=0):
-        # if target.get_object_type() == "block":
-        #     return self.pick_place_block(target, container)
+        if target.get_object_type() == "block":
+            return self.pick_place_block(target, container)
         # success = self.check_actors_contact(target, container)
         if container != self.table:
             success = self.check_on(target, container)
