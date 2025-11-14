@@ -181,8 +181,21 @@ class Base_Task(gym.Env):
         all_pose = {}
         for actor in self.scene.get_all_actors():
             all_pose[actor.get_name()] = actor.get_pose().p.tolist()
-        if not self.save_data:
-            return 
+        print("saving: episode = ", self.ep_num, " index = ", self.FRAME_IDX, end="\r")
+
+        if self.FRAME_IDX == 0:
+            self.folder_path = {"cache": f"{self.save_dir}/.cache/episode{self.ep_num}/"}
+
+            for directory in self.folder_path.values():  # remove previous data
+                if os.path.exists(directory):
+                    file_list = os.listdir(directory)
+                    for file in file_list:
+                        os.remove(directory + file)
+
+        pkl_dic = self.get_obs()
+        save_pkl(self.folder_path["cache"] + f"{self.FRAME_IDX}.pkl", pkl_dic)  # use cache
+        self.FRAME_IDX += 1
+        
         self.sub_plans.append({
             "frame_idx": frame_idx,
             "action": action,
@@ -262,9 +275,9 @@ class Base_Task(gym.Env):
         self.scene.add_ground(kwargs.get("ground_height", 0))
         # set default physical material
         self.scene.default_physical_material = self.scene.create_physical_material(
-            kwargs.get("static_friction", 0.5),
-            kwargs.get("dynamic_friction", 0.5),
-            kwargs.get("restitution", 0),
+            kwargs.get("static_friction", 1.5),      # 增加静摩擦，防止滑动
+            kwargs.get("dynamic_friction", 1.2),     # 增加动摩擦，防止滑动
+            kwargs.get("restitution", 0.0),          # 完全不弹
         )
         # give some white ambient light of moderate intensity
         self.scene.set_ambient_light(kwargs.get("ambient_light", [0.5, 0.5, 0.5]))
@@ -587,8 +600,8 @@ class Base_Task(gym.Env):
         return traj_data
 
     def merge_pkl_to_hdf5_video(self):
-        if not self.save_data:
-            return
+        # if not self.save_data:
+        #     return
         cache_path = self.folder_path["cache"]
         target_file_path = f"{self.save_dir}/data/episode{self.ep_num}.hdf5"
         target_video_path = f"{self.save_dir}/video/episode{self.ep_num}.mp4"

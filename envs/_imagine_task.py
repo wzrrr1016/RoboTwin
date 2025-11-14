@@ -11,6 +11,8 @@ import numpy as np
 
 class Imagine_Task(Base_Task):  
 
+    object_list = []
+
     def setup_demo(self, **kwags):
         super()._init_task_env_(**kwags)
     
@@ -40,6 +42,9 @@ class Imagine_Task(Base_Task):
         actor.set_name(object_name)
         actor.set_object_type(object_type)
         actor.set_model_id(model_id)
+        actor.set_type("task_related")
+
+        self.object_list.append(actor)
         return actor
 
     def add_actor_block(self, object_name, block_pose = None):
@@ -49,6 +54,7 @@ class Imagine_Task(Base_Task):
         block = self.create_block(block_pose, color_name=color)
         block.set_name(object_name)
         block.set_object_type("block")
+        block.set_type("task_related")
         self.add_prohibit_area(block,padding=0.02)
         return block
     
@@ -86,6 +92,17 @@ class Imagine_Task(Base_Task):
             actor.set_name(object_name)
             actor.set_object_type(object_type)
             actor.set_model_id(model_id)
+            actor.set_type("distractor")
+
+    def check_scene(self):
+        print("check scene for fallen actors")
+        all_actors = self.object_list
+        for actor in all_actors:
+            if actor.get_type() == "task_related":
+                if actor.get_pose().p[2] < 0.7:
+                    raise ValueError("task related actor fallen!")
+                    
+        return True
             
     def create_box_pose(self,num, block_half_size=0.02):
         block_pose_lst = []
@@ -209,7 +226,7 @@ class Imagine_Task(Base_Task):
                 container_point = get_blank_point(new_mask)
                 depth_img = self.cameras.get_depth()['front_camera']['depth']
                 container_pose = pixel_to_world(container_point,cam2world_gl,instrinsic_cv,depth_img)[0]
-                container_pose = (container_pose+np.array(pose))/2
+                # container_pose = (container_pose+np.array(pose))/2
             except Exception as e:
                 container_pose = np.array([pose[0]-0.01,pose[1]+0.01,pose[2]])
         if np.all(abs(pose[:3] - container_pose[:3]) > np.array([0.1,0.1,0.15])):
@@ -225,6 +242,7 @@ class Imagine_Task(Base_Task):
     def pick(self, target, arm_tag=ArmTag('left')):
         # print("pick ",target.get_name())
         self.move(self.open_gripper(arm_tag=arm_tag))
+        # self.move_by_displacement(arm_tag=ArmTag("left"), z=0.2, move_axis="world")
         self.plan_success = True
 
         frame_idx = self.FRAME_IDX - 1
@@ -233,7 +251,8 @@ class Imagine_Task(Base_Task):
         # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}.png",'front_camera')
         # print("before pick")
         target_pose_p = target.get_pose().p
-        if target_pose_p[2]< 0.76:
+        is_static = target.get_static()
+        if not is_static:
             target_pose_q = target.get_pose().q
             target_object_type = target.get_object_type()
             target_name = target.get_name()
@@ -303,7 +322,7 @@ class Imagine_Task(Base_Task):
         target_name = target.get_name()
         model_id = target.get_model_id()
         self.scene.remove_actor(target.actor)
-        place_pose[2] += 0.08
+        place_pose[2] += 0.12
         new_pose = sapien.Pose(place_pose[:3],target_pose_q)
         new_target = self.add_actor(target_object_type,target_name, new_pose, False,model_id)
         target.copy_to(new_target)
@@ -316,24 +335,26 @@ class Imagine_Task(Base_Task):
                 target_pose = place_pose,
                 use_functional_point=False,
                 arm_tag=arm_tag,
-                pre_dis=0.25,
-                dis=0.15,
+                pre_dis=0.2,
+                dis=0.1,
             ))
         # print('place plan success: ',self.plan_success)
         # self.save_camera_rgb(f"/home/wangzhuoran/RoboTwin/{frame_idx}_place.png",'front_camera')
         # print("arm after place")
         if not self.plan_success:
             return False
-
-        # target_pose_p = target.get_pose().p
-        # target_pose_q = target.get_pose().q
-        # target_object_type = target.get_object_type()
-        # target_name = target.get_name()
-        # model_id = target.get_model_id()
-        # self.scene.remove_actor(target.actor)
-        # new_pose = sapien.Pose(target_pose_p,target_pose_q)
-        # new_target = self.add_actor(target_object_type,target_name, new_pose, True, model_id)
-        # target.copy_to(new_target)
+        print("placed object:", target.get_object_type())
+        if "pen" in target.get_object_type():
+            print("reset pen pose after place")
+            target_pose_p = target.get_pose().p
+            target_pose_q = target.get_pose().q
+            target_object_type = target.get_object_type()
+            target_name = target.get_name()
+            model_id = target.get_model_id()
+            self.scene.remove_actor(target.actor)
+            new_pose = sapien.Pose(target_pose_p,target_pose_q)
+            new_target = self.add_actor(target_object_type,target_name, new_pose, True, model_id)
+            target.copy_to(new_target)
 
         success = self.check_on(target, container)
         # print("place success:",success)
@@ -341,8 +362,8 @@ class Imagine_Task(Base_Task):
     
 
     def pick_and_place(self, target, container, arm_tag=ArmTag('left'), try_times=0):
-        if target.get_object_type() == "block":
-            return self.pick_place_block(target, container)
+        # if target.get_object_type() == "block":
+        #     return self.pick_place_block(target, container)
         # success = self.check_actors_contact(target, container)
         if container != self.table:
             success = self.check_on(target, container)
@@ -385,6 +406,8 @@ class Imagine_Task(Base_Task):
 
     def pick_block(self,block):
 
+        self.move(self.open_gripper(arm_tag=ArmTag("left")))
+        self.move_by_displacement(arm_tag=ArmTag("left"), z=0.1, move_axis="world")
         arm_tag = ArmTag("left")
         frame_idx = self.FRAME_IDX - 1
         pose = block.get_pose().p
@@ -420,7 +443,7 @@ class Imagine_Task(Base_Task):
                 target_pose = place_pose,
                 use_functional_point=False,
                 arm_tag=arm_tag,
-                pre_dis=0.1,
+                pre_dis=0.15,
                 dis=0.03,
             ))
         

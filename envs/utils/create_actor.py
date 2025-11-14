@@ -506,10 +506,10 @@ def create_actor(
         convex=False,
         is_static=False,
         model_id=0,
-        mass: float = 5.0,
-        damping: tuple = (0.5, 1.0),       # (线性阻尼, 角度阻尼)
-        restitution: float = 0.01,         # 弹性系数 (0=不弹, 1=完全弹)
-        friction: tuple = (1.0, 0.8)       # (静摩擦, 动摩擦)
+        mass: float = 0.5,
+        damping: tuple = (1.0, 2.0),       # (线性阻尼, 角度阻尼) - 增加阻尼减少晃动
+        restitution: float = 0.0,          # 弹性系数 (0=不弹, 1=完全弹) - 完全不弹
+        friction: tuple = (1.5, 1.2)       # (静摩擦, 动摩擦) - 增加摩擦防止滑动
 ) -> Actor:
     scene, pose = preprocess(scene, pose)
     modeldir = Path("assets/objects") / modelname
@@ -572,7 +572,7 @@ def create_actor(
     mesh.set_name(modelname)
     mesh.set_pose(pose)
 
-    return Actor(mesh, model_data, mass=mass, damping=damping)
+    return Actor(mesh, model_data, mass=mass, damping=damping, is_static=is_static)
 
 
 # create urdf model

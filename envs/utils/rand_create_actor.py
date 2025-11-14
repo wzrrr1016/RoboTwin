@@ -18,7 +18,8 @@ def check_overlap(radius, x, y, area):
     elif y >= area[3]:
         dy = y - area[3]
 
-    return dx * dx + dy * dy <= radius * radius
+    overlap = (dx * dx + dy * dy <= radius * radius)
+    return overlap
 
 
 def rand_pose(

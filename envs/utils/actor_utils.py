@@ -21,22 +21,33 @@ class Actor:
         "orientation": "orientation_point",
     }
 
-    def __init__(self, actor: Entity, actor_data: dict, mass=0.5, damping=(0.1, 0.5)):
+    def __init__(self, actor: Entity, actor_data: dict, mass=0.5, damping=(1.0, 2.0), is_static=False):  # 增加阻尼，减少晃动
         self.actor = actor
         self.config = actor_data
         self.set_mass(mass)
         self.set_damping(damping)
         self.object_type = None
         self.model_id = None
+        self.is_static = is_static
 
     def copy_to(self, new_actor):
         self.POINTS = new_actor.POINTS
         self.actor = new_actor.actor
         self.config = new_actor.config
         self.object_type = new_actor.object_type
+        self.type = new_actor.type
+
+    def get_static(self) -> bool:
+        return self.is_static
 
     def set_object_type(self, object_type: str):
         self.object_type = object_type
+
+    def set_type(self, type: str):
+        self.type = type
+
+    def get_type(self) -> str:
+        return self.type
 
     def get_object_type(self) -> str:
         return self.object_type

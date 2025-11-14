@@ -11,8 +11,8 @@ def get_modelname(actor_name):
         model_extents = asset_models[actor_name].get("extents",(0.1,0.1,0.1))
         model_size = np.array(model_extents)*np.array(scale)
         model_radius = max(np.linalg.norm(model_size[:2])/2.0, np.linalg.norm(model_size[1:])/2.0, np.linalg.norm(model_size[::2])/2.0)
-        # if model_type != "container":
-        #     scale = (scale[0]*0.95,scale[1]*0.95,scale[2]*0.95)
+        if model_type != "container":
+            scale = (scale[0]*0.96,scale[1]*0.96,scale[2]*0.96)
         return modelname, model_type, scale, model_radius
     else:
         # print(f"Error: {actor_name} not in asset list")
@@ -33,7 +33,7 @@ def get_grasp_type(actor_name):
     else:
         return "point"
     
-def get_args_from_modeltype(model_type,object_pose=None, radius=0.05, prohibited_area=None,xlim=[-0.28,0.28],ylim=[-0.20,0.10],zlim=[0.743]):
+def get_args_from_modeltype(model_type,object_pose=None, radius=0.05, prohibited_area=None,xlim=[-0.28,0.28],ylim=[-0.20,0.10],zlim=[0.741]):
     if model_type == "object":
         rotate_lim = [1, 1, 1]
         rotate_rand = True
@@ -51,6 +51,12 @@ def get_args_from_modeltype(model_type,object_pose=None, radius=0.05, prohibited
         rotate_rand = True
         qpos = [0, 1, 0, 0]
         is_static = False
+        convex = True
+    elif model_type == "pen":
+        rotate_lim = [0, 1, 0]
+        rotate_rand = True
+        qpos = [1, 0, 0, 0]
+        is_static = True
         convex = True
     elif model_type == "tool":
         rotate_lim = [0, 1, 0]

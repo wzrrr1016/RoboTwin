@@ -225,7 +225,7 @@ def run(TASK_ENV, args):
                 print(f"Collecting Data of episode {ct} (seed = {seed_list[ct]})")
                 args["need_plan"] = False
                 args["render_freq"] = 0
-                args["save_data"] = True
+                args["save_data"] = False
                 TASK_ENV.setup_demo(now_ep_num=ct, seed=seed_list[ct],grasp_getter=grasp_getter, **args)
 
                 traj_data = TASK_ENV.load_tran_data(ct)
@@ -266,14 +266,14 @@ def run(TASK_ENV, args):
             try:
 
                 args = origin_args.copy()
-                args["save_data"] = True
+                args["save_data"] = False
                 args["render_freq"] = 0
                 print(f"Start Collecting Data of episode {suc_num} (seed = {epid})")
                 TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
                 info = TASK_ENV.play_once()
 
-                if TASK_ENV.plan_success and TASK_ENV.check_success():
-                # if True:
+                # if TASK_ENV.plan_success and TASK_ENV.check_success():
+                if True:
                     print(f"simulate data episode {suc_num} success! (seed = {epid})")
                     seed_list.append(epid)
 
@@ -325,19 +325,19 @@ def run(TASK_ENV, args):
                     TASK_ENV.viewer.close()
                 clear_cache()
                 time.sleep(0.3)
-            # except Exception as e:
-            #     # stack_trace = traceback.format_exc()
-            #     print(" -------------")
-            #     print(f"simulate data episode {suc_num} fail! (seed = {epid})")
-            #     print("Error: ", e)
-            #     print(" -------------")
-            #     fail_num += 1
-            #     TASK_ENV.close_env()
+            except Exception as e:
+                # stack_trace = traceback.format_exc()
+                print(" -------------")
+                print(f"simulate data episode {suc_num} fail! (seed = {epid})")
+                print("Error: ", e)
+                print(" -------------")
+                fail_num += 1
+                TASK_ENV.close_env()
 
-            #     if args["render_freq"]:
-            #         TASK_ENV.viewer.close()
-            #     time.sleep(1)
-            #     clear_cache()
+                if args["render_freq"]:
+                    TASK_ENV.viewer.close()
+                time.sleep(1)
+                clear_cache()
             epid += 1
 
             with open(os.path.join(args["save_path"], "seed.txt"), "w") as file:

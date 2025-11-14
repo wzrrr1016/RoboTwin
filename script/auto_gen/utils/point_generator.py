@@ -157,6 +157,7 @@ def save_frames(
                 rgb_bytes = root[rgb_ds_path][frame_idx].tobytes()
                 arr = np.frombuffer(rgb_bytes, dtype=np.uint8)
                 img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+                img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 if img is None:
                     continue
             except Exception as e:

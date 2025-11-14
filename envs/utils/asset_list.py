@@ -26,7 +26,7 @@ asset_models = {
         "model": "004_fluted-block",
         "idx": [0,1],
         "type": "container",
-        "scale":(1.2,1.2,1.2)
+        "scale":(2.0,2.0,2.0)
         },
     "french-fries": {
         "model": "005_french-fries",
@@ -56,12 +56,14 @@ asset_models = {
     "tray": {
         "model": "008_tray",
         "idx": [0,1,2,3],
-        "type": "container"
+        "type": "container",
+        "scale":(1.1,1.1,1.1)
         },
     "dustbin": {
         "model": "011_dustbin",
         "idx": [0],
-        "type": "container"
+        "type": "container",
+        "scale":(0.4,0.2,0.4)
         },
     "pot-with-plant": {
         "model": "012_plant-pot",
@@ -336,7 +338,7 @@ asset_models = {
     "markpen": {
         "model": "058_markpen",
         "idx": [0,1,2,3,4,5],
-        "type": "object"
+        "type": "pen"
         },
     "pencup": {
         "model": "059_pencup",
@@ -399,7 +401,7 @@ asset_models = {
         },
     "can": {
         "model": "071_can",
-        "idx": [0,1,2,3,4,5],
+        "idx": [0,1,2,3,5,6],
         "type": "bottle"
         },
     "electronicscale": {
