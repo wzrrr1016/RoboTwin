@@ -1,0 +1,1751 @@
+{
+  "jsonl_file": "code_gen/task_info/common_sense_correction.jsonl",
+  "output_dir": "envs_gen/common_sense_correction",
+  "total_tasks": 50,
+  "successful_tasks": 50,
+  "error_tasks": 0,
+  "model": "local",
+  "temperature": 0,
+  "results": [
+    {
+      "task_name": "1_electronic_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate"
+          ],
+          "objects": [
+            "mouse",
+            "bell",
+            "can"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "sand-clock",
+            "shoe",
+            "book",
+            "dumbbell"
+          ]
+        },
+        "task": "Put electronic items into the plate.",
+        "action": [
+          "Pick bell and place it into plate (wrong)",
+          "Pick bell from plate and place it back on the table (recovery)",
+          "Pick mouse and place it into plate",
+          "Pick can and place it back on the table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/1_electronic_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "2_liquid_container_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "fluted_block"
+          ],
+          "objects": [
+            "can",
+            "bottle",
+            "mug",
+            "cup"
+          ],
+          "distractor": [
+            "calculator",
+            "knife",
+            "hammer",
+            "toycar",
+            "book",
+            "red_block"
+          ]
+        },
+        "task": "Put liquid containers into the shoe_box and non-liquid containers into the fluted_block.",
+        "action": [
+          "Pick can and place it into shoe_box",
+          "Pick bottle and place it into shoe_box",
+          "Pick mug and place it into fluted_block (wrong)",
+          "Pick mug from fluted_block and place it into shoe_box (recovery)",
+          "Pick cup and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/2_liquid_container_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "3_repair_tool_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray"
+          ],
+          "objects": [
+            "hammer",
+            "drill",
+            "shampoo",
+            "tissue-box"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "stapler",
+            "scanner",
+            "mouse"
+          ]
+        },
+        "task": "Put repair tools into the tray and personal care items on the table.",
+        "action": [
+          "Pick hammer and place it into tray",
+          "Pick drill and place it into tray",
+          "Pick shampoo and place it into tray (wrong)",
+          "Pick shampoo from tray and place it on table (recovery)",
+          "Pick tissue-box and place it on table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/3_repair_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "4_square_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "dustbin"
+          ],
+          "objects": [
+            "green_block",
+            "yellow_block",
+            "purple_block",
+            "shampoo",
+            "mouse"
+          ],
+          "distractor": [
+            "apple",
+            "bread",
+            "toycar",
+            "pot-with-plant",
+            "book",
+            "msg"
+          ]
+        },
+        "task": "Put solid square items into the coaster and other items into the dustbin.",
+        "action": [
+          "Pick green_block and place it into coaster",
+          "Pick yellow_block and place it into coaster",
+          "Pick purple_block and place it into coaster",
+          "Pick shampoo and place it into coaster (wrong)",
+          "Pick shampoo from coaster and place it into dustbin (recovery)",
+          "Pick mouse and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/4_square_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "5_tool_and_block_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box",
+            "shoe_box"
+          ],
+          "objects": [
+            "blue_block",
+            "yellow_block",
+            "screwdriver",
+            "bell",
+            "stapler"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "jam-jar",
+            "shoe",
+            "book"
+          ]
+        },
+        "task": "Put tools into the shoe_box and blocks into the wooden_box.",
+        "action": [
+          "Pick blue_block and place it into shoe_box (wrong)",
+          "Pick blue_block from shoe_box and place it into wooden_box (recovery)",
+          "Pick screwdriver and place it into shoe_box",
+          "Pick bell and place it into shoe_box",
+          "Pick stapler and place it into shoe_box",
+          "Pick yellow_block and place it into wooden_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/5_tool_and_block_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "6_edible_non_edible_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate",
+            "dustbin"
+          ],
+          "objects": [
+            "apple",
+            "bread",
+            "can",
+            "mug"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "battery",
+            "fluted_block",
+            "alarm-clock"
+          ]
+        },
+        "task": "Put edible items on the plate and non-edible items into the dustbin.",
+        "action": [
+          "Pick apple and place it into plate",
+          "Pick bread and place it into plate",
+          "Pick can and place it into plate (wrong)",
+          "Pick can from plate and place it into dustbin (recovery)",
+          "Pick mug and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/6_edible_non_edible_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "7_repair_tool_and_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "fluted_block"
+          ],
+          "objects": [
+            "can",
+            "drill",
+            "hammer"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "baguette",
+            "scanner"
+          ]
+        },
+        "task": "Put repair tools into the fluted_block and drinkware into the coaster.",
+        "action": [
+          "Pick can and place it into fluted_block (wrong)",
+          "Pick can from fluted_block and place it into coaster (recovery)",
+          "Pick drill and place it into fluted_block",
+          "Pick hammer and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/7_repair_tool_and_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "8_square_solid_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "wooden_box"
+          ],
+          "objects": [
+            "red_block",
+            "purple_block",
+            "orange_block",
+            "shampoo",
+            "small-speaker"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "alarm-clock"
+          ]
+        },
+        "task": "Put the square solid objects into the wooden_box and the other items into the tray.",
+        "action": [
+          "Pick red_block and place it into tray (wrong)",
+          "Pick red_block from tray and place it into wooden_box (recovery)",
+          "Pick purple_block and place it into wooden_box",
+          "Pick orange_block and place it into wooden_box",
+          "Pick shampoo and place it into tray",
+          "Pick small-speaker and place it into tray"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/8_square_solid_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "9_safe_items_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate"
+          ],
+          "objects": [
+            "knife",
+            "fork",
+            "mouse",
+            "microphone",
+            "blue_block"
+          ],
+          "distractor": [
+            "pet-collar",
+            "sand-clock",
+            "shoe",
+            "book",
+            "tissue-box",
+            "dumbbell"
+          ]
+        },
+        "task": "Put safe items on the plate and dangerous items on the table.",
+        "action": [
+          "Pick knife and place it into plate (wrong)",
+          "Pick knife from plate and place it on the table (recovery)",
+          "Pick fork and place it into plate",
+          "Pick mouse and place it into plate",
+          "Pick microphone and place it into plate",
+          "Pick blue_block and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/9_safe_items_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "10_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "fluted_block"
+          ],
+          "objects": [
+            "mug",
+            "scanner",
+            "toycar",
+            "hammer"
+          ],
+          "distractor": [
+            "shoe",
+            "book",
+            "pot-with-plant",
+            "sand-clock",
+            "tissue-box",
+            "shampoo"
+          ]
+        },
+        "task": "Put drinkware onto the coaster and other items into the fluted_block.",
+        "action": [
+          "Pick mug and place it onto coaster",
+          "Pick scanner and place it onto coaster (wrong)",
+          "Pick scanner from coaster and place it into fluted_block (recovery)",
+          "Pick toycar and place it into fluted_block",
+          "Pick hammer and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/10_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "11_shoe_and_recyclable_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "dustbin"
+          ],
+          "objects": [
+            "shoe",
+            "bottle",
+            "cup_with_handle",
+            "hammer"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "toycar",
+            "pot-with-plant",
+            "alarm-clock",
+            "red_block"
+          ]
+        },
+        "task": "Put shoes into the shoe_box and recyclable items into the dustbin.",
+        "action": [
+          "Pick shoe and place it into shoe_box",
+          "Pick hammer and place it into dustbin",
+          "Pick cup_with_handle and place it into shoe_box (wrong)",
+          "Pick cup_with_handle from shoe_box and place it into dustbin (recovery)",
+          "Pick bottle and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/11_shoe_and_recyclable_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "12_kitchen_item_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "wooden_box"
+          ],
+          "objects": [
+            "knife",
+            "cup_with_handle",
+            "mug",
+            "bread",
+            "mouse"
+          ],
+          "distractor": [
+            "drill",
+            "dumbbell",
+            "fluted_block",
+            "teanet",
+            "tissue-box",
+            "battery"
+          ]
+        },
+        "task": "Put kitchen items into the tray and non-kitchen items into the wooden_box.",
+        "action": [
+          "Pick knife and place it into tray",
+          "Pick cup_with_handle and place it into tray",
+          "Pick mug and place it into tray",
+          "Pick bread and place it into tray",
+          "Pick mouse and place it into tray (wrong)",
+          "Pick mouse from tray and place it into wooden_box (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/12_kitchen_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "13_food_and_tableware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "fluted_block",
+            "shoe_box"
+          ],
+          "objects": [
+            "apple",
+            "bread",
+            "shampoo",
+            "fork",
+            "knife"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "dumbbell"
+          ]
+        },
+        "task": "Put food and tableware into the fluted_block and hygiene items into the shoe_box.",
+        "action": [
+          "Pick apple and place it into fluted_block",
+          "Pick bread and place it into fluted_block",
+          "Pick fork and place it into fluted_block",
+          "Pick shampoo and place it into fluted_block (wrong)",
+          "Pick shampoo from fluted_block and place it into shoe_box (recovery)",
+          "Pick knife and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/13_food_and_tableware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "14_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster"
+          ],
+          "objects": [
+            "can",
+            "cup_without_handle",
+            "mouse",
+            "toycar",
+            "red_block"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "battery",
+            "shoe"
+          ]
+        },
+        "task": "Put drinkware on the coaster and non-drinkware items on the table.",
+        "action": [
+          "Pick can and place it into coaster",
+          "Pick cup_without_handle and place it into coaster",
+          "Pick mouse and place it into coaster (wrong)",
+          "Pick mouse from coaster and place it onto table (recovery)",
+          "Pick toycar and place it onto table",
+          "Pick red_block and place it onto table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/14_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "15_block_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box"
+          ],
+          "objects": [
+            "red_block",
+            "blue_block",
+            "green_block",
+            "apple",
+            "tissue-box"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "sand-clock",
+            "toycar",
+            "pot-with-plant",
+            "hammer"
+          ]
+        },
+        "task": "Put the blocks into the wooden_box and other items on the table.",
+        "action": [
+          "Pick red_block and place it into wooden_box",
+          "Pick blue_block and place it into wooden_box",
+          "Pick green_block and place it into wooden_box",
+          "Pick apple and place it into wooden_box (wrong)",
+          "Pick apple from wooden_box and place it on table (recovery)",
+          "Pick tissue-box and place it on table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/15_block_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "16_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate"
+          ],
+          "objects": [
+            "cup_with_handle",
+            "bottle",
+            "hammer",
+            "screwdriver"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "pot-with-plant",
+            "alarm-clock",
+            "shoe",
+            "book"
+          ]
+        },
+        "task": "Put drinkware into the plate and tools on the table.",
+        "action": [
+          "Pick cup_with_handle and place it into plate",
+          "Pick bottle and place it into plate",
+          "Pick hammer and place it into plate (wrong)",
+          "Pick hammer from plate and place it on the table (recovery)",
+          "Pick screwdriver and place it on the table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/16_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "17_recyclable_nonrecyclable_sorting_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "dustbin"
+          ],
+          "objects": [
+            "book",
+            "tissue-box",
+            "shampoo",
+            "bread"
+          ],
+          "distractor": [
+            "red_block",
+            "green_block",
+            "blue_block",
+            "yellow_block",
+            "purple_block"
+          ]
+        },
+        "task": "Put recyclable items into the dustbin and non-recyclable items into the tray.",
+        "action": [
+          "Pick book and place it into dustbin",
+          "Pick tissue-box and place it into dustbin",
+          "Pick shampoo and place it into dustbin",
+          "Pick bread and place it into dustbin (wrong)",
+          "Pick bread from dustbin and place it into tray (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/17_recyclable_nonrecyclable_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "18_sound_related_item_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "fluted_block"
+          ],
+          "objects": [
+            "microphone",
+            "alarm-clock",
+            "sand-clock",
+            "small-speaker",
+            "fork"
+          ],
+          "distractor": [
+            "table-tennis",
+            "roll-paper",
+            "pot-with-plant",
+            "dumbbell",
+            "book"
+          ]
+        },
+        "task": "Put sound-producing items into the shoe_box and non-sound items into the fluted_block.",
+        "action": [
+          "Pick microphone and place it into shoe_box",
+          "Pick alarm-clock and place it into shoe_box",
+          "Pick small-speaker and place it into shoe_box",
+          "Pick sand-clock and place it into shoe_box (wrong)",
+          "Pick sand-clock from shoe_box and place it into fluted_block (recovery)",
+          "Pick fork and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/18_sound_related_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "19_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "plate"
+          ],
+          "objects": [
+            "mug",
+            "can",
+            "pot-with-plant",
+            "screwdriver",
+            "yellow_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "shoe",
+            "book",
+            "dumbbell"
+          ]
+        },
+        "task": "Put drinkware items on the coaster and non-drinkware items on the plate.",
+        "action": [
+          "Pick mug and place it into coaster",
+          "Pick can and place it into coaster",
+          "Pick pot-with-plant and place it into coaster (wrong)",
+          "Pick pot-with-plant from coaster and place it into plate (recovery)",
+          "Pick screwdriver and place it into plate",
+          "Pick yellow_block and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/19_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "20_metal_item_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray"
+          ],
+          "objects": [
+            "fork",
+            "knife",
+            "can",
+            "shampoo"
+          ],
+          "distractor": [
+            "calculator",
+            "cup-with-liquid",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper"
+          ]
+        },
+        "task": "Put all metal items into the tray.",
+        "action": [
+          "Pick fork and place it into tray",
+          "Pick knife and place it into tray",
+          "Pick can and place it into tray",
+          "Pick shampoo and place it into tray (wrong)",
+          "Pick shampoo from tray and place it back on the table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/20_metal_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "21_dangerous_item_disposal_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "dustbin"
+          ],
+          "objects": [
+            "knife",
+            "cup_without_handle",
+            "pot-with-plant"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "baguette",
+            "apple"
+          ]
+        },
+        "task": "Put dangerous items into the dustbin.",
+        "action": [
+          "Pick cup_without_handle and place it into dustbin (wrong)",
+          "Pick cup_without_handle from dustbin and place it back on the table (recovery)",
+          "Pick knife and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/21_dangerous_item_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "22_tool_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate",
+            "wooden_box"
+          ],
+          "objects": [
+            "scanner",
+            "hammer",
+            "dumbbell",
+            "sand-clock",
+            "bell"
+          ],
+          "distractor": [
+            "cup_with_handle",
+            "battery",
+            "cup-with-liquid",
+            "blue_block",
+            "toycar",
+            "book"
+          ]
+        },
+        "task": "Put tools into the wooden_box and non-tools into the plate.",
+        "action": [
+          "Pick scanner and place it into wooden_box (wrong)",
+          "Pick scanner from wooden_box and place it into plate (recovery)",
+          "Pick hammer and place it into wooden_box",
+          "Pick dumbbell and place it into wooden_box",
+          "Pick sand-clock and place it into plate",
+          "Pick bell and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/22_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "23_metal_tool_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "fluted_block"
+          ],
+          "objects": [
+            "stapler",
+            "hammer",
+            "fork",
+            "mouse"
+          ],
+          "distractor": [
+            "pet-collar",
+            "sand-clock",
+            "tissue-box",
+            "shampoo",
+            "dumbbell",
+            "book"
+          ]
+        },
+        "task": "Put metal tools into the fluted_block.",
+        "action": [
+          "Pick mouse and place it into fluted_block (wrong)",
+          "Pick mouse from fluted_block and place it back on table (recovery)",
+          "Pick stapler and place it into fluted_block",
+          "Pick hammer and place it into fluted_block",
+          "Pick fork and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/23_metal_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "24_kitchen_utensil_tool_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "shoe_box"
+          ],
+          "objects": [
+            "fork",
+            "knife",
+            "hammer",
+            "drill"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "alarm-clock",
+            "sand-clock",
+            "dumbbell"
+          ]
+        },
+        "task": "Put kitchen utensils into the tray and tools into the shoe_box.",
+        "action": [
+          "Pick fork and place it into tray",
+          "Pick knife and place it into tray",
+          "Pick hammer and place it into tray (wrong)",
+          "Pick hammer from tray and place it into shoe_box (recovery)",
+          "Pick drill and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/24_kitchen_utensil_tool_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "25_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster"
+          ],
+          "objects": [
+            "cup_with_handle",
+            "cup_without_handle",
+            "apple"
+          ],
+          "distractor": [
+            "calculator",
+            "screwdriver",
+            "toycar",
+            "pot-with-plant",
+            "alarm-clock",
+            "dumbbell"
+          ]
+        },
+        "task": "Put drinkware onto the coaster.",
+        "action": [
+          "Pick cup_with_handle and place it into coaster",
+          "Pick cup_without_handle and place it into coaster",
+          "Pick apple and place it into coaster (wrong)",
+          "Pick apple from coaster and place it into table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/25_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "26_recyclable_disposal_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "dustbin"
+          ],
+          "objects": [
+            "tissue-box",
+            "can",
+            "shampoo",
+            "hammer"
+          ],
+          "distractor": [
+            "fluted_block",
+            "red_block",
+            "green_block",
+            "blue_block",
+            "purple_block"
+          ]
+        },
+        "task": "Put recyclable items into the dustbin and non-recyclable items on the table.",
+        "action": [
+          "Pick tissue-box and place it into dustbin",
+          "Pick can and place it into dustbin",
+          "Pick shampoo and place it into dustbin",
+          "Pick hammer and place it into dustbin (wrong)",
+          "Pick hammer from dustbin and place it on table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/26_recyclable_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "27_tool_electronic_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box"
+          ],
+          "objects": [
+            "scanner",
+            "stapler",
+            "hammer",
+            "knife",
+            "small-speaker"
+          ],
+          "distractor": [
+            "pot-with-plant",
+            "sand-clock",
+            "tissue-box",
+            "shampoo",
+            "red_block"
+          ]
+        },
+        "task": "Put office and repair tools into the wooden_box and electronic devices on the table.",
+        "action": [
+          "Pick scanner and place it into wooden_box (wrong)",
+          "Pick scanner from wooden_box and place it on the table (recovery)",
+          "Pick stapler and place it into wooden_box",
+          "Pick hammer and place it into wooden_box",
+          "Pick knife and place it into wooden_box",
+          "Pick small-speaker and place it on the table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/27_tool_electronic_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "28_kitchen_food_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate"
+          ],
+          "objects": [
+            "bread",
+            "teanet",
+            "small-speaker",
+            "scanner",
+            "hammer"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "pot-with-plant",
+            "shoe",
+            "dumbbell"
+          ]
+        },
+        "task": "Put kitchen items used for food into the plate.",
+        "action": [
+          "Pick small-speaker and place it into plate (wrong)",
+          "Pick small-speaker from plate and place it back on the table (recovery)",
+          "Pick bread and place it into plate",
+          "Pick teanet and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/28_kitchen_food_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "29_drinkware_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "shoe_box"
+          ],
+          "objects": [
+            "teanet",
+            "knife",
+            "purple_block",
+            "orange_block"
+          ],
+          "distractor": [
+            "calculator",
+            "table-tennis",
+            "toycar",
+            "alarm-clock",
+            "microphone",
+            "dumbbell"
+          ]
+        },
+        "task": "Put items used with tea or drinks into the coaster and others into the shoe_box.",
+        "action": [
+          "Pick teanet and place it into coaster",
+          "Pick knife and place it into coaster (wrong)",
+          "Pick knife from coaster and place it into shoe_box (recovery)",
+          "Pick purple_block and place it into shoe_box",
+          "Pick orange_block and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/29_drinkware_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "30_secondary_color_block_disposal_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "dustbin"
+          ],
+          "objects": [
+            "purple_block",
+            "yellow_block",
+            "orange_block",
+            "red_block"
+          ],
+          "distractor": [
+            "calculator",
+            "cup-with-liquid",
+            "chips-tub",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper"
+          ]
+        },
+        "task": "Put blocks with secondary colors into the dustbin.",
+        "action": [
+          "Pick purple_block and place it into dustbin",
+          "Pick yellow_block and place it into dustbin",
+          "Pick orange_block and place it into dustbin (wrong)",
+          "Pick orange_block from dustbin and place it back on table (recovery)",
+          "Pick red_block and place it on table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/30_secondary_color_block_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "31_tool_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box",
+            "fluted_block"
+          ],
+          "objects": [
+            "hammer",
+            "drill",
+            "pot-with-plant",
+            "hamburg",
+            "bread"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "battery",
+            "scanner"
+          ]
+        },
+        "task": "Put tools into the wooden_box and non-tools into the fluted_block.",
+        "action": [
+          "Pick hammer and place it into wooden_box",
+          "Pick drill and place it into wooden_box",
+          "Pick pot-with-plant and place it into wooden_box (wrong)",
+          "Pick pot-with-plant from wooden_box and place it into fluted_block (recovery)",
+          "Pick hamburg and place it into fluted_block",
+          "Pick bread and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/31_tool_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "32_drinkware_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "tray"
+          ],
+          "objects": [
+            "mug",
+            "can",
+            "cup_without_handle",
+            "stapler",
+            "shoe"
+          ],
+          "distractor": [
+            "fluted_block",
+            "alarm-clock",
+            "tissue-box",
+            "dumbbell",
+            "toycar",
+            "pot-with-plant"
+          ]
+        },
+        "task": "Put drinkware into the coaster and non-drinkware items into the tray.",
+        "action": [
+          "Pick mug and place it into tray (wrong)",
+          "Pick mug from tray and place it into coaster (recovery)",
+          "Pick can and place it into coaster",
+          "Pick cup_without_handle and place it into coaster",
+          "Pick stapler and place it into tray",
+          "Pick shoe and place it into tray"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/32_drinkware_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "33_tool_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray"
+          ],
+          "objects": [
+            "stapler",
+            "dumbbell",
+            "pink_block",
+            "fork"
+          ],
+          "distractor": [
+            "pet-collar",
+            "shoe",
+            "book",
+            "alarm-clock",
+            "tissue-box"
+          ]
+        },
+        "task": "Put tools into the tray.",
+        "action": [
+          "Pick stapler and place it into tray",
+          "Pick dumbbell and place it into tray",
+          "Pick pink_block and place it into tray (wrong)",
+          "Pick pink_block from tray and place it back on table (recovery)",
+          "Pick fork and place it into tray"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/33_tool_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "34_hygiene_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "fluted_block"
+          ],
+          "objects": [
+            "shampoo",
+            "tissue-box",
+            "bottle",
+            "mouse"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "hammer",
+            "shoe"
+          ]
+        },
+        "task": "Put hygiene items into the fluted_block.",
+        "action": [
+          "Pick shampoo and place it into fluted_block",
+          "Pick tissue-box and place it into fluted_block",
+          "Pick bottle and place it into fluted_block (wrong)",
+          "Pick bottle from fluted_block and place it back on the table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/34_hygiene_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "35_sound_kitchen_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "plate"
+          ],
+          "objects": [
+            "teanet",
+            "bell",
+            "microphone",
+            "cup_with_handle"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "battery",
+            "sand-clock",
+            "shoe"
+          ]
+        },
+        "task": "Put sound-related items into the shoe_box and kitchen utensils into the plate.",
+        "action": [
+          "Pick teanet and place it into shoe_box (wrong)",
+          "Pick teanet from shoe_box and place it into plate (recovery)",
+          "Pick bell and place it into shoe_box",
+          "Pick microphone and place it into shoe_box",
+          "Pick cup_with_handle and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/35_sound_kitchen_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "36_office_supplies_drinkware_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box",
+            "fluted_block"
+          ],
+          "objects": [
+            "mouse",
+            "cup_with_handle",
+            "bottle",
+            "markpen"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "battery",
+            "apple",
+            "shoe",
+            "dumbbell"
+          ]
+        },
+        "task": "Put office supplies into the wooden_box and drinkware into the fluted_block.",
+        "action": [
+          "Pick mouse and place it into wooden_box",
+          "Pick markpen and place it into wooden_box",
+          "Pick cup_with_handle and place it into wooden_box (wrong)",
+          "Pick cup_with_handle from wooden_box and place it into fluted_block (recovery)",
+          "Pick bottle and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/36_office_supplies_drinkware_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "37_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "coaster"
+          ],
+          "objects": [
+            "bottle",
+            "mug",
+            "bread",
+            "apple",
+            "pink_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "battery",
+            "screwdriver"
+          ]
+        },
+        "task": "Put drinkware on the coaster and non-drinkware into the shoe_box.",
+        "action": [
+          "Pick bottle and place it into shoe_box (wrong)",
+          "Pick bottle from shoe_box and place it into coaster (recovery)",
+          "Pick mug and place it into coaster",
+          "Pick bread and place it into shoe_box",
+          "Pick apple and place it into shoe_box",
+          "Pick pink_block and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/37_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "38_electronic_item_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray",
+            "dustbin"
+          ],
+          "objects": [
+            "alarm-clock",
+            "small-speaker",
+            "can",
+            "cup_without_handle",
+            "screwdriver"
+          ],
+          "distractor": [
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "baguette",
+            "apple"
+          ]
+        },
+        "task": "Put electronic items into the tray and non-electronic items into the dustbin.",
+        "action": [
+          "Pick alarm-clock and place it into tray",
+          "Pick small-speaker and place it into tray",
+          "Pick can and place it into tray (wrong)",
+          "Pick can from tray and place it into dustbin (recovery)",
+          "Pick cup_without_handle and place it into dustbin",
+          "Pick screwdriver and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/38_electronic_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "39_toy_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box"
+          ],
+          "objects": [
+            "orange_block",
+            "red_block",
+            "toycar",
+            "book",
+            "mug"
+          ],
+          "distractor": [
+            "dumbbell",
+            "shoe",
+            "microphone",
+            "alarm-clock",
+            "pot-with-plant",
+            "screwdriver"
+          ]
+        },
+        "task": "Put the toy items into the wooden_box.",
+        "action": [
+          "Pick orange_block and place it into wooden_box",
+          "Pick red_block and place it into wooden_box",
+          "Pick toycar and place it into wooden_box",
+          "Pick mug and place it into wooden_box (wrong)",
+          "Pick mug from wooden_box and place it back on table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/39_toy_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "40_electronic_non_electronic_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate",
+            "fluted_block"
+          ],
+          "objects": [
+            "small-speaker",
+            "alarm-clock",
+            "microphone",
+            "bell",
+            "bread"
+          ],
+          "distractor": [
+            "red_block",
+            "green_block",
+            "blue_block",
+            "yellow_block",
+            "purple_block"
+          ]
+        },
+        "task": "Put electronic items into the fluted_block and non-electronic items into the plate.",
+        "action": [
+          "Pick small-speaker and place it into fluted_block",
+          "Pick alarm-clock and place it into fluted_block",
+          "Pick microphone and place it into fluted_block",
+          "Pick bell and place it into fluted_block (wrong)",
+          "Pick bell from fluted_block and place it into plate (recovery)",
+          "Pick bread and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/40_electronic_non_electronic_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "41_toy_and_footwear_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "shoe_box",
+            "tray"
+          ],
+          "objects": [
+            "toycar",
+            "orange_block",
+            "blue_block",
+            "shoe",
+            "yellow_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "alarm-clock",
+            "dumbbell",
+            "book"
+          ]
+        },
+        "task": "Put toys into the tray and shoes into the shoe_box.",
+        "action": [
+          "Pick toycar and place it into shoe_box (wrong)",
+          "Pick toycar from shoe_box and place it into tray (recovery)",
+          "Pick orange_block and place it into tray",
+          "Pick blue_block and place it into tray",
+          "Pick yellow_block and place it into tray",
+          "Pick shoe and place it into shoe_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/41_toy_and_footwear_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "42_disposable_item_disposal_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "dustbin"
+          ],
+          "objects": [
+            "shampoo",
+            "french_fries",
+            "cup_without_handle",
+            "purple_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "battery",
+            "knife",
+            "screwdriver"
+          ]
+        },
+        "task": "Put disposable items into the dustbin.",
+        "action": [
+          "Pick shampoo and place it into dustbin",
+          "Pick french_fries and place it into dustbin",
+          "Pick cup_without_handle and place it into dustbin (wrong)",
+          "Pick cup_without_handle from dustbin and place it back on the table (recovery)"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/42_disposable_item_disposal_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "43_metal_object_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate"
+          ],
+          "objects": [
+            "can",
+            "bell",
+            "tissue-box",
+            "screwdriver"
+          ],
+          "distractor": [
+            "calculator",
+            "baguette",
+            "shoe",
+            "book",
+            "alarm-clock",
+            "fluted_block"
+          ]
+        },
+        "task": "Put metal objects on the plate.",
+        "action": [
+          "Pick can and place it into plate",
+          "Pick bell and place it into plate",
+          "Pick tissue-box and place it into plate (wrong)",
+          "Pick tissue-box from plate and place it back on the table (recovery)",
+          "Pick screwdriver and place it into plate"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/43_metal_object_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "44_drinkware_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "fluted_block"
+          ],
+          "objects": [
+            "can",
+            "mug",
+            "knife",
+            "bell",
+            "bread"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "battery",
+            "screwdriver"
+          ]
+        },
+        "task": "Put drinkware into the coaster and non-drinkware into the fluted_block.",
+        "action": [
+          "Pick can and place it into fluted_block (wrong)",
+          "Pick can from fluted_block and place it into coaster (recovery)",
+          "Pick mug and place it into coaster",
+          "Pick knife and place it into fluted_block",
+          "Pick bell and place it into fluted_block",
+          "Pick bread and place it into fluted_block"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/44_drinkware_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "45_sound_related_item_organization_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "wooden_box",
+            "shoe_box"
+          ],
+          "objects": [
+            "sand-clock",
+            "small-speaker",
+            "microphone",
+            "yellow_block",
+            "can"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "baguette",
+            "battery"
+          ]
+        },
+        "task": "Put sound-related items into the shoe_box and non-sound-related items into the wooden_box.",
+        "action": [
+          "Pick sand-clock and place it into shoe_box (wrong)",
+          "Pick sand-clock from shoe_box and place it into wooden_box (recovery)",
+          "Pick small-speaker and place it into shoe_box",
+          "Pick microphone and place it into shoe_box",
+          "Pick yellow_block and place it into wooden_box",
+          "Pick can and place it into wooden_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/45_sound_related_item_organization_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "46_heavy_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "tray"
+          ],
+          "objects": [
+            "drill",
+            "dumbbell",
+            "cup_without_handle",
+            "french_fries",
+            "blue_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "stapler",
+            "sand-clock"
+          ]
+        },
+        "task": "Put heavy items into the tray and light items on the table.",
+        "action": [
+          "Pick drill and place it into tray",
+          "Pick dumbbell and place it into tray",
+          "Pick cup_without_handle and place it into tray (wrong)",
+          "Pick cup_without_handle from tray and place it on table (recovery)",
+          "Pick french_fries and place it on table",
+          "Pick blue_block and place it on table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/46_heavy_item_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "47_recyclable_trash_sorting_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "dustbin"
+          ],
+          "objects": [
+            "can",
+            "french_fries",
+            "small-speaker"
+          ],
+          "distractor": [
+            "pot-with-plant",
+            "toycar",
+            "fluted_block",
+            "book",
+            "alarm-clock"
+          ]
+        },
+        "task": "Put items that are considered trash into the dustbin.",
+        "action": [
+          "Pick can and place it into dustbin (wrong)",
+          "Pick can from dustbin and place it back on the table (recovery)",
+          "Pick french_fries and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/47_recyclable_trash_sorting_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "48_non_drinkware_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster",
+            "wooden_box"
+          ],
+          "objects": [
+            "book",
+            "shoe",
+            "apple",
+            "yellow_block"
+          ],
+          "distractor": [
+            "calculator",
+            "table-tennis",
+            "hammer",
+            "toycar",
+            "pot-with-plant",
+            "alarm-clock"
+          ]
+        },
+        "task": "Put items that are not drinkware into the wooden_box.",
+        "action": [
+          "Pick shoe and place it into coaster (wrong)",
+          "Pick shoe from coaster and place it into wooden_box (recovery)",
+          "Pick book and place it into wooden_box",
+          "Pick apple and place it into wooden_box",
+          "Pick yellow_block and place it into wooden_box"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/48_non_drinkware_placement_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "49_food_vs_nonfood_separation_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "plate",
+            "dustbin"
+          ],
+          "objects": [
+            "apple",
+            "french_fries",
+            "can",
+            "tissue-box",
+            "pink_block"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "roll-paper",
+            "battery"
+          ]
+        },
+        "task": "Put food items into the plate and non-food items into the dustbin.",
+        "action": [
+          "Pick apple and place it into plate",
+          "Pick french_fries and place it into plate",
+          "Pick can and place it into plate (wrong)",
+          "Pick can from plate and place it into dustbin (recovery)",
+          "Pick tissue-box and place it into dustbin",
+          "Pick pink_block and place it into dustbin"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/49_food_vs_nonfood_separation_correction.py",
+      "status": "success"
+    },
+    {
+      "task_name": "50_drink_related_item_placement_correction",
+      "task_description": {
+        "scene": {
+          "containers": [
+            "coaster"
+          ],
+          "objects": [
+            "teanet",
+            "apple",
+            "bread",
+            "bell"
+          ],
+          "distractor": [
+            "calculator",
+            "pet-collar",
+            "table-tennis",
+            "sand-clock",
+            "shoe",
+            "book"
+          ]
+        },
+        "task": "Put items used with drinks on the coaster.",
+        "action": [
+          "Pick teanet and place it on coaster",
+          "Pick apple and place it on coaster (wrong)",
+          "Pick apple from coaster and place it on table (recovery)",
+          "Pick bread and place it on table",
+          "Pick bell and place it on table"
+        ]
+      },
+      "output_file": "envs_gen/common_sense_correction/50_drink_related_item_placement_correction.py",
+      "status": "success"
+    }
+  ],
+  "timestamp": "20251117_135951"
+}

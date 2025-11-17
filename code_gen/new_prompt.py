@@ -43,6 +43,9 @@ AVAILABLE_ENV_FUNCTION_LOAD_ACTORS = {
     "def add_distractors(self, object_list):\
         Args:\
         object_list: create distractor objects to the environment."
+    "def check_scene(self):\
+        check if all actors are placed correctly in the scene.\
+        return success"
 }
 
 AVAILABLE_ENV_FUNCTION_PLAY_ONCE = {
@@ -53,6 +56,9 @@ AVAILABLE_ENV_FUNCTION_PLAY_ONCE = {
         object: The object to be picked and placed\
         container: The container to be placed in\
         return success"
+    "def add_end(self):\
+        mark the end of the task.\
+        return"
 }
 
 AVAILABLE_ENV_FUNCTION_CHECK_SUCCESS = {
@@ -89,6 +95,7 @@ For example:
         self.can = self.add_actor("can","can")
         distractor_list = ["bottle", "shampoo", "bread", "calculator"]
         self.add_distractors(distractor_list)
+        self.check_scene()
 ```
 
 Next, you need to complete the play_once function, which is used to define the action of the robot arm. 
@@ -110,6 +117,8 @@ For example:
         print("pick place can:", success)
         if not success:
             return self.info
+        self.add_end()
+        return self.info
 ```
 
 Finally, you need to complete the check_success function, which is used to check the success of the action.
@@ -138,6 +147,7 @@ class {task_name}(Imagine_Task):
         self.can = self.add_actor("can","can")
         distractor_list = ["bottle", "shampoo", "bread", "calculator"]
         self.add_distractors(distractor_list)
+        self.check_scene()
 
     def play_once(self):
         success = self.pick_and_place(self.bottle, self.plate)
@@ -148,6 +158,8 @@ class {task_name}(Imagine_Task):
         print("pick place can:", success)
         if not success:
             return self.info
+        self.add_end()
+        return self.info
 
     def check_success(self):
         if self.check_on(self.bottle, self.plate) and self.check_on(self.can, self.plate):
@@ -157,7 +169,7 @@ class {task_name}(Imagine_Task):
 All the available object types are:
 
 CONTAINERS:
-    "plate", "tray", "wooden_box", "dustbin", "fluted_block", "shoe_box", "coaster",
+    "plate", "tray", "wooden_box", "dustbin","shoe_box", "coaster","plasticbox"
 
 OBJECTS able to pick:
     "hammer", "microphone", "bottle", "can", "cup", "cup_with_handle", "cup_without_handle", "pot-with-plant",
