@@ -113,7 +113,7 @@ def compute_points_for_plan(
                     else:
                         # Normal container
                         next_pose_map = plan[idx+1]['pose']
-                        if obj_name in next_pose_map:
+                        if entry['target_name'][1] == entry['next_action']['target_name'][1] and obj_name in next_pose_map:
                             obj_pos = np.array(next_pose_map[obj_name], dtype=float)
                             container_point = np.array([obj_pos[0], obj_pos[1], 0.745])
                             px = world_to_pixel_func(container_point, Tcw, K)[0]
