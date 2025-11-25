@@ -69,7 +69,6 @@ CONTAINER_KB: Dict[str, List[str]] = {
     "tray": ["container", "group_surface", "flat", "rectangular", "for_organization", "holds_multiple_items","rectangle"],
     "wooden_box": ["container", "storage", "enclosed", "wood", "for_general_items", "has_lid","rectangular"],
     "dustbin": ["container", "waste", "for_trash", "disposal", "unwanted_items", "recyclable_items"],
-    "fluted_block": ["container", "group_surface", "flat", "for_organization", "stable_base"],
     "shoe_box": ["container", "for_shoe", "enclosed", "specific_purpose", "storage", "rectangular"],
     "coaster": ["container", "for_drinkware", "flat", "protects_surface", "for_cups_and_mugs", "circular"],
 }
@@ -88,6 +87,7 @@ DISTRACTOR_KB: Dict[str, List[str]] = {
     "battery": ["electronic", "power_source", "cylindrical", "metal", "portable", "energy_storage", "recyclable"],
     "msg": ["seasoning", "powder", "cooking", "kitchen", "flavor_enhancer", "white", "edible"],
     "soy-sauce": ["liquid", "seasoning", "cooking", "kitchen", "salty", "bottle_container", "dark", "edible"],
+    "fluted_block": ["block", "toy", "square","solid"],
 }
 
 for obj in ATTR_KB.keys():

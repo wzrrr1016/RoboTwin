@@ -69,7 +69,6 @@ def match_subplan_to_actions(
             i = j + 1
         else:
             i += 1
-
     return matched_plan
 
 
@@ -94,18 +93,23 @@ def filter_plan_by_rules(plan: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
     filtered = []
     for desc, entries in task_groups.items():
-        if '(wrong)' in desc or '(recovery)' in desc:
+        # if '(wrong)' in desc or '(recovery)' in desc:
             # Keep only first pick and last place
-            picks = [e for e in entries if e.get('action') == 'pick']
-            places = [e for e in entries if e.get('action') == 'place']
+        picks = [e for e in entries if e.get('action') == 'pick']
+        places = [e for e in entries if e.get('action') == 'place']
+        dones = [e for e in entries if e.get('action') == 'done']
 
-            if picks:
-                filtered.append(picks[0])  # First pick
-            if places:
-                filtered.append(places[-1])  # Last place
-        else:
-            # Keep all actions
-            filtered.extend(entries)
+        if picks:
+            filtered.append(picks[0])  # First pick
+        if places:
+            filtered.append(places[-1])  # Last place
+
+        if dones:
+            filtered.extend(dones)
+
+        # else:
+        #     # Keep all actions
+        #     filtered.extend(entries)
 
     # Sort by frame_idx to maintain order
     filtered.sort(key=lambda x: x.get('frame_idx', 0))

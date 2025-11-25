@@ -51,7 +51,8 @@ def compute_points_for_plan(
         except KeyError as e:
             raise RuntimeError(f"Missing camera config in {hdf5_path}: {e}")
 
-        for entry in plan:
+        for idx in range(len(plan)):
+            entry = plan[idx]
             frame_idx = int(entry.get("frame_idx", 0))
             action = entry['next_action']['action']
             targets = entry["next_action"]['target']
@@ -92,15 +93,33 @@ def compute_points_for_plan(
                     # Add container point
                     if container_name == 'table':
                         # Use object's x, y but z = 0.743
-                        if obj_name in pose_map:
-                            obj_pos = np.array(pose_map[obj_name], dtype=float)
-                            table_point = np.array([obj_pos[0], obj_pos[1], 0.745])
-                            px = world_to_pixel_func(table_point, Tcw, K)[0]
-                            u, v = float(px[0]), float(px[1])
-                            frame_points['table'] = [u, v]
+                        next_entry = plan[idx+1]
+                        print("table next:",next_entry)
+                        if next_entry['action'] == 'pick' and next_entry['target_name'][0] == obj_name:
+                            if obj_name in pose_map:
+                                obj_pos = np.array(pose_map[obj_name], dtype=float)
+                                table_point = np.array([obj_pos[0], obj_pos[1], 0.745])
+                                px = world_to_pixel_func(table_point, Tcw, K)[0]
+                                u, v = float(px[0]), float(px[1])
+                                frame_points['table'] = [u, v]
+                        else:
+                            next_pose_map = next_entry['pose']
+                            if obj_name in next_pose_map:
+                                obj_pos = np.array(next_pose_map[obj_name], dtype=float)
+                                table_point = np.array([obj_pos[0], obj_pos[1], 0.745])
+                                px = world_to_pixel_func(table_point, Tcw, K)[0]
+                                u, v = float(px[0]), float(px[1])
+                                frame_points['table'] = [u, v]                            
                     else:
                         # Normal container
-                        if container_name in pose_map:
+                        next_pose_map = plan[idx+1]['pose']
+                        if obj_name in next_pose_map:
+                            obj_pos = np.array(next_pose_map[obj_name], dtype=float)
+                            container_point = np.array([obj_pos[0], obj_pos[1], 0.745])
+                            px = world_to_pixel_func(container_point, Tcw, K)[0]
+                            u, v = float(px[0]), float(px[1])
+                            frame_points[container_name] = [u, v] 
+                        elif container_name in pose_map:
                             container_pos = np.array(pose_map[container_name], dtype=float)
                             px = world_to_pixel_func(container_pos, Tcw, K)[0]
                             u, v = float(px[0]), float(px[1])

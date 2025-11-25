@@ -9,10 +9,10 @@ This script converts data from source directory to target directory format by:
 
 Usage:
 python script/auto_gen/clean_data_raw.py \
-    --source_dir data/1_toy_and_metal_storage_correction/data_collect \
-    --target_dir robotwin_data/1_toy_and_metal_storage_correction/data_collect/front_camera \
+    --source_dir robotwin_data/data_origin/1_toy_and_metal_storage_correction/data_collect \
+    --target_dir robotwin_data/data_origin/1_toy_and_metal_storage_correction/data_collect/front_camera \
     --task_name 1_toy_and_metal_storage_correction \
-    --task_info code_gen/task_info/common_sense_correction.jsonl \
+    --task_info code_gen/task_info_old/common_sense_correction.jsonl \
     --camera front_camera \
     --all
 
@@ -86,29 +86,32 @@ def process_episode(
 
     # Load subplan
     subplan = load_subplan(subplan_path)
+    if subplan[0]['frame_idx'] == -1:
+        for i in range(len(subplan)):
+            subplan[i]['frame_idx'] += 1
     print(f"  Loaded {len(subplan)} subplan entries")
 
     # Generate plan with task_description and next_action
     plan = generate_plan(subplan, action_descriptions)
 
     # Get the last frame index
-    with h5py.File(hdf5_path, "r") as root:
-        K_seq = root[f"/observation/{camera_name}/intrinsic_cv"][()]  # [T,3,3]
-    last_frame_idx = int(K_seq.shape[0] - 1)
-
-    done_task = {
-        'frame_idx': last_frame_idx,
-        'action': 'done',
-        'target_name': [],
-        'pose': {},
-        'task_description': 'Task completed',
-        'next_action': {
+    if plan[-1]['action'] != 'done':
+        with h5py.File(hdf5_path, "r") as root:
+            K_seq = root[f"/observation/{camera_name}/intrinsic_cv"][()]  # [T,3,3]
+        last_frame_idx = int(K_seq.shape[0] - 1)
+        done_task = {
+            'frame_idx': last_frame_idx,
             'action': 'done',
-            'target': []
+            'target_name': [],
+            'pose': {},
+            'task_description': 'Task completed',
+            'next_action': {
+                'action': 'done',
+                'target': []
+            }
         }
-    }
 
-    plan.append(done_task)
+        plan.append(done_task)
     print(f"  Generated plan with {len(plan)} entries")
     
     # Generate points and save frames

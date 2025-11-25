@@ -7,7 +7,7 @@ from sapien.render import clear_cache
 from collections import OrderedDict
 import pdb
 from envs import *
-from envs.zerograsp.zerograsp import ZeroGrasp_Getter
+from envs.zerograsp.zerograsp_client import ZeroGrasp_Client
 import yaml
 import importlib
 import pkgutil
@@ -179,14 +179,17 @@ def main(task_name=None, task_config=None, task_folder=None):
 def run(TASK_ENV, args):
     epid, suc_num, fail_num, seed_list = 0, 0, 0, []
 
+    # Use ZeroGrasp Client instead of loading model locally
+    zerograsp_server_url = args.get("zerograsp_server_url", "http://localhost:5000")
 
-
-    zerograsp_config_path = args.get("zerograsp_config_path")
-    zerograsp_checkpoint_path = args.get("zerograsp_checkpoint_path")
-
-
-    grasp_getter = ZeroGrasp_Getter(zerograsp_config_path,zerograsp_checkpoint_path)
-    # grasp_getter = None
+    try:
+        print(f"\033[96mConnecting to ZeroGrasp server at {zerograsp_server_url}...\033[0m")
+        grasp_getter = ZeroGrasp_Client(server_url=zerograsp_server_url, timeout=60)
+        print("\033[92mSuccessfully connected to ZeroGrasp server!\033[0m")
+    except Exception as e:
+        print(f"\033[91mFailed to connect to ZeroGrasp server: {e}\033[0m")
+        print("\033[93mPlease ensure the server is running: bash start_zerograsp_server.sh\033[0m")
+        grasp_getter = None
 
     print(f"Task Name: \033[34m{args['task_name']}\033[0m")
 
@@ -199,7 +202,7 @@ def run(TASK_ENV, args):
     def exist_hdf5(idx):
         file_path = os.path.join(args["save_path"], 'data', f'episode{idx}.hdf5')
         return os.path.exists(file_path)
-    
+
     def exist_pkl(idx):
         file_path = os.path.join(args["save_path"], '_traj_data', f'episode{idx}.pkl')
         return os.path.exists(file_path)
@@ -266,7 +269,7 @@ def run(TASK_ENV, args):
             try:
 
                 args = origin_args.copy()
-                args["save_data"] = True
+                args["save_data"] = False
                 args["render_freq"] = 0
                 print(f"Start Collecting Data of episode {suc_num} (seed = {epid})")
                 TASK_ENV.setup_demo(now_ep_num=suc_num, seed=epid,grasp_getter=grasp_getter, **args)
@@ -303,7 +306,7 @@ def run(TASK_ENV, args):
 
                     suc_num += 1
                     clear_cache()
-                
+
                 else:
                     print(f"simulate data episode {suc_num} fail! (seed = {epid})")
                     fail_num += 1
@@ -368,6 +371,8 @@ if __name__ == "__main__":
     parser.add_argument("task_config", type=str, help="Task config file name (without .yml)")
     parser.add_argument("--task_folder", type=str, default=None,
                         help="Optional task folder path (e.g., envs_gen/common_sense_correction_glm4)")
+    parser.add_argument("--server_url", type=str, default="http://localhost:5000",
+                        help="ZeroGrasp server URL (default: http://localhost:5000)")
     args = parser.parse_args()
     task_name = args.task_name
     task_config = args.task_config
